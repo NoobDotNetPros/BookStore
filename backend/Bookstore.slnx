@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="../Bookstore.Application/Bookstore.Application.csproj" Id="fc446358-9505-4f63-a603-864f82263123" />
-  <Project Path="../Bookstore.Domain/Bookstore.Domain.csproj" Id="2efd7c00-d7af-4035-bd64-6c769d01e833" />
-  <Project Path="../Bookstore.Infrastructure/Bookstore.Infrastructure.csproj" Id="26c9a70a-fecb-4dab-816f-210050198e73" />
   <Project Path="Bookstore.Api.csproj" />
+  <Project Path="Bookstore.Application/Bookstore.Application.csproj" />
+  <Project Path="Bookstore.Domain/Bookstore.Domain.csproj" />
+  <Project Path="Bookstore.Infrastructure/Bookstore.Infrastructure.csproj" />
 </Solution>
