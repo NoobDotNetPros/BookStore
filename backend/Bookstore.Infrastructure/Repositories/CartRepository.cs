@@ -19,6 +19,18 @@ public class CartRepository : ICartRepository
         return await _context.CartItems
             .Include(c => c.Book)
             .Where(c => c.UserId == userId && !c.IsWishlist)
+            .OrderByDescending(c => c.CreatedAt)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<CartItem>> GetUserWishlistItemsAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.CartItems
+            .Include(c => c.Book)
+            .Where(c => c.UserId == userId && c.IsWishlist)
+            .OrderByDescending(c => c.CreatedAt)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 
@@ -27,6 +39,12 @@ public class CartRepository : ICartRepository
         return await _context.CartItems
             .Include(c => c.Book)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+    }
+
+    public async Task<CartItem?> GetUserCartItemByBookIdAsync(int userId, int bookId, CancellationToken cancellationToken = default)
+    {
+        return await _context.CartItems
+            .FirstOrDefaultAsync(c => c.UserId == userId && c.BookId == bookId, cancellationToken);
     }
 
     public async Task<CartItem> AddAsync(CartItem cartItem, CancellationToken cancellationToken = default)

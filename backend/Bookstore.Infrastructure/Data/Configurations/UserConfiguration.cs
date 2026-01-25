@@ -33,17 +33,25 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Role)
             .IsRequired()
-            .HasConversion<string>();
+            .HasConversion<string>()
+            .HasMaxLength(20);
 
         builder.Property(u => u.IsEmailVerified)
             .IsRequired()
             .HasDefaultValue(false);
 
         builder.Property(u => u.VerificationToken)
-            .HasMaxLength(256);
+            .HasMaxLength(256)
+            .IsRequired(false);
+
+        builder.Property(u => u.VerificationTokenExpiry)
+            .IsRequired(false);
 
         builder.Property(u => u.CreatedAt)
             .IsRequired();
+
+        builder.Property(u => u.UpdatedAt)
+            .IsRequired(false);
 
         // Relationships
         builder.HasMany(u => u.Addresses)
@@ -60,5 +68,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(o => o.User)
             .HasForeignKey(o => o.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Indexes
+        builder.HasIndex(u => u.Phone);
+        builder.HasIndex(u => u.VerificationToken);
     }
 }
