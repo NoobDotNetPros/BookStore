@@ -9,6 +9,7 @@ namespace Bookstore.Domain.Entities
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
+        public bool IsEmailVerified { get; set; } = false;
         public UserRole Role { get; set; }
         public List<Address> Addresses { get; set; } = new();
         public List<CartItem> CartItems { get; set; } = new();

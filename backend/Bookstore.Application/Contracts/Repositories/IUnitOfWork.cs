@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Bookstore.Application.Contracts.Repositories;
 
-namespace Bookstore.Application.Contracts.Repositories
+public interface IUnitOfWork
 {
-    internal interface IUnitOfWork
-    {
-    }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
