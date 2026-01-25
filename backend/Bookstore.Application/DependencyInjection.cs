@@ -1,12 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
+using Bookstore.Application.Behaviors;
+using FluentValidation;
+using MediatR;  // ← ADD THIS (correct namespace)
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Bookstore.Application
+namespace Bookstore.Application;
+
+public static class DependencyInjection
 {
-    internal class DependencyInjection
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        // MediatR
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
+
+        // FluentValidation
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // AutoMapper
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+        // Behaviors (Fixed - removed MediatR. prefix)
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        return services;
     }
 }
