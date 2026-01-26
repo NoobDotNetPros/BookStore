@@ -1,4 +1,6 @@
+using Bookstore.Application.Features.Users.Commands.Login;
 using Bookstore.Application.Features.Users.Commands.RegisterUser;
+using Bookstore.Application.Features.Users.Commands.VerifyEmail;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,8 +28,19 @@ public class UserAuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command)
     {
-        var userId = await _mediator.Send(command);
-        return Ok(new { id = userId, message = "New user created" });
+        try
+        {
+            var userId = await _mediator.Send(command);
+            return Ok(new
+            {
+                id = userId,
+                message = "Registration successful. Please check your email to verify your account."
+            });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     /// <summary>
@@ -40,8 +53,12 @@ public class UserAuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> VerifyEmail(string token)
     {
-        // TODO: Implement verification logic
-        return Ok(new { message = "Verified successfully" });
+        var result = await _mediator.Send(new VerifyEmailCommand(token));
+
+        if (!result)
+            return BadRequest(new { message = "Invalid or expired verification token" });
+
+        return Ok(new { message = "Email verified successfully. You can now login." });
     }
 
     /// <summary>
@@ -50,13 +67,23 @@ public class UserAuthController : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> LoginUser([FromBody] LoginRequest request)
+    public async Task<IActionResult> LoginUser([FromBody] LoginCommand command)
     {
-        // TODO: Implement login logic
-        return Ok(new { message = "Successfully logged in", email = request.Email });
+        try
+        {
+            var response = await _mediator.Send(command);
+            return Ok(new
+            {
+                message = "Successfully logged in",
+                data = response
+            });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
     }
 }
-
-public record LoginRequest(string Email, string Password);
