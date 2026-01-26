@@ -1,0 +1,12 @@
+namespace Bookstore.Models.Entities
+{
+    public class Address:BaseAuditableEntity
+    {
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+        public string AddressType { get; set; } = string.Empty;
+        public string FullAddress { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
+        public string State { get; set; } = string.Empty;
+    }
+}
