@@ -3,9 +3,13 @@ using Bookstore.Application.Contracts.Services;
 using Bookstore.Infrastructure.Data;
 using Bookstore.Infrastructure.Repositories;
 using Bookstore.Infrastructure.Services;
+using Bookstore.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+
 
 namespace Bookstore.Infrastructure;
 
@@ -15,6 +19,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // Configuration Settings
+        services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
+
         // DbContext
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
