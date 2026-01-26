@@ -8,9 +8,8 @@ Designed for real-world production use with clear separation of concerns and ext
 
 ---
 
-## 🏗 Architecture Overview
+## 📂 Detailed Project Structure
 
-This project strictly follows **N-Tier Architecture** principles:
 
 ```
 Bookstore.slnx
@@ -100,66 +99,6 @@ Bookstore.slnx
 | **Application**    | CQRS, MediatR handlers, validation, mapping |
 | **Infrastructure** | Database, repositories, external services   |
 | **API**            | HTTP endpoints, auth, middleware, Swagger   |
-
----
-
-## 📂 Detailed Project Structure
-
-```
-backend/
-├── Bookstore.Domain/
-│   ├── Common/
-│   │   ├── BaseAuditableEntity.cs
-│   │   └── DomainException.cs
-│   ├── Entities/
-│   │   ├── Book.cs
-│   │   ├── User.cs
-│   │   ├── CartItem.cs
-│   │   ├── Order.cs
-│   │   ├── OrderItem.cs
-│   │   ├── Address.cs
-│   │   └── Feedback.cs
-│   └── Enums/
-│       ├── UserRole.cs
-│       └── OrderStatus.cs
-│
-├── Bookstore.Application/
-│   ├── Common/
-│   │   ├── Exceptions/
-│   │   └── Models/
-│   ├── Contracts/
-│   │   ├── Repositories/
-│   │   └── Services/
-│   ├── Features/
-│   │   ├── Books/
-│   │   ├── Users/
-│   │   └── Orders/
-│   ├── Behaviors/
-│   │   └── ValidationBehavior.cs
-│   ├── MappingProfiles/
-│   └── DependencyInjection.cs
-│
-├── Bookstore.Infrastructure/
-│   ├── Data/
-│   │   ├── ApplicationDbContext.cs
-│   │   ├── Configurations/
-│   │   ├── Migrations/
-│   │   └── DbInitializer.cs
-│   ├── Repositories/
-│   ├── Services/
-│   ├── Settings/
-│   └── DependencyInjection.cs
-│
-└── Bookstore.Api/
-    ├── Controllers/
-    │   ├── Admin/
-    │   └── User/
-    ├── Middleware/
-    │   └── GlobalExceptionMiddleware.cs
-    ├── appsettings.json
-    ├── appsettings.Development.json
-    └── Program.cs
-```
 
 ---
 
