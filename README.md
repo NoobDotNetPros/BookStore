@@ -3,22 +3,93 @@
 
 **Clean Architecture | .NET 8 | CQRS | MediatR**
 
-A scalable **Bookstore Backend API** built using **Clean Architecture**, **CQRS**, **MediatR**, and **Entity Framework Core 8**.
+A scalable **Bookstore Backend API** built using **N-Tier Architecture**, **CQRS**, **MediatR**, and **Entity Framework Core 8**.
 Designed for real-world production use with clear separation of concerns and extensibility.
 
 ---
 
 ## 🏗 Architecture Overview
 
-This project strictly follows **Clean Architecture** principles:
+This project strictly follows **N-Tier Architecture** principles:
 
 ```
-Bookstore/
-└── backend/
-    ├── Bookstore.Domain/          # Core business logic (Entities, Enums)
-    ├── Bookstore.Application/     # Use cases, CQRS, DTOs, Validators
-    ├── Bookstore.Infrastructure/  # EF Core, Repositories, External services
-    └── Bookstore.Api/             # Controllers, Middleware, Swagger
+Bookstore.slnx
+├── Bookstore.Web/                    (Presentation Layer)
+│   ├── Controllers/
+│   │   ├── BookController.cs
+│   │   ├── UserAuthController.cs
+│   │   ├── CartController.cs
+│   │   ├── WishlistController.cs
+│   │   ├── OrderController.cs
+│   │   ├── AddressController.cs
+│   │   ├── FeedbackController.cs
+│   │   └── Admin/
+│   │       ├── AdminBookController.cs
+│   │       ├── AdminOrderController.cs
+│   │       └── AdminAuthController.cs
+│   ├── Middleware/
+│   │   └── GlobalExceptionMiddleware.cs
+│   ├── Program.cs
+│   ├── appsettings.json
+│   └── appsettings.Development.json
+│
+├── Bookstore.Business/               (Business Logic Layer)
+│   ├── Interfaces/
+│   │   ├── IBookRepository.cs
+│   │   ├── IUserRepository.cs
+│   │   ├── IOrderRepository.cs
+│   │   ├── ICartRepository.cs
+│   │   ├── IUnitOfWork.cs
+│   │   ├── IEmailService.cs
+│   │   ├── IJwtService.cs
+│   │   └── IPasswordHasher.cs
+│   ├── Services/
+│   │   ├── PasswordHasher.cs
+│   │   ├── JwtService.cs
+│   │   ├── EmailService.cs
+│   │   ├── ValidationBehavior.cs
+│   │   ├── Books/
+│   │   │   ├── Commands/
+│   │   │   └── Queries/
+│   │   ├── Users/
+│   │   │   └── Commands/
+│   │   └── MappingProfiles/
+│   ├── Models/
+│   │   ├── SmtpSettings.cs
+│   │   ├── Result.cs
+│   │   ├── ValidationException.cs
+│   │   └── NotFoundException.cs
+│   └── DependencyInjection.cs
+│
+├── Bookstore.DataAccess/             (Data Access Layer)
+│   ├── Context/
+│   │   ├── ApplicationDbContext.cs
+│   │   ├── DbInitializer.cs
+│   │   └── Configurations/
+│   ├── Repositories/
+│   │   ├── BookRepository.cs
+│   │   ├── UserRepository.cs
+│   │   ├── OrderRepository.cs
+│   │   ├── CartRepository.cs
+│   │   └── UnitOfWork.cs
+│   └── Migrations/
+│
+└── Bookstore.Models/                 (Shared Models/DTOs)
+    ├── Entities/
+    │   ├── BaseAuditableEntity.cs
+    │   ├── Book.cs
+    │   ├── User.cs
+    │   ├── Order.cs
+    │   ├── OrderItem.cs
+    │   ├── CartItem.cs
+    │   ├── Address.cs
+    │   ├── Feedback.cs
+    │   ├── UserRole.cs
+    │   └── OrderStatus.cs
+    └── DTOs/
+        ├── BookDto.cs
+        ├── UserDto.cs
+        └── LoginResponseDto.cs
 ```
 
 ### 🔹 Layer Responsibilities
