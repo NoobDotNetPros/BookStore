@@ -1,0 +1,108 @@
+.book-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  &--out-of-stock {
+    .book-card__image-container {
+      position: relative;
+    }
+  }
+
+  &__image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    height: 200px;
+  }
+
+  &__image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  &__out-of-stock-badge {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #333;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  &__content {
+    padding: 0.75rem 1rem 1rem;
+  }
+
+  &__title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__author {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0 0 0.5rem;
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__rating-badge {
+    background-color: #388e3c;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  &__review-count {
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  &__price {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__current-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  &__original-price {
+    font-size: 0.85rem;
+    color: #999;
+    text-decoration: line-through;
+  }
+}

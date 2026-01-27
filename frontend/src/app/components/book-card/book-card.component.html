@@ -1,0 +1,23 @@
+<div class="book-card" [class.book-card--out-of-stock]="book.isOutOfStock">
+  <div class="book-card__image-container">
+    <img [src]="book.coverImage" [alt]="book.title" class="book-card__image" />
+    @if (book.isOutOfStock) {
+      <div class="book-card__out-of-stock-badge">OUT OF STOCK</div>
+    }
+  </div>
+
+  <div class="book-card__content">
+    <h3 class="book-card__title">{{ book.title }}</h3>
+    <p class="book-card__author">by {{ book.author }}</p>
+
+    <div class="book-card__rating">
+      <span class="book-card__rating-badge">{{ book.rating }} ★</span>
+      <span class="book-card__review-count">({{ book.reviewCount }})</span>
+    </div>
+
+    <div class="book-card__price">
+      <span class="book-card__current-price">Rs. {{ book.price }}</span>
+      <span class="book-card__original-price">Rs.{{ book.originalPrice }}</span>
+    </div>
+  </div>
+</div>
