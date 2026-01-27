@@ -1,0 +1,179 @@
+# Visual Studio / Visual Studio Code
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+.idea/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# .NET / ASP.NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/Properties/launchSettings.json
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+project.assets.json
+
+# Visual Studio cache/options directory
+.vs/
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# CodeRush
+.cr/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+package-lock.json
+yarn.lock
+
+# Angular
+.angular/
+/dist/
+/tmp/
+/out-tsc/
+/bazel-out/
+
+# IDEs and editors
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+Thumbs.db
+Thumbs.db:encryptable
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Windows image file caches
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+.ionide/
+
+# Backup files
+*~
+*.bak
+*.tmp
+*.temp
+*.orig
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# dotnet user secrets
+secrets.json
+appsettings.Development.json
+
+# Copilot cache and snapshots
+**/CopilotSnapshots/
+**/CopilotIndices/
+**/.copilot/
+**/copilot-chat/
+
+# Entity Framework Migrations
+**/Migrations/
+
+# Test coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Sensitive data
+*.key
+*.pem
+*.p12
+*.cert
+*.cer
