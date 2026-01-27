@@ -57,6 +57,38 @@
   color: #333;
 }
 
+/* Location Picker */
+.location-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 2px;
+  background: #fff;
+
+  &:hover {
+    border-color: #ccc;
+  }
+}
+
+.location-icon {
+  display: flex;
+  align-items: center;
+}
+
+.location-text {
+  font-size: 13px;
+  color: #a03037;
+}
+
+.location-arrow {
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+}
+
 /* Collapsed panel state */
 .panel.collapsed .panel-header {
   border-bottom: none;
