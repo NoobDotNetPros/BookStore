@@ -1,0 +1,187 @@
+<div class="page">
+  <nav class="breadcrumb">
+    <a href="/">Home</a> / <span>My cart</span>
+  </nav>
+
+  <!-- My Cart Section -->
+  <section class="panel cart-panel">
+    <div class="panel-header" (click)="toggleSection('cart')">
+      <h2>My cart ({{ cartCount() }})</h2>
+    </div>
+
+    <div class="cart-body" *ngIf="activeSection() === 'cart'">
+      <div class="empty-cart" *ngIf="cartItems().length === 0">
+        <p>Your cart is empty</p>
+      </div>
+
+      <div class="cart-items" *ngIf="cartItems().length > 0">
+        <article class="book" *ngFor="let item of cartItems(); trackBy: trackByItemId">
+          <div class="cover">
+            <img [src]="item.cover" [alt]="item.title" />
+          </div>
+          <div class="details">
+            <h3>{{ item.title }}</h3>
+            <p class="author">{{ item.author }}</p>
+            <div class="price">
+              <span class="current">Rs. {{ formatPrice(item.price) }}</span>
+              <span class="original">Rs.{{ formatPrice(item.originalPrice) }}</span>
+            </div>
+            <div class="quantity-row">
+              <button 
+                class="circle" 
+                type="button" 
+                [disabled]="item.quantity <= 1"
+                (click)="decreaseQty(item.id)">−</button>
+              <input 
+                type="text" 
+                class="qty-input" 
+                [value]="item.quantity" 
+                readonly />
+              <button 
+                class="circle" 
+                type="button" 
+                [disabled]="item.quantity >= 10"
+                (click)="increaseQty(item.id)">+</button>
+              <button 
+                class="remove" 
+                type="button" 
+                (click)="removeItem(item.id)">Remove</button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="cart-actions" *ngIf="cartItems().length > 0">
+        <button class="primary" type="button" (click)="placeOrder()">
+          Place Order
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Address Details Section -->
+  <section class="panel address-panel" [class.collapsed]="activeSection() === 'cart'">
+    <div class="panel-header clickable" (click)="toggleSection('address')">
+      <h3>Customer Details</h3>
+      <button 
+        class="outline" 
+        type="button" 
+        *ngIf="activeSection() === 'address'"
+        (click)="$event.stopPropagation()">
+        Add New Address
+      </button>
+    </div>
+
+    <div class="address-body" *ngIf="activeSection() === 'address' || activeSection() === 'summary'">
+      <!-- Customer Info -->
+      <div class="customer-info">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" [value]="selectedAddress().fullName" readonly />
+        </div>
+        <div class="field">
+          <label>Mobile Number</label>
+          <input type="text" [value]="selectedAddress().mobileNumber" readonly />
+        </div>
+      </div>
+
+      <!-- Address List -->
+      <div class="address-list">
+        <div 
+          class="address-item" 
+          *ngFor="let addr of savedAddresses; let i = index"
+          [class.selected]="selectedAddressIndex() === i">
+          
+          <div class="address-radio-row">
+            <label class="radio-label" (click)="selectAddress(i)">
+              <input 
+                type="radio" 
+                name="address" 
+                [checked]="selectedAddressIndex() === i" />
+              <span class="address-type-label">{{ i + 1 }}.{{ addr.type.toUpperCase() }}</span>
+            </label>
+            <button 
+              class="edit-link" 
+              type="button" 
+              *ngIf="selectedAddressIndex() === i">
+              Edit
+            </button>
+          </div>
+
+          <!-- Expanded Address Details -->
+          <div class="address-expanded" *ngIf="selectedAddressIndex() === i">
+            <div class="field full-width">
+              <label>Address</label>
+              <textarea rows="2" readonly>{{ addr.address }}</textarea>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>city/town</label>
+                <input type="text" [value]="addr.city" readonly />
+              </div>
+              <div class="field">
+                <label>State</label>
+                <input type="text" [value]="addr.state" readonly />
+              </div>
+            </div>
+          </div>
+
+          <!-- Collapsed Address Preview -->
+          <div class="address-collapsed" *ngIf="selectedAddressIndex() !== i">
+            <p class="address-label">Address</p>
+            <p class="address-text">{{ addr.address }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions" *ngIf="activeSection() === 'address'">
+        <button class="primary" type="button" (click)="continueToSummary()">
+          CONTINUE
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Order Summary Section -->
+  <section class="panel order-panel" [class.collapsed]="activeSection() !== 'summary'">
+    <div class="panel-header" (click)="toggleSection('summary')">
+      <h3>Order Summary</h3>
+    </div>
+
+    <div class="order-body" *ngIf="activeSection() === 'summary'">
+      <div class="order-items">
+        <article class="order-item" *ngFor="let item of cartItems(); trackBy: trackByItemId">
+          <div class="cover small">
+            <img [src]="item.cover" [alt]="item.title" />
+          </div>
+          <div class="details">
+            <h3>{{ item.title }}</h3>
+            <p class="author">{{ item.author }}</p>
+            <div class="price">
+              <span class="current">Rs. {{ formatPrice(item.price) }}</span>
+              <span class="original">Rs.{{ formatPrice(item.originalPrice) }}</span>
+            </div>
+            <p class="qty-info">Qty: {{ item.quantity }}</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="order-total">
+        <div class="total-row">
+          <span>Total</span>
+          <span class="total-amount">Rs. {{ formatPrice(cartTotal()) }}</span>
+        </div>
+        <div class="savings-row" *ngIf="cartSavings() > 0">
+          <span>You save</span>
+          <span class="savings-amount">Rs. {{ formatPrice(cartSavings()) }}</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary checkout-btn" type="button" (click)="checkout()">
+          Checkout
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
