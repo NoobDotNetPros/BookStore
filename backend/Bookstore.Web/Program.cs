@@ -77,7 +77,8 @@ builder.Services.AddCors(options =>
 });
 
 // Configuration Settings
-builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+var smtpConfig = builder.Configuration.GetSection("SmtpSettings");
+builder.Services.Configure<SmtpSettings>(smtpConfig);
 
 // DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

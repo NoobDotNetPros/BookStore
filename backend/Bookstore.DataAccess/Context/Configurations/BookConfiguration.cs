@@ -38,7 +38,8 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
             .IsRequired();
 
         builder.Property(b => b.CreatedAt)
-            .IsRequired();
+            .IsRequired()
+            .HasDefaultValueSql("GETUTCDATE()");
 
         // Relationships
         builder.HasMany(b => b.Feedbacks)

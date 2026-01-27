@@ -42,6 +42,15 @@ public class EmailService : IEmailService
     {
         try
         {
+            // Validate SMTP settings
+            if (string.IsNullOrEmpty(_smtpSettings.Host) || 
+                string.IsNullOrEmpty(_smtpSettings.UserName) || 
+                string.IsNullOrEmpty(_smtpSettings.Password) ||
+                string.IsNullOrEmpty(_smtpSettings.FromEmail))
+            {
+                throw new InvalidOperationException("SMTP settings are not configured. Please set: Host, UserName, Password, and FromEmail.");
+            }
+
             using var client = new SmtpClient(_smtpSettings.Host, _smtpSettings.Port)
             {
                 Credentials = new NetworkCredential(_smtpSettings.UserName, _smtpSettings.Password),
@@ -64,6 +73,7 @@ public class EmailService : IEmailService
         {
             // Log the error (add ILogger later)
             Console.WriteLine($"Email sending failed: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
             throw;
         }
     }
