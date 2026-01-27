@@ -33,9 +33,9 @@ $header-height: 48px;
   }
 
   &__logo-icon {
-    width: 24px;
-    height: 24px;
-    color: $header-text-color;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
   }
 
   &__logo-text {
