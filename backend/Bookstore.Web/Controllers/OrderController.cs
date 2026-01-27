@@ -1,6 +1,7 @@
 using Bookstore.Business.Interfaces;
 using Bookstore.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Bookstore.DataAccess.Context;
 
 namespace Bookstore.Web.Controllers;
 
@@ -47,22 +48,17 @@ public class OrderController : ControllerBase
             }).ToList()
         };
 
-        using (var transaction = await _unitOfWork.Context.Database.BeginTransactionAsync())
+        try
         {
-            try
-            {
-                await _orderRepository.AddAsync(order);
-                await _unitOfWork.SaveChangesAsync();
-
-                // Commit transaction
-                await transaction.CommitAsync();
-            }
-            catch
-            {
-                // Rollback transaction on error
-                await transaction.RollbackAsync();
-                throw;
-            }
+            await _unitOfWork.BeginTransactionAsync();
+            await _orderRepository.AddAsync(order);
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitTransactionAsync();
+        }
+        catch
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            throw;
         }
 
         return Ok(new { message = "New order", data = request });
