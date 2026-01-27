@@ -1,13 +1,25 @@
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Bookstore.Web": {
+    "https": {
       "commandName": "Project",
+      "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:4200;http://localhost:4201",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:53553;http://localhost:53554"
+      }
+    },
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:4200",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

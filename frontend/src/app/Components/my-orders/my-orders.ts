@@ -48,22 +48,26 @@ export class MyOrders implements OnInit {
             next: (response) => {
                 if (response.success && response.data) {
                     this.orders.set(
-                        response.data.map(order => ({
-                            id: order.id,
-                            title: order.items && order.items.length > 0 ? order.items[0].productName : 'Unknown',
-                            author: 'Order #' + order.id,
-                            price: order.totalAmount,
-                            originalPrice: order.totalAmount * 1.2,
-                            image: order.items && order.items.length > 0 ? order.items[0].bookCoverImage || 'https://via.placeholder.com/200' : 'https://via.placeholder.com/200',
-                            orderDate: new Date(order.createdDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
-                            status: order.status,
-                            items: order.items
-                        }))
+                        response.data.map(order => {
+                            const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+
+                            return {
+                                id: order.id,
+                                title: firstItem?.productName || 'Unknown Product',
+                                author: 'Order #' + order.id,
+                                price: order.totalAmount,
+                                originalPrice: order.totalAmount * 1.2,
+                                image: firstItem?.bookCoverImage || 'https://via.placeholder.com/200',
+                                orderDate: new Date(order.createdDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
+                                status: order.status,
+                                items: order.items
+                            };
+                        })
                     );
                 }
                 this.loading.set(false);
             },
-            error: (err) => {
+            error: (err: any) => {
                 this.errorMessage.set('Failed to load orders. Please try again.');
                 console.error('Error loading orders:', err);
                 this.loading.set(false);

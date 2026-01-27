@@ -1,9 +1,12 @@
 $primary-color: #007bff;
+$primary-color-dark: #0056b3; // Darker version
 $danger-color: #dc3545;
+$danger-color-dark: #b32d00; // Darker version
 $success-color: #28a745;
 $light-bg: #f8f9fa;
 $border-color: #ddd;
 $text-color: #333;
+$gray-dark: #545b62; // Darker gray
 
 .admin-panel {
   max-width: 1400px;
@@ -42,7 +45,7 @@ $text-color: #333;
         color: white;
 
         &:hover {
-          background: darken($primary-color, 10%);
+          background: $primary-color-dark;
           transform: translateY(-2px);
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
@@ -172,7 +175,7 @@ $text-color: #333;
                 color: white;
 
                 &:hover {
-                  background: darken($primary-color, 10%);
+                  background: $primary-color-dark;
                 }
               }
 
@@ -181,7 +184,7 @@ $text-color: #333;
                 color: white;
 
                 &:hover {
-                  background: darken($danger-color, 10%);
+                  background: $danger-color-dark;
                 }
               }
             }
@@ -326,7 +329,7 @@ $text-color: #333;
               color: white;
 
               &:hover {
-                background: darken($primary-color, 10%);
+                background: $primary-color-dark;
               }
             }
 
@@ -335,7 +338,7 @@ $text-color: #333;
               color: white;
 
               &:hover {
-                background: darken(#6c757d, 10%);
+                background: $gray-dark;
               }
             }
           }

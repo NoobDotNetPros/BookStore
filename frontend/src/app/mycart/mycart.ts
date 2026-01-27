@@ -90,14 +90,14 @@ export class MyCartComponent implements OnInit {
         if (response.success && response.data) {
           const cart = response.data;
           this.cartItems.set(
-            cart.items.map(item => ({
+            cart.items.map((item: any) => ({
               id: item.id,
               bookId: item.bookId,
-              title: item.bookTitle,
-              author: item.bookAuthor || 'Unknown Author',
-              price: item.price,
-              originalPrice: item.price * 1.2,
-              cover: item.bookCoverImage || 'https://via.placeholder.com/200',
+              title: item.bookTitle || item.bookName || item.book?.bookName || 'Unknown',
+              author: item.bookAuthor || item.book?.author || 'Unknown Author',
+              price: item.price || item.bookPrice || 0,
+              originalPrice: (item.price || item.bookPrice || 0) * 1.2,
+              cover: item.bookCoverImage || item.book?.coverImage || 'https://via.placeholder.com/200',
               quantity: item.quantity
             }))
           );
@@ -232,5 +232,3 @@ export class MyCartComponent implements OnInit {
     return item.id;
   }
 }
-
-

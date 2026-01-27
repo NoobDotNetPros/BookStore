@@ -1,7 +1,7 @@
-<div class="book-details-container">
+<div class="book-details-container" *ngIf="book() as currentBook">
     <!-- Breadcrumb -->
     <div class="breadcrumb">
-        <a href="/">Home</a> / <span>{{ book().title }}</span>
+        <a href="/">Home</a> / <span>{{ currentBook.title }}</span>
     </div>
 
     <div class="details-layout">
@@ -9,19 +9,19 @@
         <div class="image-section">
             <div class="thumbnails">
                 <div class="thumb active">
-                    <img [src]="book().image" alt="Thumbnail" />
+                    <img [src]="currentBook.image" alt="Thumbnail" />
                 </div>
                 <div class="thumb">
-                    <img [src]="book().image" alt="Thumbnail" />
+                    <img [src]="currentBook.image" alt="Thumbnail" />
                 </div>
             </div>
             <div class="main-image">
-                <img [src]="book().image" [alt]="book().title" />
+                <img [src]="currentBook.image" [alt]="currentBook.title" />
             </div>
 
             <div class="action-buttons">
-                <ng-container *ngIf="!book().isOutOfStock; else outOfStockBtns">
-                    <button class="btn btn-add-bag" (click)="addToBag()">ADD TO BAG</button>
+                <ng-container *ngIf="!currentBook.isOutOfStock; else outOfStockBtns">
+                    <button class="btn btn-add-bag" (click)="addToCart()">ADD TO BAG</button>
                     <button class="btn btn-wishlist" (click)="addToWishlist()">❤ WISHLIST</button>
                 </ng-container>
                 <ng-template #outOfStockBtns>
@@ -33,24 +33,24 @@
 
         <!-- Right: Info Section -->
         <div class="info-section">
-            <h1 class="book-title">{{ book().title }}</h1>
-            <p class="book-author">{{ book().author }}</p>
+            <h1 class="book-title">{{ currentBook.title }}</h1>
+            <p class="book-author">{{ currentBook.author }}</p>
 
             <div class="rating-row">
-                <span class="rating-badge">{{ book().rating }} ★</span>
-                <span class="reviews-count">({{ book().reviewsCount }})</span>
+                <span class="rating-badge">{{ currentBook.rating }} ★</span>
+                <span class="reviews-count">({{ currentBook.reviewsCount }})</span>
             </div>
 
             <div class="price-row">
-                <span class="current-price">Rs.{{ book().price }}</span>
-                <span class="original-price">Rs.{{ book().originalPrice }}</span>
+                <span class="current-price">Rs.{{ currentBook.price }}</span>
+                <span class="original-price">Rs.{{ currentBook.originalPrice }}</span>
             </div>
 
             <hr class="divider">
 
             <div class="book-description">
                 <h3>• Book Detail</h3>
-                <p>{{ book().description }}</p>
+                <p>{{ currentBook.description }}</p>
             </div>
 
             <hr class="divider">
@@ -76,7 +76,8 @@
                             <p class="reviewer-name">{{ review.name }}</p>
                             <div class="reviewer-rating">
                                 <span *ngFor="let s of [1,2,3,4,5]; let i = index">
-                                    {{ i < review.rating ? '★' : '☆' }} </span>
+                                    {{ i < review.rating ? '★' : '☆' }}
+                                </span>
                             </div>
                             <p class="review-text">{{ review.comment }}</p>
                         </div>
@@ -86,4 +87,14 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading()" class="loading-container">
+    <p>Loading book details...</p>
+</div>
+
+<!-- Error State -->
+<div *ngIf="errorMessage()" class="error-container">
+    <p>{{ errorMessage() }}</p>
 </div>

@@ -51,8 +51,8 @@ export class Wishlist implements OnInit {
                         response.data.map(item => ({
                             id: item.id,
                             bookId: item.bookId,
-                            title: item.bookTitle,
-                            author: item.bookAuthor || 'Unknown Author',
+                            title: item.bookTitle || 'Unknown Title',
+                            author: 'Unknown Author', // Backend doesn't provide author in wishlist
                             image: item.coverImage || 'https://via.placeholder.com/200',
                             price: item.price,
                             originalPrice: item.price * 1.2

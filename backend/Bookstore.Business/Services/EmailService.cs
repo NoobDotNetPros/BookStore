@@ -17,7 +17,7 @@ public class EmailService : IEmailService
 
     public async Task SendVerificationEmailAsync(string email, string token, CancellationToken cancellationToken = default)
     {
-        var verificationLink = $"http://localhost:4200/verify-email?token={token}";
+        var verificationLink = $"http://localhost:5000/verify-email?token={token}";
         
         var subject = "Verify Your Email - Bookstore App";
         var body = $@"

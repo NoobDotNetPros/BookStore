@@ -1,52 +1,45 @@
 <div class="book-list-container">
-    <!-- Header Section -->
-    <div class="book-list-header">
-        <h2 class="book-list-title">Books <span class="item-count">({{ itemCount }} items)</span></h2>
-        <div class="sort-selector">
-            <select class="sort-dropdown">
-                <option *ngFor="let option of sortOptions">{{ option }}</option>
-            </select>
-        </div>
+    <div class="header-section">
+        <h2 class="page-title">Books <span class="item-count">({{ books().length }} items)</span></h2>
+        <select class="sort-dropdown">
+            <option *ngFor="let option of sortOptions()">{{ option }}</option>
+        </select>
     </div>
 
-    <!-- Book Grid -->
-    <div class="book-grid">
-        <div class="book-card" *ngFor="let book of books()" (click)="openDetails(book.id)">
-            <div class="book-card__image-container">
-                <div class="book-card__image-wrapper">
-                    <img [src]="book.image" [alt]="book.title" class="book-card__image" />
-                </div>
-                <div *ngIf="book.isOutOfStock" class="out-of-stock-overlay">
-                    <span>OUT OF STOCK</span>
-                </div>
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="loading-state">
+        <p>Loading books...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage()" class="error-state">
+        <p>{{ errorMessage() }}</p>
+    </div>
+
+    <!-- Books Grid -->
+    <div class="books-grid" *ngIf="!loading() && !errorMessage()">
+        <div class="book-card" *ngFor="let book of books(); trackBy: trackByBookId" (click)="openDetails(book.id)">
+            <div class="book-image">
+                <img [src]="book.image" [alt]="book.title">
+                <span *ngIf="book.isOutOfStock" class="out-of-stock-badge">Out of Stock</span>
             </div>
-
-            <div class="book-card__details">
-                <h3 class="book-card__title">{{ book.title }}</h3>
-                <p class="book-card__author">{{ book.author }}</p>
-
-                <div class="book-card__rating">
-                    <span class="rating-badge">
-                        {{ book.rating }} <span class="star">★</span>
-                    </span>
-                    <span class="reviews-count">({{ book.reviewsCount }})</span>
+            <div class="book-info">
+                <h3 class="book-title">{{ book.title }}</h3>
+                <p class="book-author">{{ book.author }}</p>
+                <div class="rating">
+                    <span class="stars">{{ book.rating }} ★</span>
+                    <span class="reviews">({{ book.reviewsCount }})</span>
                 </div>
-
-                <div class="book-card__price">
-                    <span class="current-price">Rs. {{ book.price }}</span>
-                    <span class="original-price">Rs. {{ book.originalPrice }}</span>
+                <div class="price-section">
+                    <span class="current-price">Rs. {{ formatPrice(book.price) }}</span>
+                    <span class="original-price">Rs. {{ formatPrice(book.originalPrice) }}</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Pagination (Mock) -->
-    <div class="pagination">
-        <button class="pagination__btn prev" disabled>‹</button>
-        <button class="pagination__btn active">1</button>
-        <button class="pagination__btn">2</button>
-        <button class="pagination__btn">3</button>
-        <button class="pagination__btn">...</button>
-        <button class="pagination__btn next">›</button>
+    <!-- Empty State -->
+    <div *ngIf="!loading() && !errorMessage() && books().length === 0" class="empty-state">
+        <p>No books available at the moment.</p>
     </div>
 </div>

@@ -1,43 +1,58 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_ENDPOINTS } from '../Models/api-constants';
-import { ApiResponse } from '../Models/auth.models';
-
-export interface Order {
-  id: number;
-  userId: string;
-  status: string;
-  totalAmount: number;
-  shippingAddress: string;
-  createdDate: string;
-  items: OrderItem[];
-}
+import { API_BASE_URL } from '../Models/api-constants';
 
 export interface OrderItem {
   id: number;
   orderId: number;
   bookId: number;
-  bookTitle: string;
+  productName: string;      // ✅ Add this
+  bookCoverImage: string;   // ✅ Add this
   quantity: number;
   price: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Order {
+  id: number;
+  userId: number;
+  status: string;
+  totalAmount: number;
+  shippingAddress: string;
+  items: OrderItem[];
+  createdDate: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data?: T;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+  private apiUrl = `${API_BASE_URL}/Order`;
 
   getUserOrders(): Observable<ApiResponse<Order[]>> {
-    return this.http.get<ApiResponse<Order[]>>(API_ENDPOINTS.ORDERS.GET_ALL);
+    return this.http.get<ApiResponse<Order[]>>(`${this.apiUrl}/user`);
   }
 
-  getOrderById(id: number): Observable<ApiResponse<Order>> {
-    return this.http.get<ApiResponse<Order>>(API_ENDPOINTS.ORDERS.GET_BY_ID(id));
+  getOrderById(orderId: number): Observable<ApiResponse<Order>> {
+    return this.http.get<ApiResponse<Order>>(`${this.apiUrl}/${orderId}`);
   }
 
-  createOrder(order: any): Observable<ApiResponse<Order>> {
-    return this.http.post<ApiResponse<Order>>(API_ENDPOINTS.ORDERS.CREATE, order);
+  createOrder(orderData: any): Observable<ApiResponse<Order>> {
+    return this.http.post<ApiResponse<Order>>(this.apiUrl, orderData);
+  }
+
+  cancelOrder(orderId: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${orderId}`);
   }
 }
