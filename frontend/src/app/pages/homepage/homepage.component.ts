@@ -1,9 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HeaderComponent } from '../../components/header/header.component';
-import { BookCardComponent } from '../../components/book-card/book-card.component';
-import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { HeaderComponent } from '../../Components/header/header.component';
+import { BookCardComponent } from '../../Components/book-card/book-card.component';
+import { PaginationComponent } from '../../Components/pagination/pagination.component';
 import { Book } from '../../models/book.model';
 
 @Component({
