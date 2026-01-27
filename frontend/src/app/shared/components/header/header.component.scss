@@ -5,17 +5,17 @@ $search-bg-color: #ffffff;
 $search-text-color: #333333;
 $search-placeholder-color: #888888;
 $search-border-radius: 4px;
-$header-height: 64px;
+$header-height: 48px;
 
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   background-color: $header-bg-color;
-  padding: 0 24px;
+  padding: 0 100px;
   height: $header-height;
   width: 100%;
   box-sizing: border-box;
+  gap: 32px;
 
   // Logo Section
   &__logo {
@@ -33,13 +33,13 @@ $header-height: 64px;
   }
 
   &__logo-icon {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     color: $header-text-color;
   }
 
   &__logo-text {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     letter-spacing: 0.5px;
   }
@@ -50,26 +50,25 @@ $header-height: 64px;
     align-items: center;
     background-color: $search-bg-color;
     border-radius: $search-border-radius;
-    padding: 8px 16px;
-    flex: 1;
-    max-width: 500px;
-    margin: 0 40px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 6px 12px;
+    width: 340px;
+    flex-shrink: 0;
+    box-shadow: none;
   }
 
   &__search-icon {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     color: $search-placeholder-color;
     flex-shrink: 0;
-    margin-right: 12px;
+    margin-right: 8px;
   }
 
   &__search-input {
     flex: 1;
     border: none;
     outline: none;
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: $search-text-color;
     background: transparent;
 
@@ -82,20 +81,21 @@ $header-height: 64px;
   &__nav {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
     flex-shrink: 0;
+    margin-left: auto;
   }
 
   &__nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     background: none;
     border: none;
     color: $header-text-color;
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 2px 4px;
     transition: opacity 0.2s ease;
 
     &:hover {
@@ -110,12 +110,12 @@ $header-height: 64px;
   }
 
   &__nav-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   }
 
   &__nav-label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 500;
     letter-spacing: 0.3px;
   }
