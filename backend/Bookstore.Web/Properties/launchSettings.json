@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Bookstore.Web": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:53553;http://localhost:53554"
+    }
+  }
+}
