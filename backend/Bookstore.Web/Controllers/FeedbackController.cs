@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Bookstore.Web.Controllers;
 
 [ApiController]
-[Route("bookstore_user")]
+[Route("api/feedback")]
 [Tags("Feedback")]
 public class FeedbackController : ControllerBase
 {
@@ -20,7 +20,7 @@ public class FeedbackController : ControllerBase
     /// <summary>
     /// Add comment & rating on product by product_id
     /// </summary>
-    [HttpPost("add/feedback/{product_id}")]
+    [HttpPost("books/{product_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -47,7 +47,7 @@ public class FeedbackController : ControllerBase
     /// <summary>
     /// Get comment & rating of product by product_id
     /// </summary>
-    [HttpGet("get/feedback/{product_id}")]
+    [HttpGet("books/{product_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]

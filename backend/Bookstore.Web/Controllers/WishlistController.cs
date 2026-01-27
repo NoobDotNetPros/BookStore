@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookstore.Web.Controllers;
 
 [ApiController]
-[Route("bookstore_user")]
+[Route("api/wishlist")]
 [Tags("WishList")]
 public class WishlistController : ControllerBase
 {
@@ -21,7 +21,7 @@ public class WishlistController : ControllerBase
     /// <summary>
     /// WishList item to add by product_id
     /// </summary>
-    [HttpPost("add_wish_list/{product_id}")]
+    [HttpPost("items/{product_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -48,7 +48,7 @@ public class WishlistController : ControllerBase
     /// <summary>
     /// Cart item to remove by cartItem_id
     /// </summary>
-    [HttpDelete("remove_wishlist_item/{product_id}")]
+    [HttpDelete("items/{product_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -65,7 +65,7 @@ public class WishlistController : ControllerBase
     /// <summary>
     /// Get all wish list items
     /// </summary>
-    [HttpGet("get_wishlist_items")]
+    [HttpGet("")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]

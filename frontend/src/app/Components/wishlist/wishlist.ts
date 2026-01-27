@@ -1,5 +1,17 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { WishlistService, WishlistItem } from '../../Services/wishlist.service';
+import { AuthService } from '../../Services/auth.service';
+
+interface WishlistDisplayItem {
+  id: number;
+  bookId: number;
+  title: string;
+  author: string;
+  image: string;
+  price: number;
+  originalPrice: number;
+}
 
 @Component({
     selector: 'app-wishlist',
@@ -8,33 +20,66 @@ import { CommonModule } from '@angular/common';
     templateUrl: './wishlist.html',
     styleUrl: './wishlist.scss',
 })
-export class Wishlist {
-    isLoggedIn = signal(false);
+export class Wishlist implements OnInit {
+    private wishlistService = inject(WishlistService);
+    private authService = inject(AuthService);
 
-    wishlistItems = signal([
-        {
-            id: '1',
-            title: "Don't Make Me Think",
-            author: 'by Steve Krug',
-            price: 1500,
-            originalPrice: 2000,
-            image: 'https://images-na.ssl-images-amazon.com/images/I/41SH-SvWPxL._SX430_BO1,204,203,200_.jpg'
-        },
-        {
-            id: '2',
-            title: "React Material-UI",
-            author: 'by Cookbook',
-            price: 780,
-            originalPrice: 1000,
-            image: 'https://m.media-amazon.com/images/I/71UBc1jVb-L._AC_UF1000,1000_QL80_.jpg'
+    isLoggedIn = signal<boolean>(false);
+    wishlistItems = signal<WishlistDisplayItem[]>([]);
+    loading = signal<boolean>(true);
+    errorMessage = signal<string>('');
+
+    itemsCount = computed(() => this.wishlistItems().length);
+
+    ngOnInit() {
+        this.isLoggedIn.set(this.authService.isLoggedIn());
+        if (this.isLoggedIn()) {
+            this.loadWishlist();
+        } else {
+            this.loading.set(false);
         }
-    ]);
+    }
 
-    itemsCount = signal(2);
+    loadWishlist() {
+        this.loading.set(true);
+        this.errorMessage.set('');
 
-    removeFromWishlist(id: string) {
-        this.wishlistItems.update(items => items.filter(item => item.id !== id));
-        this.itemsCount.set(this.wishlistItems().length);
-        console.log(`Removed item ${id} from wishlist`);
+        this.wishlistService.getWishlist().subscribe({
+            next: (response) => {
+                if (response.success && response.data) {
+                    this.wishlistItems.set(
+                        response.data.map(item => ({
+                            id: item.id,
+                            bookId: item.bookId,
+                            title: item.bookTitle,
+                            author: item.bookAuthor || 'Unknown Author',
+                            image: item.coverImage || 'https://via.placeholder.com/200',
+                            price: item.price,
+                            originalPrice: item.price * 1.2
+                        }))
+                    );
+                } else {
+                    this.errorMessage.set(response.message || 'Failed to load wishlist');
+                }
+                this.loading.set(false);
+            },
+            error: (err) => {
+                this.errorMessage.set('Failed to load wishlist. Please try again.');
+                console.error('Error loading wishlist:', err);
+                this.loading.set(false);
+            }
+        });
+    }
+
+    removeFromWishlist(bookId: number) {
+        this.wishlistService.removeFromWishlist(bookId).subscribe({
+            next: () => {
+                this.wishlistItems.update(items => items.filter(item => item.bookId !== bookId));
+            },
+            error: (err) => {
+                console.error('Error removing from wishlist:', err);
+                alert('Failed to remove item from wishlist');
+            }
+        });
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookstore.Web.Controllers;
 
 [ApiController]
-[Route("bookstore_user")]
+[Route("api/users")]
 [Tags("Customer Details")]
 public class AddressController : ControllerBase
 {
@@ -21,7 +21,7 @@ public class AddressController : ControllerBase
     /// <summary>
     /// Update the customer details to place order
     /// </summary>
-    [HttpPut("edit_user")]
+    [HttpPut("profile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -49,6 +49,25 @@ public class AddressController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
 
         return Ok(new { message = "Customer details added", data = request });
+    }
+
+    /// <summary>
+    /// Get user profile
+    /// </summary>
+    [HttpGet("profile")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetUserProfile()
+    {
+        // TODO: Get userId from JWT token
+        int userId = 1;
+
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
+        return Ok(new { message = "Successfully fetched user profile", data = user });
     }
 }
 

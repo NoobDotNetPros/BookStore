@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookstore.Web.Controllers;
 
 [ApiController]
-[Route("bookstore_user")]
+[Route("api/cart")]
 [Tags("Cart")]
 public class CartController : ControllerBase
 {
@@ -21,12 +21,12 @@ public class CartController : ControllerBase
     /// <summary>
     /// Cart item to add by product_id
     /// </summary>
-    [HttpPost("add_cart_item/{product_id}")]
+    [HttpPost("items")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> AddToCart(int product_id)
+    public async Task<IActionResult> AddToCart([FromBody] AddCartItemRequest request)
     {
         // TODO: Get userId from JWT token
         int userId = 1;
@@ -34,8 +34,8 @@ public class CartController : ControllerBase
         var cartItem = new CartItem
         {
             UserId = userId,
-            BookId = product_id,
-            Quantity = 1,
+            BookId = request.BookId,
+            Quantity = request.Quantity,
             IsWishlist = false
         };
 
@@ -48,7 +48,7 @@ public class CartController : ControllerBase
     /// <summary>
     /// Update cart item quantity by cartItem_id
     /// </summary>
-    [HttpPut("cart_item_quantity/{cartItem_id}")]
+    [HttpPut("items/{cartItem_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -69,7 +69,7 @@ public class CartController : ControllerBase
     /// <summary>
     /// Cart item to remove by cartItem_id
     /// </summary>
-    [HttpDelete("remove_cart_item/{cartItem_id}")]
+    [HttpDelete("items/{cartItem_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -85,7 +85,7 @@ public class CartController : ControllerBase
     /// <summary>
     /// Get all cart items
     /// </summary>
-    [HttpGet("get_cart_items")]
+    [HttpGet("")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -101,3 +101,4 @@ public class CartController : ControllerBase
 }
 
 public record UpdateQuantityRequest(int QuantityToBuy);
+public record AddCartItemRequest(int BookId, int Quantity);

@@ -1,7 +1,7 @@
 <div class="book-details-container">
     <!-- Breadcrumb -->
     <div class="breadcrumb">
-        <a href="/">Home</a> / <span>Book(04)</span>
+        <a href="/">Home</a> / <span>{{ book().title }}</span>
     </div>
 
     <div class="details-layout">
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="reviews-list">
-                    <div class="review-item" *ngFor="let review of customerReviews">
+                    <div class="review-item" *ngFor="let review of customerReviews()">
                         <div class="reviewer-avatar">{{ review.initial }}</div>
                         <div class="review-content">
                             <p class="reviewer-name">{{ review.name }}</p>

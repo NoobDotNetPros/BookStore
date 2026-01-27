@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bookstore.Web.Controllers;
 
 [ApiController]
-[Route("bookstore_user")]
+[Route("api/auth")]
 [Tags("User")]
 public class UserAuthController : ControllerBase
 {
@@ -19,7 +19,7 @@ public class UserAuthController : ControllerBase
     /// <summary>
     /// Create new user in system
     /// </summary>
-    [HttpPost("registration")]
+    [HttpPost("signup")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]

@@ -1,12 +1,17 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CartService } from '../Services/cart.service';
+import { UserService } from '../Services/user.service';
+import { OrderService } from '../Services/order.service';
+import { AuthService } from '../Services/auth.service';
 
 type ActiveSection = 'cart' | 'address' | 'summary';
 
 interface CartItem {
-  id: string;
+  id: number;
+  bookId: number;
   title: string;
   author: string;
   price: number;
@@ -31,54 +36,30 @@ interface Address {
   templateUrl: './mycart.html',
   styleUrls: ['./mycart.scss']
 })
-export class MyCartComponent {
+export class MyCartComponent implements OnInit {
+  private cartService = inject(CartService);
+  private userService = inject(UserService);
+  private orderService = inject(OrderService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   activeSection = signal<ActiveSection>('cart');
-
-  constructor(private router: Router) { }
-
-  // Cart items
-  cartItems = signal<CartItem[]>([
-    {
-      id: 'book-1',
-      title: "Don't Make Me Think",
-      author: 'by Steve Krug',
-      price: 1500,
-      originalPrice: 2000,
-      cover: 'https://images-na.ssl-images-amazon.com/images/I/41SH-SvWPxL._SX430_BO1,204,203,200_.jpg',
-      quantity: 1
-    }
-  ]);
+  cartItems = signal<CartItem[]>([]);
+  loading = signal<boolean>(true);
+  errorMessage = signal<string>('');
+  isLoggedIn = signal<boolean>(false);
 
   // Address data
   addressData: Address = {
-    fullName: 'Poonam Yadav',
-    mobileNumber: '81678954778',
-    address: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, HSR Layout, Bangalore',
-    city: 'Bengaluru',
-    state: 'Karnataka',
-    type: 'Work'
+    fullName: '',
+    mobileNumber: '',
+    address: '',
+    city: '',
+    state: '',
+    type: 'Home'
   };
 
-  // Saved addresses list
-  savedAddresses: Address[] = [
-    {
-      fullName: 'Poonam Yadav',
-      mobileNumber: '81678954778',
-      address: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore',
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      type: 'Work'
-    },
-    {
-      fullName: 'Poonam Yadav',
-      mobileNumber: '81678954778',
-      address: 'BridgeLabz Solutions LLP, No. 42, 14th Main, 15th Cross, Sector 4, Opp to BDA complex, near Kumarakom restaurant, HSR Layout, Bangalore',
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      type: 'Home'
-    }
-  ];
-
+  savedAddresses: Address[] = [];
   selectedAddressIndex = signal(0);
 
   // Computed values
@@ -92,37 +73,112 @@ export class MyCartComponent {
     this.cartItems().reduce((sum, item) => sum + ((item.originalPrice - item.price) * item.quantity), 0)
   );
 
-  // Section toggle - clicking section header opens that section
+  ngOnInit() {
+    this.isLoggedIn.set(this.authService.isLoggedIn());
+    if (this.isLoggedIn()) {
+      this.loadCart();
+      this.loadUserProfile();
+    } else {
+      this.loading.set(false);
+    }
+  }
+
+  loadCart() {
+    this.loading.set(true);
+    this.cartService.getCart().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          const cart = response.data;
+          this.cartItems.set(
+            cart.items.map(item => ({
+              id: item.id,
+              bookId: item.bookId,
+              title: item.bookTitle,
+              author: item.bookAuthor || 'Unknown Author',
+              price: item.price,
+              originalPrice: item.price * 1.2,
+              cover: item.bookCoverImage || 'https://via.placeholder.com/200',
+              quantity: item.quantity
+            }))
+          );
+        }
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.errorMessage.set('Failed to load cart');
+        console.error('Error loading cart:', err);
+        this.loading.set(false);
+      }
+    });
+  }
+
+  loadUserProfile() {
+    this.userService.getUserProfile().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          const user = response.data;
+          this.addressData = {
+            fullName: user.fullName,
+            mobileNumber: user.mobileNumber,
+            address: '',
+            city: '',
+            state: '',
+            type: 'Home'
+          };
+        }
+      },
+      error: (err) => {
+        console.error('Error loading user profile:', err);
+      }
+    });
+  }
+
+  // Section toggle
   toggleSection(section: ActiveSection): void {
-    const current = this.activeSection();
-    // Only allow going back or forward if logic permits (e.g. can't go to summary if cart empty)
     if (section === 'cart') this.activeSection.set('cart');
     if (section === 'address' && this.cartItems().length > 0) this.activeSection.set('address');
     if (section === 'summary' && this.activeSection() === 'address') this.activeSection.set('summary');
   }
 
   // Cart operations
-  increaseQty(itemId: string): void {
+  increaseQty(itemId: number): void {
     const items = this.cartItems();
     const index = items.findIndex(item => item.id === itemId);
     if (index !== -1 && items[index].quantity < 10) {
-      items[index].quantity++;
-      this.cartItems.set([...items]);
+      const newQty = items[index].quantity + 1;
+      this.cartService.updateItem(itemId, newQty).subscribe({
+        next: () => {
+          items[index].quantity = newQty;
+          this.cartItems.set([...items]);
+        },
+        error: (err) => console.error('Error updating quantity:', err)
+      });
     }
   }
 
-  decreaseQty(itemId: string): void {
+  decreaseQty(itemId: number): void {
     const items = this.cartItems();
     const index = items.findIndex(item => item.id === itemId);
     if (index !== -1 && items[index].quantity > 1) {
-      items[index].quantity--;
-      this.cartItems.set([...items]);
+      const newQty = items[index].quantity - 1;
+      this.cartService.updateItem(itemId, newQty).subscribe({
+        next: () => {
+          items[index].quantity = newQty;
+          this.cartItems.set([...items]);
+        },
+        error: (err) => console.error('Error updating quantity:', err)
+      });
     }
   }
 
-  removeItem(itemId: string): void {
-    const items = this.cartItems().filter(item => item.id !== itemId);
-    this.cartItems.set(items);
+  removeItem(itemId: number): void {
+    this.cartService.removeItem(itemId).subscribe({
+      next: () => {
+        const items = this.cartItems().filter(item => item.id !== itemId);
+        this.cartItems.set(items);
+      },
+      error: (err) => console.error('Error removing item:', err)
+    });
   }
 
   // Navigation
@@ -137,7 +193,23 @@ export class MyCartComponent {
   }
 
   checkout(): void {
-    this.router.navigate(['/order-success']);
+    // Create order
+    const orderItems = this.cartItems().map(item => ({
+      Product_Id: item.bookId.toString(),
+      Product_Name: item.title,
+      Product_Quantity: item.quantity,
+      Product_Price: item.price
+    }));
+
+    this.orderService.createOrder({ Orders: orderItems }).subscribe({
+      next: () => {
+        this.router.navigate(['/order-success']);
+      },
+      error: (err) => {
+        console.error('Error creating order:', err);
+        alert('Failed to create order');
+      }
+    });
   }
 
   // Select address
@@ -156,7 +228,7 @@ export class MyCartComponent {
     return price.toLocaleString('en-IN');
   }
 
-  trackByItemId(index: number, item: CartItem): string {
+  trackByItemId(index: number, item: CartItem): number {
     return item.id;
   }
 }

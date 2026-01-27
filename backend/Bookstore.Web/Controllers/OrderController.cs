@@ -6,7 +6,7 @@ using Bookstore.DataAccess.Context;
 namespace Bookstore.Web.Controllers;
 
 [ApiController]
-[Route("bookstore_user")]
+[Route("api/orders")]
 [Tags("Order")]
 public class OrderController : ControllerBase
 {
@@ -22,7 +22,7 @@ public class OrderController : ControllerBase
     /// <summary>
     /// Add new order
     /// </summary>
-    [HttpPost("add/order")]
+    [HttpPost("")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -62,7 +62,41 @@ public class OrderController : ControllerBase
         }
 
         return Ok(new { message = "New order", data = request });
+    }
 
+    /// <summary>
+    /// Get all user orders
+    /// </summary>
+    [HttpGet("")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetUserOrders()
+    {
+        // TODO: Get userId from JWT token
+        int userId = 1;
+
+        var orders = await _orderRepository.GetUserOrdersAsync(userId);
+        return Ok(new { message = "Successfully fetched user orders", data = orders });
+    }
+
+    /// <summary>
+    /// Get order by ID
+    /// </summary>
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetOrderById(int id)
+    {
+        var order = await _orderRepository.GetByIdAsync(id);
+        if (order == null)
+            return NotFound(new { message = "Order not found" });
+
+        return Ok(new { message = "Successfully fetched order", data = order });
     }
 }
 
