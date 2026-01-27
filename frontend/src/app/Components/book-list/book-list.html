@@ -11,7 +11,7 @@
 
     <!-- Book Grid -->
     <div class="book-grid">
-        <div class="book-card" *ngFor="let book of books()">
+        <div class="book-card" *ngFor="let book of books()" (click)="openDetails(book.id)">
             <div class="book-card__image-container">
                 <div class="book-card__image-wrapper">
                     <img [src]="book.image" [alt]="book.title" class="book-card__image" />

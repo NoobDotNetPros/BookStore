@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface Book {
   id: string;
@@ -21,6 +22,12 @@ interface Book {
   styleUrl: './book-list.scss',
 })
 export class BookList {
+  constructor(private router: Router) { }
+
+  openDetails(bookId: string) {
+    this.router.navigate(['/book', bookId]);
+  }
+
   books = signal<Book[]>([
     {
       id: '1',
@@ -107,4 +114,5 @@ export class BookList {
 
   sortOptions = ['Sort by relevance', 'Price: Low to High', 'Price: High to Low', 'Newest First'];
   itemCount = 128;
+
 }

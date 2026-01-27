@@ -1,0 +1,113 @@
+// Variables
+$bg-color: #f5f5f5;
+$text-primary: #333333;
+$text-secondary: #9D9D9D;
+$border-color: #E2E2E2;
+$green-status: #388E3C;
+
+.page-container {
+    padding: 24px 0;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: 'Roboto', sans-serif;
+}
+
+.breadcrumb {
+    font-size: 0.85rem;
+    color: $text-secondary;
+    margin-bottom: 24px;
+
+    a {
+        color: $text-secondary;
+        text-decoration: none;
+
+        &:hover {
+            color: $text-primary;
+        }
+    }
+
+    span {
+        font-weight: 500;
+        color: $text-primary;
+    }
+}
+
+.orders-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.order-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 24px;
+    border: 1px solid $border-color;
+    background: white;
+    border-radius: 2px;
+    position: relative;
+
+    .item-visual {
+        width: 100px;
+        height: 120px;
+        margin-right: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .item-details {
+        flex: 1;
+
+        .title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: $text-primary;
+            margin: 0 0 8px;
+        }
+
+        .author {
+            font-size: 0.9rem;
+            color: $text-secondary;
+            margin: 0 0 16px;
+        }
+
+        .price-row {
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+
+            .current {
+                font-weight: 700;
+                font-size: 1.1rem;
+                color: $text-primary;
+            }
+
+            .original {
+                font-size: 0.9rem;
+                color: $text-secondary;
+                text-decoration: line-through;
+            }
+        }
+    }
+
+    .order-status {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: $text-primary;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .status-dot {
+            color: $green-status;
+            font-size: 0.8rem;
+        }
+    }
+}

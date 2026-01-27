@@ -73,6 +73,7 @@ $card-bg: #ffffff;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 
     &:hover {
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
