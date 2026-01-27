@@ -1,6 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { Component, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 type ActiveSection = 'cart' | 'address' | 'summary';
 
@@ -32,6 +33,8 @@ interface Address {
 })
 export class MyCartComponent {
   activeSection = signal<ActiveSection>('cart');
+
+  constructor(private router: Router) { }
 
   // Cart items
   cartItems = signal<CartItem[]>([
@@ -80,18 +83,22 @@ export class MyCartComponent {
 
   // Computed values
   cartCount = computed(() => this.cartItems().reduce((sum, item) => sum + item.quantity, 0));
-  
-  cartTotal = computed(() => 
+
+  cartTotal = computed(() =>
     this.cartItems().reduce((sum, item) => sum + (item.price * item.quantity), 0)
   );
 
-  cartSavings = computed(() => 
+  cartSavings = computed(() =>
     this.cartItems().reduce((sum, item) => sum + ((item.originalPrice - item.price) * item.quantity), 0)
   );
 
   // Section toggle - clicking section header opens that section
   toggleSection(section: ActiveSection): void {
-    this.activeSection.set(section);
+    const current = this.activeSection();
+    // Only allow going back or forward if logic permits (e.g. can't go to summary if cart empty)
+    if (section === 'cart') this.activeSection.set('cart');
+    if (section === 'address' && this.cartItems().length > 0) this.activeSection.set('address');
+    if (section === 'summary' && this.activeSection() === 'address') this.activeSection.set('summary');
   }
 
   // Cart operations
@@ -130,7 +137,7 @@ export class MyCartComponent {
   }
 
   checkout(): void {
-    alert('Order placed successfully!');
+    this.router.navigate(['/order-success']);
   }
 
   // Select address
@@ -153,3 +160,5 @@ export class MyCartComponent {
     return item.id;
   }
 }
+
+

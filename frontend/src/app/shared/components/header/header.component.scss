@@ -1,21 +1,23 @@
-// Header color variables
-$header-bg-color: #9a2540;
-$header-text-color: #ffffff;
-$search-bg-color: #ffffff;
-$search-text-color: #333333;
-$search-placeholder-color: #888888;
-$search-border-radius: 4px;
-$header-height: 48px;
+// Premium Header Variables
+$header-bg: #8B2C3A; // Deep Maroon/Red from design
+$header-text: #ffffff;
+$search-bg: #ffffff;
+$search-text: #333333;
+$search-placeholder: #999999;
+$header-height: 56px;
 
 .header {
   display: flex;
   align-items: center;
-  background-color: $header-bg-color;
-  padding: 0 100px;
+  justify-content: space-between;
+  background-color: $header-bg;
+  padding: 0 12%; // Match the wide margins in design
   height: $header-height;
   width: 100%;
   box-sizing: border-box;
-  gap: 32px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1000;
 
   // Logo Section
   &__logo {
@@ -23,139 +25,143 @@ $header-height: 48px;
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    color: $header-text-color;
+    color: $header-text;
     cursor: pointer;
-    flex-shrink: 0;
 
-    &:hover {
-      opacity: 0.9;
+    &-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); // Ensure white icon
+    }
+
+    &-text {
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
     }
   }
 
-  &__logo-icon {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-  }
-
-  &__logo-text {
-    font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-
-  // Search Bar Section
+  // Search Bar Section - Centered
   &__search {
     display: flex;
     align-items: center;
-    background-color: $search-bg-color;
-    border-radius: $search-border-radius;
+    background-color: $search-bg;
+    border-radius: 4px;
     padding: 6px 12px;
-    width: 340px;
-    flex-shrink: 0;
-    box-shadow: none;
-  }
+    width: 450px; // Wider search bar
+    max-width: 40%;
+    margin: 0 24px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 
-  &__search-icon {
-    width: 16px;
-    height: 16px;
-    color: $search-placeholder-color;
-    flex-shrink: 0;
-    margin-right: 8px;
-  }
+    &-icon {
+      width: 18px;
+      height: 18px;
+      color: #9D9D9D;
+      margin-right: 12px;
+    }
 
-  &__search-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 0.875rem;
-    color: $search-text-color;
-    background: transparent;
+    &-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 0.9rem;
+      color: $search-text;
+      background: transparent;
 
-    &::placeholder {
-      color: $search-placeholder-color;
+      &::placeholder {
+        color: $search-placeholder;
+      }
     }
   }
 
-  // Navigation Section
+  // Navigation: Profile & Cart
   &__nav {
     display: flex;
     align-items: center;
-    gap: 20px;
-    flex-shrink: 0;
-    margin-left: auto;
-  }
+    gap: 32px;
 
-  &__nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    background: none;
-    border: none;
-    color: $header-text-color;
-    cursor: pointer;
-    padding: 2px 4px;
-    transition: opacity 0.2s ease;
+    &-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      color: $header-text;
+      cursor: pointer;
+      padding: 0;
+      position: relative;
+      
+      &:hover {
+        opacity: 0.9;
+      }
 
-    &:hover {
-      opacity: 0.85;
+      // Badge for Cart
+      .badge {
+        position: absolute;
+        top: -4px;
+        right: 0;
+        background-color: #ffffff;
+        color: $header-bg;
+        font-size: 10px;
+        font-weight: bold;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $header-bg;
+      }
     }
 
-    &:focus {
-      outline: 2px solid rgba(255, 255, 255, 0.5);
-      outline-offset: 2px;
-      border-radius: 4px;
+    &-icon {
+      width: 20px;
+      height: 20px;
+      margin-bottom: 2px;
     }
-  }
 
-  &__nav-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  &__nav-label {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.3px;
+    &-label {
+      font-size: 0.7rem;
+      font-weight: 400;
+    }
   }
 }
 
-// Responsive adjustments
+// Responsive Design
+@media (max-width: 1024px) {
+  .header {
+    padding: 0 5%;
+    &__search {
+      width: 300px;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0 16px;
+    justify-content: space-between;
 
     &__logo-text {
-      display: none;
+        display: none;
     }
 
     &__search {
+      position: static;
+      transform: none;
+      width: auto;
+      flex: 1;
       margin: 0 16px;
       max-width: none;
     }
 
     &__nav {
       gap: 16px;
-    }
-
-    &__nav-label {
-      display: none;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    padding: 0 12px;
-
-    &__search {
-      margin: 0 12px;
-      padding: 6px 12px;
-    }
-
-    &__nav {
-      gap: 8px;
+      &-label { display: none; }
     }
   }
 }

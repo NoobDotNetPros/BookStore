@@ -1,0 +1,122 @@
+$accent-color: #337AB7; // Blue for Continue button
+$text-primary: #333333;
+$table-border: #DDDDDD;
+
+.success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    text-align: center;
+}
+
+.success-content {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.celebration-image {
+    margin-bottom: 24px;
+
+    img {
+        max-width: 250px;
+        height: auto;
+    }
+
+    .emoji-confetti {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+}
+
+.confetti-bottom {
+    margin: 10px 0;
+
+    .confetti-icon {
+        font-size: 2rem;
+    }
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: $text-primary;
+    margin-bottom: 24px;
+}
+
+.description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+.info-table {
+    width: 100%;
+    margin-bottom: 40px;
+    border: 1px solid $table-border;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            border: 1px solid $table-border;
+            padding: 16px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #FAFAFA;
+            font-weight: 500;
+            color: #777;
+        }
+
+        td {
+            color: #333;
+        }
+
+        // Address column width adjustment
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 40%;
+        }
+    }
+}
+
+.continue-btn {
+    background-color: $accent-color;
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.2s;
+    min-width: 200px;
+
+    &:hover {
+        background-color: darken($accent-color, 10%);
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .info-table {
+        overflow-x: auto;
+        display: block; // Allow scrolling
+
+        table {
+            min-width: 600px;
+        }
+    }
+}
