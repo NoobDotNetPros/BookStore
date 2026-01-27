@@ -5,6 +5,7 @@ import { Wishlist } from './Components/wishlist/wishlist';
 import { MyOrders } from './Components/my-orders/my-orders';
 import { Profile } from './Components/profile/profile';
 import { OrderSuccess } from './Components/order-success/order-success';
+import { AdminPanelComponent } from './Components/admin-panel/admin-panel';
 import { Login } from './login/login';
 import { Signup } from './signup/signup';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password';
@@ -21,5 +22,6 @@ export const routes: Routes = [
   { path: 'orders', component: MyOrders },
   { path: 'profile', component: Profile },
   { path: 'my-cart', component: MyCartComponent },
-  { path: 'order-success', component: OrderSuccess }
+  { path: 'order-success', component: OrderSuccess },
+  { path: 'admin', component: AdminPanelComponent }
 ];

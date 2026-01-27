@@ -42,4 +42,12 @@ export const API_ENDPOINTS = {
     GET_BY_BOOK: (bookId: number) => `${API_BASE_URL}/feedback/books/${bookId}`,
     ADD: (bookId: number) => `${API_BASE_URL}/feedback/books/${bookId}`,
   },
+  // Admin endpoints
+  ADMIN: {
+    GET_BOOKS: `${API_BASE_URL}/admin/books`,
+    GET_BOOK: (id: number) => `${API_BASE_URL}/admin/books/${id}`,
+    CREATE_BOOK: `${API_BASE_URL}/admin/books`,
+    UPDATE_BOOK: (id: number) => `${API_BASE_URL}/admin/books/${id}`,
+    DELETE_BOOK: (id: number) => `${API_BASE_URL}/admin/books/${id}`,
+  },
 };

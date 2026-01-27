@@ -1,0 +1,157 @@
+<div class="admin-panel">
+  <div class="admin-header">
+    <h1>📚 Book Management Admin Panel</h1>
+    <button class="btn btn-primary" (click)="openNewForm()">+ Add New Book</button>
+  </div>
+
+  <div class="stats-container" *ngIf="!loading()">
+    <div class="stat-card">
+      <h3>Total Books</h3>
+      <p class="stat-value">{{ totalBooks() }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Total Inventory Value</h3>
+      <p class="stat-value">₹{{ totalValue() | number:'1.0-0' }}</p>
+    </div>
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <div class="loading" *ngIf="loading()">
+    <p>Loading books...</p>
+  </div>
+
+  <div class="books-table" *ngIf="!loading()">
+    <table>
+      <thead>
+        <tr>
+          <th>Cover</th>
+          <th>Book Name</th>
+          <th>Author</th>
+          <th>ISBN</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Discount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of books()">
+          <td>
+            <img [src]="book.coverImage" [alt]="book.bookName" class="book-thumbnail" />
+          </td>
+          <td>
+            <strong>{{ book.bookName }}</strong>
+            <p class="description">{{ book.description.substring(0, 50) }}...</p>
+          </td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.isbn }}</td>
+          <td>
+            <span [class.low-stock]="book.quantity < 10">{{ book.quantity }}</span>
+          </td>
+          <td>₹{{ book.price }}</td>
+          <td>₹{{ book.discountPrice }}</td>
+          <td>
+            <button class="btn btn-edit" (click)="editBook(book)">Edit</button>
+            <button class="btn btn-delete" (click)="deleteBook(book)">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="books().length === 0">
+          <td colspan="8" class="text-center">No books found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Book Form Modal -->
+  <div class="modal-overlay" *ngIf="showForm()" (click)="closeForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editingId() ? 'Edit Book' : 'Add New Book' }}</h2>
+        <button class="close-btn" (click)="closeForm()">✕</button>
+      </div>
+
+      <form class="book-form" (ngSubmit)="saveBook()">
+        <div class="form-group">
+          <label>Book Name *</label>
+          <input type="text"
+            [value]="formData().bookName"
+            (input)="updateFormField('bookName', $event)"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label>Author *</label>
+          <input type="text"
+            [value]="formData().author"
+            (input)="updateFormField('author', $event)"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label>ISBN *</label>
+          <input type="text"
+            [value]="formData().isbn"
+            (input)="updateFormField('isbn', $event)"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea
+            [value]="formData().description"
+            (input)="updateFormField('description', $event)"
+            rows="3"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quantity *</label>
+            <input type="number"
+              [value]="formData().quantity"
+              (input)="updateFormField('quantity', +$event)"
+              required />
+          </div>
+
+          <div class="form-group">
+            <label>Price (₹) *</label>
+            <input type="number"
+              [value]="formData().price"
+              (input)="updateFormField('price', +$event)"
+              step="0.01"
+              required />
+          </div>
+
+          <div class="form-group">
+            <label>Discount Price (₹) *</label>
+            <input type="number"
+              [value]="formData().discountPrice"
+              (input)="updateFormField('discountPrice', +$event)"
+              step="0.01"
+              required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Cover Image URL</label>
+          <input type="text"
+            [value]="formData().coverImage"
+            (input)="updateFormField('coverImage', $event)"
+            placeholder="https://..." />
+          <small>Paste image URL from OpenLibrary or other source</small>
+        </div>
+
+        <div class="image-preview" *ngIf="formData().coverImage">
+          <img [src]="formData().coverImage" [alt]="formData().bookName" />
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
+          <button type="submit" class="btn btn-primary">{{ editingId() ? 'Update Book' : 'Create Book' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
