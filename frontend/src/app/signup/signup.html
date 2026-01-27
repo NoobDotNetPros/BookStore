@@ -1,0 +1,42 @@
+<div class="wrapper">
+  <div class="inner-div">
+    <div class="left">
+      <img src="assets/book-shopping.png" alt="Online Book Shopping">
+      <h2>ONLINE BOOK SHOPPING</h2>
+    </div>
+    <div class="right">
+      <div class="top">
+        <a routerLink="/login">LOGIN</a>
+        <a routerLink="/signup" class="active">SIGNUP</a>
+      </div>
+      <form>
+        <div class="form-group has-error">
+          <label>Full Name</label>
+          <input type="text" class="error-border">
+          <span class="error-text">Enter full name</span>
+        </div>
+        <div class="form-group">
+          <label>Email Id</label>
+          <input type="email">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="password-wrapper">
+            <input [type]="showPassword ? 'text' : 'password'">
+            <button type="button" class="toggle-password" (click)="togglePassword()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="tel">
+        </div>
+        <button type="submit" class="signup-btn">Signup</button>
+      </form>
+    </div>
+  </div>
+</div>
