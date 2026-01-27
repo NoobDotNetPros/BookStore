@@ -1,39 +1,74 @@
 # =========================
-# Backend - .NET / C#
+# Visual Studio / VS Code / IDEs
 # =========================
-
-# Build results
-**/bin/
-**/obj/
-
-# Visual Studio
 .vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-*.rsuser
-
-# Visual Studio Code
 .vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# Rider
-.idea/
-
-# User-specific files
+!.vscode/*.code-snippets
+*.suo
 *.user
 *.userosscache
+*.sln.docstates
+*.userprefs
+.idea/
 
-# NuGet Packages
-*.nupkg
-**/packages/
+# =========================
+# Build Results - .NET
+# =========================
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+**/bin/
+**/obj/
+
+# =========================
+# .NET / ASP.NET Core
+# =========================
 project.lock.json
 project.fragment.lock.json
 artifacts/
+**/Properties/launchSettings.json
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+project.assets.json
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# CodeRush
+.cr/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
@@ -47,52 +82,125 @@ ScaffoldingReadMe.txt
 **/*.dswa.cache.json
 **/swae.build.ex.cache
 
-# =========================
-# Frontend - Node / Angular
-# =========================
+# dotnet user secrets
+secrets.json
+appsettings.Development.json
 
-# Dependencies
+# =========================
+# Node / Angular / Frontend
+# =========================
+node_modules/
 **/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+package-lock.json
+yarn.lock
 
-# Build output
+# Angular
+.angular/
+**/.angular/
+/dist/
 **/dist/
+/tmp/
 **/tmp/
+/out-tsc/
 **/out-tsc/
+/bazel-out/
 **/bazel-out/
 
-# Angular cache
-**/.angular/
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-# Debug logs
-npm-debug.log
-yarn-error.log
-
-# Test coverage
+# =========================
+# Test Coverage
+# =========================
+coverage/
 **/coverage/
+*.lcov
+.nyc_output/
 
 # =========================
-# IDE & System Files
+# System Files
 # =========================
-
 # macOS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 
 # Windows
-Thumbs.db
 ehthumbs.db
-Desktop.ini
+ehthumbs_vista.db
+Thumbs.db
+Thumbs.db:encryptable
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.stackdump
 
+# =========================
+# Editor / Temp Files
+# =========================
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.temp
+*.orig
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
+.ionide/
+
+# =========================
+# Database
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
 # Logs
+# =========================
 *.log
 logs/
 
-# Temp files
-*.tmp
-*.temp
-*.swp
-*~
+# =========================
+# Sensitive Data
+# =========================
+*.key
+*.pem
+*.p12
+*.cert
+*.cer
 
-# Environment files (uncomment if needed)
-# .env
-# .env.local
-# .env.*.local
+# =========================
+# Copilot / AI Tools
+# =========================
+**/CopilotSnapshots/
+**/CopilotIndices/
+**/.copilot/
+**/copilot-chat/
+
+# =========================
+# Entity Framework
+# =========================
+**/Migrations/

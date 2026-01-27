@@ -1,0 +1,98 @@
+.header {
+  background-color: #8b1d2e;
+  color: white;
+  min-height: 56px;
+  padding: 0.5rem 0;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    gap: 1.5rem;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__logo-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  &__logo-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  &__search-icon {
+    width: 18px;
+    height: 18px;
+    color: #999;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  &__search-input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.9rem;
+    color: #333;
+
+    &::placeholder {
+      color: #999;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto;
+  }
+
+  &__action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.2s;
+    min-width: 40px;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__action-icon {
+    width: 22px;
+    height: 22px;
+    margin-bottom: 0.2rem;
+  }
+
+  &__action-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+  }
+}

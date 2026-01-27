@@ -1,0 +1,36 @@
+<app-header></app-header>
+
+<main class="homepage">
+  <div class="homepage__container">
+    <div class="homepage__header">
+      <div class="homepage__title-section">
+        <h1 class="homepage__title">Books</h1>
+        <span class="homepage__item-count">({{ totalItems() }} Items)</span>
+      </div>
+
+      <div class="homepage__sort">
+        <select
+          class="homepage__sort-select"
+          [ngModel]="sortBy()"
+          (ngModelChange)="sortBy.set($event); onSortChange()"
+        >
+          @for (option of sortOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="homepage__grid">
+      @for (book of books(); track book.id) {
+        <app-book-card [book]="book"></app-book-card>
+      }
+    </div>
+
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
+  </div>
+</main>
