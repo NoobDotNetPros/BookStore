@@ -47,10 +47,26 @@ public class OrderController : ControllerBase
             }).ToList()
         };
 
-        await _orderRepository.AddAsync(order);
-        await _unitOfWork.SaveChangesAsync();
+        using (var transaction = await _unitOfWork.Context.Database.BeginTransactionAsync())
+        {
+            try
+            {
+                await _orderRepository.AddAsync(order);
+                await _unitOfWork.SaveChangesAsync();
+
+                // Commit transaction
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                // Rollback transaction on error
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
 
         return Ok(new { message = "New order", data = request });
+
     }
 }
 
