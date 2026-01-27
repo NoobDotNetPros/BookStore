@@ -1,6 +1,12 @@
 <div class="book-card" [class.book-card--out-of-stock]="book.isOutOfStock">
   <div class="book-card__image-container">
-    <img [src]="book.coverImage" [alt]="book.title" class="book-card__image" />
+    <img
+      [src]="book.coverImage"
+      [alt]="book.title"
+      class="book-card__image"
+      (error)="onImageError($event)"
+      loading="lazy"
+    />
     @if (book.isOutOfStock) {
       <div class="book-card__out-of-stock-badge">OUT OF STOCK</div>
     }

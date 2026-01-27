@@ -1,10 +1,17 @@
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 2rem;
   background-color: #8b1d2e;
   color: white;
+  min-height: 56px;
+  padding: 0.5rem 0;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    gap: 1.5rem;
+  }
 
   &__logo {
     display: flex;
@@ -13,8 +20,9 @@
   }
 
   &__logo-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
   }
 
   &__logo-text {
@@ -30,21 +38,22 @@
     border-radius: 4px;
     padding: 0.5rem 1rem;
     width: 100%;
-    max-width: 500px;
+    max-width: 420px;
   }
 
   &__search-icon {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     color: #999;
     margin-right: 0.5rem;
+    flex-shrink: 0;
   }
 
   &__search-input {
     border: none;
     outline: none;
     width: 100%;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: #333;
 
     &::placeholder {
@@ -56,6 +65,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    margin-left: auto;
   }
 
   &__action-btn {
@@ -68,6 +78,7 @@
     cursor: pointer;
     padding: 0;
     transition: opacity 0.2s;
+    min-width: 40px;
 
     &:hover {
       opacity: 0.8;
@@ -75,13 +86,13 @@
   }
 
   &__action-icon {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 0.25rem;
+    width: 22px;
+    height: 22px;
+    margin-bottom: 0.2rem;
   }
 
   &__action-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
   }
 }

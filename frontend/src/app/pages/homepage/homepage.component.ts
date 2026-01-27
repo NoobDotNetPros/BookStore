@@ -34,13 +34,13 @@ export class HomepageComponent {
   }
 
   loadBooks(): void {
-    // Mock data based on the images
+    // Mock data with reliable image URLs from picsum.photos
     const mockBooks: Book[] = [
       {
         id: 1,
         title: "Don't Make Me Think",
         author: 'Steve Krug',
-        coverImage: 'https://m.media-amazon.com/images/I/51WS36aA2BL._SY445_SX342_.jpg',
+        coverImage: 'https://picsum.photos/seed/book1/150/200',
         rating: 4.5,
         reviewCount: 20,
         price: 1500,
@@ -49,9 +49,9 @@ export class HomepageComponent {
       },
       {
         id: 2,
-        title: "Don't Make Me Think",
-        author: 'Steve Krug',
-        coverImage: 'https://m.media-amazon.com/images/I/61ZKhZCk0iL._SY466_.jpg',
+        title: 'React Material-UI Cookbook',
+        author: 'Adam Boduch',
+        coverImage: 'https://picsum.photos/seed/book2/150/200',
         rating: 4.5,
         reviewCount: 20,
         price: 1500,
@@ -60,9 +60,9 @@ export class HomepageComponent {
       },
       {
         id: 3,
-        title: "Don't Make Me Think",
-        author: 'Steve Krug',
-        coverImage: 'https://m.media-amazon.com/images/I/61mIq2iJUXL._SY466_.jpg',
+        title: 'Cracking the Coding Interview',
+        author: 'Gayle McDowell',
+        coverImage: 'https://picsum.photos/seed/book3/150/200',
         rating: 4.5,
         reviewCount: 20,
         price: 1500,
@@ -71,9 +71,9 @@ export class HomepageComponent {
       },
       {
         id: 4,
-        title: 'UX For DUMMIES',
-        author: 'Steve Krug',
-        coverImage: 'https://m.media-amazon.com/images/I/51cYWSHBfvL._SY466_.jpg',
+        title: 'UX For Dummies',
+        author: 'Kevin Nichols',
+        coverImage: 'https://picsum.photos/seed/book4/150/200',
         rating: 4.5,
         reviewCount: 20,
         price: 1500,
@@ -82,9 +82,9 @@ export class HomepageComponent {
       },
       {
         id: 5,
-        title: "Don't Make Me Think",
-        author: 'Steve Krug',
-        coverImage: 'https://m.media-amazon.com/images/I/41bimzkvtlL._SY466_.jpg',
+        title: 'A Project Guide to UX Design',
+        author: 'Russ Unger',
+        coverImage: 'https://picsum.photos/seed/book5/150/200',
         rating: 4.5,
         reviewCount: 20,
         price: 1500,
@@ -93,9 +93,9 @@ export class HomepageComponent {
       },
       {
         id: 6,
-        title: "Don't Make Me Think",
-        author: 'Steve Krug',
-        coverImage: 'https://m.media-amazon.com/images/I/51RFFZ9RQEL._SY466_.jpg',
+        title: 'Group Discussion',
+        author: 'M.B. Lal',
+        coverImage: 'https://picsum.photos/seed/book6/150/200',
         rating: 4.5,
         reviewCount: 20,
         price: 1500,
@@ -104,9 +104,9 @@ export class HomepageComponent {
       },
       {
         id: 7,
-        title: "Don't Make Me Think",
-        author: 'Steve Krug',
-        coverImage: 'https://m.media-amazon.com/images/I/41k3nCy4fPL._SY466_.jpg',
+        title: 'Lean UX',
+        author: 'Jeff Gothelf',
+        coverImage: 'https://picsum.photos/seed/book7/150/200',
         rating: 4.5,
         reviewCount: 20,
         price: 1500,
@@ -115,9 +115,9 @@ export class HomepageComponent {
       },
       {
         id: 8,
-        title: "Don't Make Me Think",
-        author: 'Steve Krug',
-        coverImage: 'https://m.media-amazon.com/images/I/410RTdGSdgL._SY466_.jpg',
+        title: 'The Design of Everyday Things',
+        author: 'Don Norman',
+        coverImage: 'https://picsum.photos/seed/book8/150/200',
         rating: 4.5,
         reviewCount: 20,
         price: 1500,
