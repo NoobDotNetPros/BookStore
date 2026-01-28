@@ -3,28 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../Models/api-constants';
 
-export interface OrderItem {
-  id: number;
-  orderId: number;
+export interface OrderItemHistory {
   bookId: number;
-  productName: string;      // ✅ Add this
-  bookCoverImage: string;   // ✅ Add this
+  bookName: string;
+  author: string;
   quantity: number;
   price: number;
-  createdAt?: string;
-  updatedAt?: string;
+  coverImage: string;
 }
 
-export interface Order {
-  id: number;
-  userId: number;
-  status: string;
+export interface OrderHistory {
+  orderId: number;
+  orderDate: string;
   totalAmount: number;
-  shippingAddress: string;
-  items: OrderItem[];
-  createdDate: string;
-  createdAt?: string;
-  updatedAt?: string;
+  status: string;
+  items: OrderItemHistory[];
 }
 
 export interface ApiResponse<T> {
@@ -38,18 +31,22 @@ export interface ApiResponse<T> {
 })
 export class OrderService {
   private http = inject(HttpClient);
-  private apiUrl = `${API_BASE_URL}/Order`;
+  private apiUrl = `${API_BASE_URL}/orders`;
 
-  getUserOrders(): Observable<ApiResponse<Order[]>> {
-    return this.http.get<ApiResponse<Order[]>>(`${this.apiUrl}/user`);
+  getOrderHistory(): Observable<ApiResponse<OrderHistory[]>> {
+    return this.http.get<ApiResponse<OrderHistory[]>>(`${API_BASE_URL}/order-history`);
   }
 
-  getOrderById(orderId: number): Observable<ApiResponse<Order>> {
-    return this.http.get<ApiResponse<Order>>(`${this.apiUrl}/${orderId}`);
+  getUserOrders(): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}`);
   }
 
-  createOrder(orderData: any): Observable<ApiResponse<Order>> {
-    return this.http.post<ApiResponse<Order>>(this.apiUrl, orderData);
+  getOrderById(orderId: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${orderId}`);
+  }
+
+  createOrder(orderData: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(this.apiUrl, orderData);
   }
 
   cancelOrder(orderId: number): Observable<ApiResponse<void>> {

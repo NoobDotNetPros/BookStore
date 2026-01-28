@@ -34,6 +34,7 @@ export const API_ENDPOINTS = {
     GET_ALL: `${API_BASE_URL}/orders`,
     GET_BY_ID: (id: number) => `${API_BASE_URL}/orders/${id}`,
     CREATE: `${API_BASE_URL}/orders`,
+    GET_HISTORY: `${API_BASE_URL}/order-history`,
   },
   // Wishlist endpoints
   WISHLIST: {

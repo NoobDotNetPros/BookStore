@@ -3,24 +3,48 @@
         <a href="/">Home</a> / <span>My Order</span>
     </div>
 
-    <div class="orders-container">
-        <div class="order-item" *ngFor="let item of orders()">
+    <!-- Error Message -->
+    <div class="error-banner" *ngIf="errorMessage()">
+        {{ errorMessage() }}
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="loading()">
+        <p>Fetching your order history...</p>
+    </div>
+
+    <!-- Orders List -->
+    <div class="orders-container" *ngIf="!loading() && orders().length > 0">
+        <div class="order-item" *ngFor="let order of orders()">
             <div class="item-visual">
-                <img [src]="item.image" [alt]="item.title">
+                <img [src]="order.image" [alt]="order.title">
             </div>
 
             <div class="item-details">
-                <h3 class="title">{{ item.title }}</h3>
-                <p class="author">{{ item.author }}</p>
+                <h3 class="title">{{ order.title }}</h3>
+                <p class="author" *ngIf="order.items.length > 1">
+                    and {{ order.items.length - 1 }} other book(s)
+                </p>
+                <p class="author" *ngIf="order.items.length === 1">
+                    {{ order.author }}
+                </p>
+
                 <div class="price-row">
-                    <span class="current">Rs. {{ item.price }}</span>
-                    <span class="original">Rs.{{ item.originalPrice }}</span>
+                    <span class="current">Total: Rs. {{ order.price }}</span>
+                    <span class="status-badge" [attr.data-status]="order.status">{{ order.status }}</span>
                 </div>
             </div>
 
             <div class="order-status">
-                <span class="status-dot">●</span> Order Placed on {{ item.orderDate }}
+                <span class="status-dot">●</span> Order Placed on {{ order.orderDate }}
             </div>
         </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!loading() && orders().length === 0 && !errorMessage()">
+        <h2>No orders found</h2>
+        <p>You haven't placed any orders yet. Start shopping now!</p>
+        <button class="shop-btn" routerLink="/">Go To Bookstore</button>
     </div>
 </div>

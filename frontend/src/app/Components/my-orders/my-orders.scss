@@ -110,6 +110,73 @@ $green-status: #388E3C;
             font-size: 0.8rem;
         }
     }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-weight: 500;
+        text-transform: capitalize;
+        background: #e3f2fd;
+        color: #1976d2;
+
+        &[data-status="Delivered"] {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        &[data-status="Cancelled"] {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        &[data-status="Shipped"] {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+    }
+}
+
+.error-banner {
+    background: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.loading-state, .empty-state {
+    text-align: center;
+    padding: 80px 24px;
+    background: white;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+
+    h2 {
+        margin-bottom: 8px;
+        color: $text-primary;
+    }
+
+    p {
+        color: $text-secondary;
+        margin-bottom: 24px;
+    }
+
+    .shop-btn {
+        background: #A03037;
+        color: white;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 3px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+            background: #802027;
+        }
+    }
 }
 
 // Responsive Design

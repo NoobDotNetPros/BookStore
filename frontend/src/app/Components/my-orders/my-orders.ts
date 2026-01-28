@@ -1,6 +1,6 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OrderService, Order, OrderItem } from '../../Services/order.service';
+import { OrderService, OrderHistory, OrderItemHistory, ApiResponse } from '../../Services/order.service';
 import { AuthService } from '../../Services/auth.service';
 
 interface OrderDisplay {
@@ -12,7 +12,7 @@ interface OrderDisplay {
     image: string;
     orderDate: string;
     status: string;
-    items: OrderItem[];
+    items: OrderItemHistory[];
 }
 
 @Component({
@@ -44,21 +44,21 @@ export class MyOrders implements OnInit {
         this.loading.set(true);
         this.errorMessage.set('');
 
-        this.orderService.getUserOrders().subscribe({
-            next: (response) => {
+        this.orderService.getOrderHistory().subscribe({
+            next: (response: ApiResponse<OrderHistory[]>) => {
                 if (response.success && response.data) {
                     this.orders.set(
-                        response.data.map(order => {
+                        response.data.map((order: OrderHistory) => {
                             const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
 
                             return {
-                                id: order.id,
-                                title: firstItem?.productName || 'Unknown Product',
-                                author: 'Order #' + order.id,
+                                id: order.orderId,
+                                title: firstItem?.bookName || 'Unknown Product',
+                                author: firstItem?.author || ('Order #' + order.orderId),
                                 price: order.totalAmount,
                                 originalPrice: order.totalAmount * 1.2,
-                                image: firstItem?.bookCoverImage || 'https://via.placeholder.com/200',
-                                orderDate: new Date(order.createdDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
+                                image: firstItem?.coverImage || 'https://via.placeholder.com/200',
+                                orderDate: new Date(order.orderDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
                                 status: order.status,
                                 items: order.items
                             };
@@ -68,7 +68,7 @@ export class MyOrders implements OnInit {
                 this.loading.set(false);
             },
             error: (err: any) => {
-                this.errorMessage.set('Failed to load orders. Please try again.');
+                this.errorMessage.set('Failed to load order history. Please try again.');
                 console.error('Error loading orders:', err);
                 this.loading.set(false);
             }
