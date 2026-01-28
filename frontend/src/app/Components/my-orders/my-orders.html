@@ -1,0 +1,26 @@
+<div class="page-container">
+    <div class="breadcrumb">
+        <a href="/">Home</a> / <span>My Order</span>
+    </div>
+
+    <div class="orders-container">
+        <div class="order-item" *ngFor="let item of orders()">
+            <div class="item-visual">
+                <img [src]="item.image" [alt]="item.title">
+            </div>
+
+            <div class="item-details">
+                <h3 class="title">{{ item.title }}</h3>
+                <p class="author">{{ item.author }}</p>
+                <div class="price-row">
+                    <span class="current">Rs. {{ item.price }}</span>
+                    <span class="original">Rs.{{ item.originalPrice }}</span>
+                </div>
+            </div>
+
+            <div class="order-status">
+                <span class="status-dot">●</span> Order Placed on {{ item.orderDate }}
+            </div>
+        </div>
+    </div>
+</div>

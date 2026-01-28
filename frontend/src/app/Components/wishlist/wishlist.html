@@ -1,0 +1,56 @@
+<div class="page-container">
+    <!-- Breadcrumb (Only show if logged in? Design shows it might be hidden or generic, let's keep it generic) -->
+    <div class="breadcrumb" *ngIf="isLoggedIn()">
+        <a href="/">Home</a> / <span>My Wishlist</span>
+    </div>
+
+    <!-- Login State -->
+    <div class="login-state-container" *ngIf="!isLoggedIn()">
+        <h2 class="login-title">PLEASE LOG IN</h2>
+        <p class="login-subtext">Login to view items in your wishlist.</p>
+
+        <div class="login-icon">
+            <!-- Simple SVG representation of the icon in the design (Document with Heart) -->
+            <svg width="60" height="70" viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="5" width="40" height="50" rx="4" stroke="#999" stroke-width="2" />
+                <path d="M18 15h24M18 22h24M18 29h14" stroke="#999" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M45 45 C 45 45, 50 40, 55 45 C 60 50, 50 60, 45 65 C 40 60, 30 50, 35 45 C 40 40, 45 45, 45 45 Z"
+                    fill="#FF5252" />
+            </svg>
+        </div>
+
+        <button class="btn-login-signup">LOGIN/SIGNUP</button>
+    </div>
+
+    <!-- Wishlist Content (Protected) -->
+    <div class="wishlist-container" *ngIf="isLoggedIn()">
+        <div class="wishlist-header">
+            My Wishlist ({{ itemsCount() | number:'2.0-0' }})
+        </div>
+
+        <div class="wishlist-items">
+            <div class="wishlist-item" *ngFor="let item of wishlistItems()">
+                <div class="item-content">
+                    <div class="image-wrapper">
+                        <img [src]="item.image" [alt]="item.title">
+                    </div>
+
+                    <div class="details">
+                        <h3 class="title">{{ item.title }}</h3>
+                        <p class="author">{{ item.author }}</p>
+                        <div class="price-row">
+                            <span class="current">Rs. {{ item.price }}</span>
+                            <span class="original">Rs.{{ item.originalPrice }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="delete-btn" (click)="removeFromWishlist(item.id)">
+                    <img src="assets/delete-icon.svg" alt="Delete"
+                        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIzIDYgNSA2IDIxIDYiPjwvcG9seWxpbmU+PHBhdGggZD0iTTE5IDZ2MTRhMiAyIDAgMCAxLTIgMmgtOGEyIDIgMCAwIDEtMi0ydjZtMyAwdjUtNmw0LTNoNEw5IDVzMiAwIDIgMmg0Ii8+PGxpbmUgeDE9IjEwIiB5MT0iMTEiIHgyPSIxMCIgeTI9IjE3Ij48L2xpbmU+PGxpbmUgeDE9IjE0IiB5MT0iMTEiIHgyPSIxNCIgeTI9IjE3Ij48L2xpbmU+PC9zdmc+'">
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

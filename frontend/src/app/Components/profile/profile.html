@@ -1,0 +1,90 @@
+<div class="page-container">
+    <div class="breadcrumb">
+        <a href="/">Home</a> / <span>Profile</span>
+    </div>
+
+    <div class="profile-container">
+        <!-- Personal Details -->
+        <div class="section personal-details">
+            <div class="section-header">
+                <h2>Personal Details</h2>
+                <button class="edit-btn" (click)="toggleEdit()">Edit</button>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" [ngModel]="user().fullName" [disabled]="!isEditing()">
+                </div>
+
+                <div class="form-group">
+                    <label>Email Id</label>
+                    <input type="text" [ngModel]="user().email" [disabled]="!isEditing()">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" [ngModel]="user().password" [disabled]="!isEditing()">
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="text" [ngModel]="user().mobile" [disabled]="!isEditing()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Details -->
+        <div class="section address-details">
+            <div class="section-header">
+                <h2>Address Details</h2>
+                <button class="add-btn" (click)="addNewAddress()">Add New Address</button>
+            </div>
+
+            <div class="address-list">
+                <div class="address-item" *ngFor="let addr of addresses()">
+                    <div class="address-header">
+                        <h3>{{ addr.type }}</h3>
+                        <button class="edit-link">Edit</button>
+                    </div>
+
+                    <div class="address-content">
+                        <div class="form-group full-width">
+                            <label>Address</label>
+                            <textarea disabled>{{ addr.address }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label>City/Town</label>
+                                <input type="text" [value]="addr.city" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" [value]="addr.state" disabled>
+                            </div>
+                        </div>
+
+                        <div class="type-selection">
+                            <label>Type</label>
+                            <div class="radios">
+                                <label class="radio">
+                                    <input type="radio" name="loc-{{addr.id}}" [checked]="addr.type.includes('Home')"
+                                        disabled> Home
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="loc-{{addr.id}}" [checked]="addr.type.includes('Work')"
+                                        disabled> Work
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="loc-{{addr.id}}" [checked]="addr.type.includes('Other')"
+                                        disabled> Other
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

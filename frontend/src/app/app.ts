@@ -1,13 +1,15 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { FooterComponent } from "./shared/components/footer/footer.component";
+import { FooterComponent } from './shared/components/footer';
+import { HeaderComponent } from './shared/components/header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FooterComponent],
+  standalone: true,
+  imports: [RouterOutlet, FooterComponent, HeaderComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss']
 })
 export class App {
-  protected readonly title = signal('frontend');
+  title = 'Bookstore';
 }

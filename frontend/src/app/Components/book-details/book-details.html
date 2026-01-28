@@ -1,100 +1,100 @@
-<header class="header">
-    <div class="header-container">
-        <div class="logo">
-            <i class="book-icon">📖</i>
-            <span>Bookstore</span>
-        </div>
-        <div class="search-bar">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Search ...">
-        </div>
-        <div class="header-actions">
-            <div class="action-item">
-                <i class="icon">👤</i>
-                <span>Profile</span>
-            </div>
-            <div class="action-item">
-                <i class="icon">🛒</i>
-                <span>Cart</span>
-            </div>
-        </div>
+<div class="book-details-container" *ngIf="book() as currentBook">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/">Home</a> / <span>{{ currentBook.title }}</span>
     </div>
-</header>
 
-<main class="container">
-    <nav class="breadcrumb">
-        <span>Home</span> / <span class="active">Book(01)</span>
-    </nav>
-
-    <div class="book-details-grid">
-        <div class="image-gallery">
+    <div class="details-layout">
+        <!-- Left: Image Section -->
+        <div class="image-section">
             <div class="thumbnails">
-                <img src="/assets/images/book_cover.png" alt="Thumbnail 1" class="active">
-                <img src="/assets/images/book_cover.png" alt="Thumbnail 2">
-            </div>
-            <div class="main-image">
-                <img src="/assets/images/book_cover.png" alt="Don't Make Me Think">
-                <div class="action-buttons">
-                    <button class="btn btn-add">ADD TO BAG</button>
-                    <button class="btn btn-wishlist">❤️ WISHLIST</button>
+                <div class="thumb active">
+                    <img [src]="currentBook.image" alt="Thumbnail" />
+                </div>
+                <div class="thumb">
+                    <img [src]="currentBook.image" alt="Thumbnail" />
                 </div>
             </div>
+            <div class="main-image">
+                <img [src]="currentBook.image" [alt]="currentBook.title" />
+            </div>
+
+            <div class="action-buttons">
+                <ng-container *ngIf="!currentBook.isOutOfStock; else outOfStockBtns">
+                    <button class="btn btn-add-bag" (click)="addToCart()">ADD TO BAG</button>
+                    <button class="btn btn-wishlist" (click)="addToWishlist()">❤ WISHLIST</button>
+                </ng-container>
+                <ng-template #outOfStockBtns>
+                    <button class="btn btn-notify" (click)="notifyMe()">NOTIFY ME</button>
+                    <button class="btn btn-wishlist" (click)="addToWishlist()">❤ WISHLIST</button>
+                </ng-template>
+            </div>
         </div>
 
-        <div class="book-info">
-            <h1 class="book-title">Don't Make Me Think</h1>
-            <p class="book-author">by Steve Krug</p>
+        <!-- Right: Info Section -->
+        <div class="info-section">
+            <h1 class="book-title">{{ currentBook.title }}</h1>
+            <p class="book-author">{{ currentBook.author }}</p>
 
-            <div class="rating-section">
-                <span class="rating-badge">4.5 ★</span>
-                <span class="rating-count">(20)</span>
+            <div class="rating-row">
+                <span class="rating-badge">{{ currentBook.rating }} ★</span>
+                <span class="reviews-count">({{ currentBook.reviewsCount }})</span>
             </div>
 
-            <div class="price-section">
-                <span class="current-price">Rs.1500</span>
-                <span class="old-price">Rs.2000</span>
+            <div class="price-row">
+                <span class="current-price">Rs.{{ currentBook.price }}</span>
+                <span class="original-price">Rs.{{ currentBook.originalPrice }}</span>
             </div>
 
-            <div class="separator"></div>
+            <hr class="divider">
 
-            <div class="book-detail">
+            <div class="book-description">
                 <h3>• Book Detail</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut.
-                </p>
+                <p>{{ currentBook.description }}</p>
             </div>
 
-            <div class="separator"></div>
+            <hr class="divider">
 
             <div class="feedback-section">
-                <h2>Customer Feedback</h2>
-                <div class="feedback-container">
-                    <p class="feedback-label">Overall rating</p>
-                    <div class="star-rating">
-                        @for (star of [1, 2, 3, 4, 5]; track star) {
-                        <span (click)="setRating(star)" [class.filled]="selectedRating() >= star">★</span>
-                        }
+                <h3>Customer Feedback</h3>
+
+                <div class="feedback-box">
+                    <p class="overall-label">Overall rating</p>
+                    <div class="stars">
+                        <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
                     </div>
-                    <textarea placeholder="Write your review" class="review-input"></textarea>
-                    <div class="submit-container">
+                    <div class="review-input-container">
+                        <input type="text" placeholder="Write your review" class="review-input" />
                         <button class="btn-submit">Submit</button>
                     </div>
                 </div>
-            </div>
 
-            <div class="recent-reviews">
-                <div class="review-item">
-                    <div class="user-avatar">AC</div>
-                    <div class="review-content">
-                        <p class="user-name">Aniket Chile</p>
-                        <div class="user-rating">★★★☆☆</div>
-                        <p class="review-text">Good book for beginners in UX design.</p>
+                <div class="reviews-list">
+                    <div class="review-item" *ngFor="let review of customerReviews()">
+                        <div class="reviewer-avatar">{{ review.initial }}</div>
+                        <div class="review-content">
+                            <p class="reviewer-name">{{ review.name }}</p>
+                            <div class="reviewer-rating">
+                                <span *ngFor="let s of [1,2,3,4,5]; let i = index">
+                                    {{ i < review.rating ? '★' : '☆' }}
+                                </span>
+                            </div>
+                            <p class="review-text">{{ review.comment }}</p>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
-</main>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading()" class="loading-container">
+    <p>Loading book details...</p>
+</div>
+
+<!-- Error State -->
+<div *ngIf="errorMessage()" class="error-container">
+    <p>{{ errorMessage() }}</p>
+</div>

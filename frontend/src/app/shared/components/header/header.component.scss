@@ -1,21 +1,35 @@
-// Header color variables
-$header-bg-color: #9a2540;
-$header-text-color: #ffffff;
-$search-bg-color: #ffffff;
-$search-text-color: #333333;
-$search-placeholder-color: #888888;
-$search-border-radius: 4px;
-$header-height: 48px;
+// Premium Header Variables
+$header-bg: #8B2C3A; // Deep Maroon/Red from design
+$header-text: #ffffff;
+$search-bg: #ffffff;
+$search-text: #333333;
+$search-placeholder: #999999;
+$header-height: 56px;
 
 .header {
-  display: flex;
-  align-items: center;
-  background-color: $header-bg-color;
-  padding: 0 100px;
+  // display: flex; // Moved to content
+  // align-items: center; // Moved to content
+  // justify-content: space-between; // Moved to content
+  background-color: $header-bg;
+  padding: 0; // Remove padding here, let container handle it
   height: $header-height;
   width: 100%;
-  box-sizing: border-box;
-  gap: 32px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px; // Standard container padding
+    height: 100%;
+  }
 
   // Logo Section
   &__logo {
@@ -23,139 +37,300 @@ $header-height: 48px;
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    color: $header-text-color;
+    color: $header-text;
     cursor: pointer;
-    flex-shrink: 0;
 
-    &:hover {
-      opacity: 0.9;
+    &-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); // Ensure white icon
+    }
+
+    &-text {
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
     }
   }
 
-  &__logo-icon {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-  }
-
-  &__logo-text {
-    font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-
-  // Search Bar Section
+  // Search Bar Section - Centered
   &__search {
     display: flex;
     align-items: center;
-    background-color: $search-bg-color;
-    border-radius: $search-border-radius;
+    background-color: $search-bg;
+    border-radius: 4px;
     padding: 6px 12px;
-    width: 340px;
-    flex-shrink: 0;
-    box-shadow: none;
-  }
+    width: 450px; // Wider search bar
+    max-width: 40%;
+    margin: 0 24px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 
-  &__search-icon {
-    width: 16px;
-    height: 16px;
-    color: $search-placeholder-color;
-    flex-shrink: 0;
-    margin-right: 8px;
-  }
+    &-icon {
+      width: 18px;
+      height: 18px;
+      color: #9D9D9D;
+      margin-right: 12px;
+    }
 
-  &__search-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 0.875rem;
-    color: $search-text-color;
-    background: transparent;
+    &-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 0.9rem;
+      color: $search-text;
+      background: transparent;
 
-    &::placeholder {
-      color: $search-placeholder-color;
+      &::placeholder {
+        color: $search-placeholder;
+      }
     }
   }
 
-  // Navigation Section
+  // Navigation: Profile & Cart
   &__nav {
     display: flex;
     align-items: center;
-    gap: 20px;
-    flex-shrink: 0;
-    margin-left: auto;
-  }
+    gap: 32px;
 
-  &__nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    background: none;
-    border: none;
-    color: $header-text-color;
-    cursor: pointer;
-    padding: 2px 4px;
-    transition: opacity 0.2s ease;
+    &-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      color: $header-text;
+      cursor: pointer;
+      padding: 0;
+      position: relative;
 
-    &:hover {
-      opacity: 0.85;
+      &:hover {
+        opacity: 0.9;
+      }
+
+      // Badge for Cart
+      .badge {
+        position: absolute;
+        top: -4px;
+        right: 0;
+        background-color: #ffffff;
+        color: $header-bg;
+        font-size: 10px;
+        font-weight: bold;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $header-bg;
+      }
     }
 
-    &:focus {
-      outline: 2px solid rgba(255, 255, 255, 0.5);
-      outline-offset: 2px;
-      border-radius: 4px;
+    &-icon {
+      width: 20px;
+      height: 20px;
+      margin-bottom: 2px;
+    }
+
+    &-label {
+      font-size: 0.7rem;
+      font-weight: 400;
     }
   }
 
-  &__nav-icon {
-    width: 20px;
-    height: 20px;
+  // Profile Container specific
+  .profile-container {
+    height: 100%;
+    justify-content: center;
+
+    .profile-icon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    &:hover .profile-dropdown {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
   }
 
-  &__nav-label {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.3px;
+  // Dropdown Menu
+  .profile-dropdown {
+    display: none; // Hidden by default
+    position: absolute;
+    top: 50px; // Adjust based on header height
+    right: -80px; // Align somewhat centered or to right
+    width: 280px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    cursor: default;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+
+    // Arrow pointing up
+    &::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      right: 86px; // Adjust to align with icon
+      width: 16px;
+      height: 16px;
+      background-color: white;
+      transform: rotate(45deg);
+      box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.04);
+      z-index: -1;
+    }
+
+    // To bridge the gap so hover isn't lost
+    &::after {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 0;
+      width: 100%;
+      height: 15px;
+      background: transparent;
+    }
+
+    .dropdown-content {
+      padding: 20px;
+      text-align: left;
+      color: #333;
+
+      .welcome-section {
+        margin-bottom: 12px;
+
+        .welcome-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          margin: 0 0 4px 0;
+        }
+
+        .welcome-desc {
+          font-size: 12px;
+          color: #777;
+          margin: 0 0 16px 0;
+          line-height: 1.4;
+        }
+
+        .btn-login-signup {
+          display: block;
+          width: 100%;
+          padding: 8px 0;
+          border: 1px solid $header-bg;
+          background: white;
+          color: $header-bg;
+          text-align: center;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 600;
+          border-radius: 2px;
+          transition: all 0.2s;
+          text-transform: uppercase;
+
+          &:hover {
+            background-color: $header-bg;
+            color: white;
+          }
+        }
+      }
+
+      .divider {
+        height: 1px;
+        background-color: #eee;
+        margin: 12px 0;
+      }
+
+      .menu-links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .menu-link {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+          color: #555;
+          font-size: 14px;
+          transition: color 0.2s;
+          background: none;
+          border: none;
+          width: 100%;
+          padding: 0;
+          cursor: pointer;
+
+          &:hover {
+            color: $header-bg;
+          }
+
+          .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+          }
+
+          &.logout-btn {
+            text-align: left;
+          }
+        }
+      }
+    }
   }
 }
 
-// Responsive adjustments
+// Responsive Design
+@media (max-width: 1024px) {
+  .header {
+    &__search {
+      width: 300px;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .header {
-    padding: 0 16px;
-
     &__logo-text {
       display: none;
     }
 
     &__search {
+      position: static;
+      transform: none;
+      width: auto;
+      flex: 1;
       margin: 0 16px;
       max-width: none;
     }
 
     &__nav {
       gap: 16px;
-    }
 
-    &__nav-label {
-      display: none;
-    }
-  }
-}
+      &-label {
+        display: none;
+      }
 
-@media (max-width: 480px) {
-  .header {
-    padding: 0 12px;
+      // Adjust dropdown for mobile
+      .profile-dropdown {
+        right: -10px;
 
-    &__search {
-      margin: 0 12px;
-      padding: 6px 12px;
-    }
-
-    &__nav {
-      gap: 8px;
+        &::before {
+          right: 15px;
+        }
+      }
     }
   }
 }

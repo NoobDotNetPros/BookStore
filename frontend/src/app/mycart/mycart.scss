@@ -1,10 +1,378 @@
+@use 'sass:color';
+// Variables
+$bg-color: #f5f5f5;
+$panel-bg: #ffffff;
+$accent-color: #A03037; // Bookstore Red
+$primary-btn: #337AB7; // Blue
+$text-primary: #333333;
+$text-secondary: #888888;
+$border-color: #E0E0E0;
+
 .page {
+  background: $bg-color;
+  min-height: 100vh;
+  padding: 24px 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.breadcrumb {
+  max-width: 1000px;
+  margin: 0 auto 24px;
+  font-size: 13px;
+  color: $text-secondary;
+
+  a {
+    color: $text-secondary;
+    text-decoration: none;
+
+    &:hover {
+      color: $text-primary;
+    }
+  }
+
+  span {
+    font-weight: 500;
+    color: $text-primary;
+  }
+}
+
+// Panels Container
+.panels-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel {
+  background: $panel-bg;
+  border: 1px solid $border-color;
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &.collapsed {
+    max-height: 60px; // Just header visible
+  }
+}
+
+.panel-header {
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
   background: #fff;
-  width: 88%;
-  max-width: 1180px;
-  margin: 20px auto 80px;
-  color: #333;
-  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+
+  h2,
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &:hover {
+    background-color: #FAFAFA;
+  }
+}
+
+// Location Picker
+.location-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: $accent-color;
+
+  svg {
+    fill: $accent-color;
+  }
+
+  .location-text {
+    font-weight: 500;
+  }
+}
+
+// Cart Body
+.cart-body {
+  padding: 24px;
+  border-top: 1px solid $border-color;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.book {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+
+  .cover {
+    width: 90px;
+    height: 120px;
+    object-fit: contain;
+    border: 1px solid #eee;
+    padding: 4px;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .details {
+    flex: 1;
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin: 0 0 4px;
+      color: $text-primary;
+    }
+
+    .author {
+      font-size: 0.85rem;
+      color: $text-secondary;
+      margin: 0 0 12px;
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      .current {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: $text-primary;
+      }
+
+      .original {
+        font-size: 0.9rem;
+        color: $text-secondary;
+        text-decoration: line-through;
+      }
+    }
+  }
+}
+
+.quantity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid $border-color;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: $text-primary;
+    font-size: 1.2rem;
+    line-height: 1;
+
+    &:disabled {
+      color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .qty-input {
+    width: 40px;
+    text-align: center;
+    border: 1px solid $border-color;
+    padding: 4px;
+    border-radius: 2px;
+  }
+
+  .remove {
+    background: none;
+    border: none;
+    color: $text-primary;
+    font-size: 0.9rem;
+    margin-left: 16px;
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      color: $accent-color;
+    }
+  }
+}
+
+.cart-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+
+  .primary {
+    background: $primary-btn;
+    color: white;
+    border: none;
+    padding: 10px 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background: color.adjust($primary-btn, $lightness: -10%);
+    }
+  }
+}
+
+// Address Panel
+.address-body {
+  padding: 24px;
+  border-top: 1px solid $border-color;
+}
+
+.customer-info,
+.field-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  .field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: $text-primary;
+      text-transform: capitalize;
+    }
+
+    input,
+    textarea {
+      padding: 10px 12px;
+      border: 1px solid $border-color;
+      border-radius: 2px;
+      font-size: 0.95rem;
+      outline: none;
+
+      &:focus {
+        border-color: $primary-btn;
+      }
+    }
+  }
+}
+
+.address-item {
+  border: 1px solid $border-color;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  transition: all 0.2s;
+
+  &.selected {
+    border-color: $accent-color;
+    background-color: #fff;
+  }
+}
+
+.address-radio-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    cursor: pointer;
+
+    input {
+      accent-color: $accent-color;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .edit-link {
+    color: $accent-color;
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+}
+
+.address-collapsed {
+  margin-left: 28px;
+
+  .address-label {
+    font-size: 0.8rem;
+    color: $text-secondary;
+    margin: 0;
+  }
+
+  .address-text {
+    font-size: 0.95rem;
+    margin: 4px 0 0;
+  }
+}
+
+// Order Summary
+.order-body {
+  padding: 24px;
+  border-top: 1px solid $border-color;
+}
+
+.order-items {
+  margin-bottom: 24px;
+
+  .order-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .cover.small {
+      width: 60px;
+      height: 80px;
+    }
+
+    .qty-info {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.order-total {
+  border-top: 1px solid $border-color;
+  padding-top: 16px;
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
 }
 
 .breadcrumb {
@@ -334,7 +702,8 @@
     margin-bottom: 6px;
   }
 
-  input, textarea {
+  input,
+  textarea {
     width: 100%;
     border: 1px solid #e0e0e0;
     border-radius: 2px;

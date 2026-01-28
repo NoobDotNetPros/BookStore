@@ -7,6 +7,19 @@
 
 :root {
   font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --header-height: 56px;
+  --footer-height: 45px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -16,9 +29,16 @@ html, body {
   font-size: 16px;
   line-height: 1.5;
   color: #333;
-  background-color: #f5f5f5;
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-top: var(--header-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -30,7 +50,27 @@ button {
   font-family: inherit;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
+// Utility classes
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+// Responsive utilities
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
 }

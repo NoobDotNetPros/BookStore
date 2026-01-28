@@ -1,0 +1,63 @@
+<div class="book-list-container">
+    <div class="header-section">
+        <h2 class="page-title">Books <span class="item-count">({{ filteredBooks().length }} items)</span></h2>
+        <select class="sort-dropdown" (change)="onSortChange($event)">
+            <option *ngFor="let option of sortOptions()">{{ option }}</option>
+        </select>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="loading-state">
+        <p>Loading books...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage()" class="error-state">
+        <p>{{ errorMessage() }}</p>
+    </div>
+
+    <!-- Books Grid - 4 columns -->
+    <div class="books-grid" *ngIf="!loading() && !errorMessage()">
+        <div class="book-card" *ngFor="let book of paginatedBooks(); trackBy: trackByBookId"
+            (click)="openDetails(book.id)">
+            <div class="book-image">
+                <img [src]="book.image" [alt]="book.title">
+                <span *ngIf="book.isOutOfStock" class="out-of-stock-badge">OUT OF STOCK</span>
+                <div class="quick-view">QUICK VIEW</div>
+            </div>
+            <div class="book-info">
+                <h3 class="book-title">{{ book.title }}</h3>
+                <p class="book-author">by {{ book.author }}</p>
+                <div class="rating">
+                    <span class="stars">{{ book.rating }} ★</span>
+                    <span class="reviews">({{ book.reviewsCount }})</span>
+                </div>
+                <div class="price-section">
+                    <span class="current-price">Rs. {{ formatPrice(book.price) }}</span>
+                    <span class="original-price">Rs. {{ formatPrice(book.originalPrice) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading() && !errorMessage() && filteredBooks().length === 0" class="empty-state">
+        <p>No books available at the moment.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="!loading() && totalPages() > 1">
+        <button class="pagination-btn nav-btn" (click)="prevPage()" [disabled]="currentPage() === 1">
+            &lt;
+        </button>
+
+        <button *ngFor="let page of pageNumbers()" class="pagination-btn" [class.active]="page === currentPage()"
+            [class.ellipsis]="page === '...'" [disabled]="page === '...'" (click)="goToPage(page)">
+            {{ page }}
+        </button>
+
+        <button class="pagination-btn nav-btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+            &gt;
+        </button>
+    </div>
+</div>
