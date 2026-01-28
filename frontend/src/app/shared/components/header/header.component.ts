@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { BookService } from '../../../Services/book.service';
 import { AuthService } from '../../../Services/auth.service';
+import { CartService } from '../../../Services/cart.service';
 
 @Component({
   selector: 'app-header',
@@ -16,10 +17,12 @@ export class HeaderComponent implements OnInit {
   searchQuery = '';
   private bookService = inject(BookService);
   private authService = inject(AuthService);
+  private cartService = inject(CartService);
   private router = inject(Router);
 
   isLoggedIn = false;
   userName = 'Profile';
+  cartCount = 0;
 
   // Output events for parent components to handle navigation
   searchSubmit = output<string>();
@@ -30,6 +33,17 @@ export class HeaderComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.isLoggedIn = !!user;
       this.userName = user?.user.fullName || 'Profile';
+
+      if (this.isLoggedIn) {
+        // Fetch cart to initialize count
+        this.cartService.getCart().subscribe();
+      } else {
+        this.cartService.updateCartCount(0);
+      }
+    });
+
+    this.cartService.cartCount$.subscribe(count => {
+      this.cartCount = count;
     });
   }
 
@@ -42,15 +56,12 @@ export class HeaderComponent implements OnInit {
   onProfileClick(): void {
     if (this.isLoggedIn) {
       this.profileClick.emit();
-    } else {
-      // If not logged in, maybe clicking profile icon should also go to login or just toggle dropdown?
-      // For now, let's just let the hover work, but click can redirect to login
-      // this.router.navigate(['/login']);
     }
   }
 
   onCartClick(): void {
-    this.cartClick.emit();
+    this.cartClick.emit(); // Keep emitting just in case
+    this.router.navigate(['/my-cart']);
   }
 
   logout() {

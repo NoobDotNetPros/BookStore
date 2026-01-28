@@ -14,9 +14,10 @@ $header-height: 56px;
   padding: 0 12%; // Match the wide margins in design
   height: $header-height;
   width: 100%;
-  box-sizing: border-box;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: 1000;
 
   // Logo Section
