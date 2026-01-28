@@ -38,6 +38,34 @@ public class EmailService : IEmailService
         await SendEmailAsync(email, subject, body, cancellationToken);
     }
 
+    public async Task SendPasswordResetOtpAsync(string email, string otp, CancellationToken cancellationToken = default)
+    {
+        var subject = "Password Reset OTP - Bookstore App";
+        var body = $@"
+            <html>
+            <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <div style='background-color: #a33a3a; padding: 20px; text-align: center;'>
+                    <h1 style='color: white; margin: 0;'>Bookstore App</h1>
+                </div>
+                <div style='padding: 30px; background-color: #f9f9f9;'>
+                    <h2 style='color: #333;'>Password Reset Request</h2>
+                    <p style='color: #555; font-size: 16px;'>You have requested to reset your password. Use the OTP below to proceed:</p>
+                    <div style='background-color: #fff; border: 2px dashed #a33a3a; padding: 20px; text-align: center; margin: 20px 0;'>
+                        <span style='font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #a33a3a;'>{otp}</span>
+                    </div>
+                    <p style='color: #555; font-size: 14px;'>This OTP is valid for <strong>10 minutes</strong>.</p>
+                    <p style='color: #555; font-size: 14px;'>If you didn't request a password reset, please ignore this email or contact support if you have concerns.</p>
+                </div>
+                <div style='background-color: #333; padding: 15px; text-align: center;'>
+                    <p style='color: #999; font-size: 12px; margin: 0;'>© 2026 Bookstore App. All rights reserved.</p>
+                </div>
+            </body>
+            </html>
+        ";
+
+        await SendEmailAsync(email, subject, body, cancellationToken);
+    }
+
     private async Task SendEmailAsync(string toEmail, string subject, string body, CancellationToken cancellationToken)
     {
         try

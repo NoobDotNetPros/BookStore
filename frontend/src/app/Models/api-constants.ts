@@ -7,6 +7,10 @@ export const API_ENDPOINTS = {
     LOGIN: `${API_BASE_URL}/auth/login`,
     SIGNUP: `${API_BASE_URL}/auth/signup`,
     LOGOUT: `${API_BASE_URL}/auth/logout`,
+    FORGOT_PASSWORD: `${API_BASE_URL}/auth/forgot-password`,
+    VERIFY_OTP: `${API_BASE_URL}/auth/verify-otp`,
+    RESEND_OTP: `${API_BASE_URL}/auth/resend-otp`,
+    RESET_PASSWORD: `${API_BASE_URL}/auth/reset-password`,
   },
   // Books endpoints
   BOOKS: {

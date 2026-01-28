@@ -4,6 +4,28 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { API_ENDPOINTS } from '../Models/api-constants';
 import { LoginRequest, SignupRequest, LoginResponse, ApiResponse } from '../Models/auth.models';
 
+export interface ForgotPasswordResponse {
+  message: string;
+  email?: string;
+}
+
+export interface VerifyOtpResponse {
+  message: string;
+  resetToken?: string;
+}
+
+export interface ResendOtpResponse {
+  message: string;
+  waitTimeSeconds?: number;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  resetToken: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,6 +57,22 @@ export class AuthService {
   signup(fullName: string, email: string, password: string, mobileNumber: string): Observable<ApiResponse<LoginResponse>> {
     const request: SignupRequest = { fullName, email, password, mobileNumber };
     return this.http.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.AUTH.SIGNUP, request);
+  }
+
+  forgotPassword(email: string): Observable<ForgotPasswordResponse> {
+    return this.http.post<ForgotPasswordResponse>(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
+  }
+
+  verifyOtp(email: string, otp: string): Observable<VerifyOtpResponse> {
+    return this.http.post<VerifyOtpResponse>(API_ENDPOINTS.AUTH.VERIFY_OTP, { email, otp });
+  }
+
+  resendOtp(email: string): Observable<ResendOtpResponse> {
+    return this.http.post<ResendOtpResponse>(API_ENDPOINTS.AUTH.RESEND_OTP, { email });
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(API_ENDPOINTS.AUTH.RESET_PASSWORD, request);
   }
 
   logout(): void {
