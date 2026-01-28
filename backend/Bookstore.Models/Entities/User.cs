@@ -10,6 +10,12 @@ public class User : BaseAuditableEntity
     public bool IsEmailVerified { get; set; } = false;
     public string? VerificationToken { get; set; }
     public DateTime? VerificationTokenExpiry { get; set; }
+    
+    // Password Reset OTP Fields
+    public string? PasswordResetOtp { get; set; }
+    public DateTime? PasswordResetOtpExpiry { get; set; }
+    public DateTime? LastOtpSentAt { get; set; }
+    
     public List<Address> Addresses { get; set; } = new();
     public List<CartItem> CartItems { get; set; } = new();
     public List<Order> Orders { get; set; } = new();

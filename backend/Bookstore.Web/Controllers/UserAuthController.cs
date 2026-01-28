@@ -84,4 +84,88 @@ public class UserAuthController : ControllerBase
             return Unauthorized(new { message = ex.Message });
         }
     }
+
+    /// <summary>
+    /// Request password reset - sends OTP to user's email
+    /// </summary>
+    [HttpPost("forgot-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
+    {
+        var response = await _mediator.Send(command);
+
+        if (!response.Success)
+            return BadRequest(new { message = response.Message });
+
+        return Ok(new 
+        { 
+            message = response.Message,
+            email = response.Email
+        });
+    }
+
+    /// <summary>
+    /// Verify OTP sent to user's email
+    /// </summary>
+    [HttpPost("verify-otp")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpCommand command)
+    {
+        var response = await _mediator.Send(command);
+
+        if (!response.Success)
+            return BadRequest(new { message = response.Message });
+
+        return Ok(new 
+        { 
+            message = response.Message,
+            resetToken = response.ResetToken
+        });
+    }
+
+    /// <summary>
+    /// Resend OTP to user's email (with 3-minute cooldown)
+    /// </summary>
+    [HttpPost("resend-otp")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ResendOtp([FromBody] ResendOtpCommand command)
+    {
+        var response = await _mediator.Send(command);
+
+        if (!response.Success)
+            return BadRequest(new 
+            { 
+                message = response.Message,
+                waitTimeSeconds = response.WaitTimeSeconds
+            });
+
+        return Ok(new { message = response.Message });
+    }
+
+    /// <summary>
+    /// Reset password with verified token
+    /// </summary>
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+    {
+        var response = await _mediator.Send(command);
+
+        if (!response.Success)
+            return BadRequest(new { message = response.Message });
+
+        return Ok(new { message = response.Message });
+    }
 }

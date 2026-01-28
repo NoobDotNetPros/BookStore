@@ -33,6 +33,12 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync(u => u.VerificationToken == token, cancellationToken);
     }
 
+    public async Task<User?> GetByPasswordResetOtpAsync(string otp, CancellationToken cancellationToken = default)
+    {
+        return await _context.Users
+            .FirstOrDefaultAsync(u => u.PasswordResetOtp == otp, cancellationToken);
+    }
+
     public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default)
     {
         await _context.Users.AddAsync(user, cancellationToken);
