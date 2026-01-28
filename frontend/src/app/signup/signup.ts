@@ -37,14 +37,12 @@ export class Signup {
 
     this.loading = true;
     this.authService.signup(this.fullName, this.email, this.password, this.mobileNumber).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.authService.setUser(response.data);
-          this.router.navigate(['/']);
-        } else {
-          this.errorMessage = response.message || 'Signup failed';
-        }
+      next: (response: any) => {
+        // Backend returns { id, message } on success (200 OK)
+        // It does not return a token, so we cannot auto-login.
+        // Redirect to login page.
         this.loading = false;
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Signup failed. Please try again.';

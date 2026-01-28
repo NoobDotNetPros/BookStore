@@ -54,8 +54,8 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.AUTH.LOGIN, { email, password });
   }
 
-  signup(fullName: string, email: string, password: string, mobileNumber: string): Observable<ApiResponse<LoginResponse>> {
-    const request: SignupRequest = { fullName, email, password, mobileNumber };
+  signup(fullName: string, email: string, password: string, phone: string): Observable<ApiResponse<LoginResponse>> {
+    const request: SignupRequest = { fullName, email, password, phone };
     return this.http.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.AUTH.SIGNUP, request);
   }
 
@@ -89,5 +89,29 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.authToken;
+  }
+
+  isAdmin(): boolean {
+    const role = this.getUserRole();
+    return role === 'Admin';
+  }
+
+  getUserRole(): string | null {
+    const token = this.authToken;
+    if (!token) return null;
+
+    const decoded = this.decodeToken(token);
+    return decoded ? decoded.role || decoded.Role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] : null;
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      const payload = token.split('.')[1];
+      if (!payload) return null;
+      return JSON.parse(atob(payload));
+    } catch (e) {
+      console.error('Error decoding token', e);
+      return null;
+    }
   }
 }

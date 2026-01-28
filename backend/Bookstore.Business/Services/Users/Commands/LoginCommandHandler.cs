@@ -22,6 +22,20 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseDt
 
     public async Task<LoginResponseDto> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
+        // Hardcoded Admin Check
+        if (request.Email == "admin" && request.Password == "admin")
+        {
+            var adminToken = _jwtService.GenerateToken(0, "admin", "Admin");
+            return new LoginResponseDto
+            {
+                Token = adminToken,
+                UserId = 0,
+                Email = "admin",
+                FullName = "System Admin",
+                Role = "Admin"
+            };
+        }
+
         var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
 
         if (user == null)

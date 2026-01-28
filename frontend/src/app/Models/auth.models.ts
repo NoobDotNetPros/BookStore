@@ -7,7 +7,7 @@ export interface SignupRequest {
   fullName: string;
   email: string;
   password: string;
-  mobileNumber: string;
+  phone: string;
 }
 
 export interface LoginResponse {

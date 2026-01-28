@@ -38,7 +38,11 @@ export class Login {
       next: (response) => {
         if (response.success && response.data) {
           this.authService.setUser(response.data);
-          this.router.navigate(['/']);
+          if (this.authService.isAdmin()) {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/home']);
+          }
         } else {
           this.errorMessage = response.message || 'Login failed';
         }
