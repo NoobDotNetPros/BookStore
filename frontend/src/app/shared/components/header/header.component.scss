@@ -7,11 +7,11 @@ $search-placeholder: #999999;
 $header-height: 56px;
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  // display: flex; // Moved to content
+  // align-items: center; // Moved to content
+  // justify-content: space-between; // Moved to content
   background-color: $header-bg;
-  padding: 0 12%; // Match the wide margins in design
+  padding: 0; // Remove padding here, let container handle it
   height: $header-height;
   width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -19,6 +19,17 @@ $header-height: 56px;
   top: 0;
   left: 0;
   z-index: 1000;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px; // Standard container padding
+    height: 100%;
+  }
 
   // Logo Section
   &__logo {
@@ -284,8 +295,6 @@ $header-height: 56px;
 // Responsive Design
 @media (max-width: 1024px) {
   .header {
-    padding: 0 5%;
-
     &__search {
       width: 300px;
     }
@@ -294,9 +303,6 @@ $header-height: 56px;
 
 @media (max-width: 768px) {
   .header {
-    padding: 0 16px;
-    justify-content: space-between;
-
     &__logo-text {
       display: none;
     }
