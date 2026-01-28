@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../Components/header/header.component';
 import { BookCardComponent } from '../../Components/book-card/book-card.component';
 import { PaginationComponent } from '../../Components/pagination/pagination.component';
-import { Book } from '../../models/book.model';
+import { Book } from '../../Models/book.model';
 
 @Component({
   selector: 'app-homepage',

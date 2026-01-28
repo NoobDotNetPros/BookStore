@@ -10,9 +10,7 @@ import { Login } from './login/login';
 import { Signup } from './signup/signup';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password';
 import { MyCartComponent } from './mycart/mycart';
-import { WishlistComponent } from './wishlist/wishlist';
 import { authGuard } from './shared/guards/auth.guard';
-import { HomepageComponent } from './pages/homepage/homepage.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
