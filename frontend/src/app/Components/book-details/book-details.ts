@@ -60,14 +60,22 @@ export class BookDetails implements OnInit {
   ]);
 
   ngOnInit() {
+    console.log('BookDetails component initialized');
     this.isLoggedIn.set(this.authService.isLoggedIn());
 
     const bookId = this.route.snapshot.paramMap.get('id');
+    console.log('Book ID from route:', bookId);
+
     if (bookId) {
       this.loadBookDetails(+bookId);
     } else {
-      this.router.navigate(['/books']);
+      console.error('No book ID found in route');
+      this.router.navigate(['/home']);
     }
+  }
+
+  goBack() {
+    this.router.navigate(['/home']);
   }
 
   loadBookDetails(bookId: number) {

@@ -2,10 +2,64 @@
 
 :root {
   font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --header-height: 56px;
+  --footer-height: 45px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   margin: 0;
-  background: #ffffff;
+  background: #f5f5f5;
   color: #333;
+  min-height: 100vh;
+  padding-bottom: var(--footer-height);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+// Utility classes
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+// Responsive utilities
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
 }

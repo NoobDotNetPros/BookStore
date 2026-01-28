@@ -291,6 +291,10 @@ $btn-blue: #337AB7;
 }
 
 @media (max-width: 768px) {
+  .book-details-container {
+    padding: 16px;
+  }
+
   .details-layout {
     flex-direction: column;
     gap: 24px;
@@ -301,8 +305,74 @@ $btn-blue: #337AB7;
     width: 100%;
   }
 
-  .image-section .main-image {
-    margin-left: 0;
-    margin-top: 60px; // Space for thumbnails
+  .image-section {
+    .thumbnails {
+      position: relative;
+      flex-direction: row;
+      margin-bottom: 16px;
+    }
+
+    .main-image {
+      margin-left: 0;
+      height: 280px;
+    }
+
+    .action-buttons {
+      margin-left: 0;
+      flex-direction: column;
+      gap: 12px;
+
+      .btn {
+        padding: 14px;
+      }
+    }
+  }
+
+  .info-section {
+    .book-title {
+      font-size: 1.4rem;
+    }
+
+    .price-row .current-price {
+      font-size: 1.5rem;
+    }
+
+    .feedback-section .feedback-box {
+      padding: 12px;
+    }
+
+    .reviews-list .review-item {
+      gap: 12px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb {
+    font-size: 0.75rem;
+    margin-bottom: 16px;
+  }
+
+  .image-section .thumbnails .thumb {
+    width: 35px;
+    height: 45px;
+  }
+
+  .info-section {
+    .book-title {
+      font-size: 1.2rem;
+    }
+
+    .rating-row {
+      flex-wrap: wrap;
+    }
+
+    .feedback-section .reviews-list .review-item {
+      flex-direction: column;
+
+      .reviewer-avatar {
+        align-self: flex-start;
+      }
+    }
   }
 }

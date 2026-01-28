@@ -48,8 +48,18 @@ public class BookController : ControllerBase
     {
         var book = await _mediator.Send(new GetBookByIdQuery(id));
         if (book == null)
-            return NotFound(new { message = "Book not found" });
+            return NotFound(new Bookstore.Models.ApiResponse<Bookstore.Models.DTOs.BookDto>
+            {
+                Success = false,
+                Message = "Book not found",
+                Data = null
+            });
         
-        return Ok(new { message = "Successfully fetched product", data = book });
+        return Ok(new Bookstore.Models.ApiResponse<Bookstore.Models.DTOs.BookDto>
+        {
+            Success = true,
+            Message = "Successfully fetched product",
+            Data = book
+        });
     }
 }

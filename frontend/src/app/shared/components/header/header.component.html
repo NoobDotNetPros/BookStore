@@ -1,7 +1,7 @@
 <header class="header">
   <!-- Logo Section -->
   <a routerLink="/" class="header__logo">
-    <img class="header__logo-icon" src="book-open.svg" alt="Bookstore Logo" />
+    <img class="header__logo-icon" src="assets/images/education.svg" alt="Bookstore Logo" />
     <!-- Using a generic icon if the specific one isn't available, logic to be adjusted -->
     <span class="header__logo-text">Bookstore</span>
   </a>
@@ -19,14 +19,60 @@
   <!-- Navigation Icons Section -->
   <nav class="header__nav">
     <!-- Profile Icon -->
-    <button class="header__nav-item" (click)="onProfileClick()" type="button">
-      <svg class="header__nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-          stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      <span class="header__nav-label">Poonam</span>
-    </button>
+    <div class="header__nav-item profile-container">
+      <div class="profile-icon-wrapper" (click)="onProfileClick()">
+        <svg class="header__nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="header__nav-label">{{ userName }}</span>
+      </div>
+
+      <!-- Dropdown Menu -->
+      <div class="profile-dropdown">
+        <!-- Not Logged In State -->
+        <div class="dropdown-content" *ngIf="!isLoggedIn">
+          <div class="welcome-section">
+            <p class="welcome-title">Welcome</p>
+            <p class="welcome-desc">To access account and manage orders</p>
+            <a routerLink="/login" class="btn-login-signup">LOGIN/SIGNUP</a>
+          </div>
+          <div class="divider"></div>
+          <div class="menu-links">
+            <a routerLink="/orders" class="menu-link">
+              <span class="icon">📦</span> My Orders
+            </a>
+            <a routerLink="/wishlist" class="menu-link">
+              <span class="icon">❤</span> Wishlist
+            </a>
+          </div>
+        </div>
+
+        <!-- Logged In State (Optional/Basic) -->
+        <div class="dropdown-content" *ngIf="isLoggedIn">
+          <div class="welcome-section">
+            <p class="welcome-title">Hello, {{ userName }}</p>
+          </div>
+          <div class="divider"></div>
+          <div class="menu-links">
+            <a routerLink="/profile" class="menu-link">
+              <span class="icon">👤</span> Profile
+            </a>
+            <a routerLink="/orders" class="menu-link">
+              <span class="icon">📦</span> My Orders
+            </a>
+            <a routerLink="/wishlist" class="menu-link">
+              <span class="icon">❤</span> Wishlist
+            </a>
+            <div class="divider"></div>
+            <button (click)="logout()" class="menu-link logout-btn">
+              <span class="icon">🚪</span> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Cart Icon -->
     <button class="header__nav-item" (click)="onCartClick()" type="button">

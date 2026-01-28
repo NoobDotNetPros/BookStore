@@ -1,6 +1,8 @@
 <div class="admin-panel">
   <div class="admin-header">
-    <h1>📚 Book Management Admin Panel</h1>
+    <div class="header-title">
+      <h1>Book Management Admin Panel</h1>
+    </div>
     <button class="btn btn-primary" (click)="openNewForm()">+ Add New Book</button>
   </div>
 
@@ -44,7 +46,7 @@
           </td>
           <td>
             <strong>{{ book.bookName }}</strong>
-            <p class="description">{{ book.description.substring(0, 50) }}...</p>
+            <p class="description">{{ book.description?.substring(0, 50) }}...</p>
           </td>
           <td>{{ book.author }}</td>
           <td>{{ book.isbn }}</td>
@@ -76,80 +78,69 @@
       <form class="book-form" (ngSubmit)="saveBook()">
         <div class="form-group">
           <label>Book Name *</label>
-          <input type="text"
-            [value]="formData().bookName"
-            (input)="updateFormField('bookName', $event)"
-            required />
+          <input type="text" [value]="formData().bookName"
+            (input)="updateFormField('bookName', $any($event.target).value)" required />
         </div>
 
         <div class="form-group">
           <label>Author *</label>
-          <input type="text"
-            [value]="formData().author"
-            (input)="updateFormField('author', $event)"
+          <input type="text" [value]="formData().author" (input)="updateFormField('author', $any($event.target).value)"
             required />
         </div>
 
         <div class="form-group">
           <label>ISBN *</label>
-          <input type="text"
-            [value]="formData().isbn"
-            (input)="updateFormField('isbn', $event)"
+          <input type="text" [value]="formData().isbn" (input)="updateFormField('isbn', $any($event.target).value)"
             required />
         </div>
 
         <div class="form-group">
           <label>Description</label>
-          <textarea
-            [value]="formData().description"
-            (input)="updateFormField('description', $event)"
+          <textarea [value]="formData().description" (input)="updateFormField('description', $any($event.target).value)"
             rows="3"></textarea>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Quantity *</label>
-            <input type="number"
-              [value]="formData().quantity"
-              (input)="updateFormField('quantity', +$event)"
-              required />
+            <input type="number" [value]="formData().quantity"
+              (input)="updateFormField('quantity', +$any($event.target).value)" required />
           </div>
 
           <div class="form-group">
             <label>Price (₹) *</label>
-            <input type="number"
-              [value]="formData().price"
-              (input)="updateFormField('price', +$event)"
-              step="0.01"
-              required />
+            <input type="number" [value]="formData().price"
+              (input)="updateFormField('price', +$any($event.target).value)" step="0.01" required />
           </div>
 
           <div class="form-group">
             <label>Discount Price (₹) *</label>
-            <input type="number"
-              [value]="formData().discountPrice"
-              (input)="updateFormField('discountPrice', +$event)"
-              step="0.01"
-              required />
+            <input type="number" [value]="formData().discountPrice"
+              (input)="updateFormField('discountPrice', +$any($event.target).value)" step="0.01" required />
           </div>
         </div>
 
         <div class="form-group">
-          <label>Cover Image URL</label>
-          <input type="text"
-            [value]="formData().coverImage"
-            (input)="updateFormField('coverImage', $event)"
-            placeholder="https://..." />
-          <small>Paste image URL from OpenLibrary or other source</small>
+          <label>Cover Image</label>
+          <div class="file-upload-container">
+            <input type="file" accept="image/*" (change)="onFileSelected($event)" id="coverImageFile" />
+            <label for="coverImageFile" class="file-upload-btn">
+              Choose Image
+            </label>
+            <span class="file-name" *ngIf="selectedFile()">{{ selectedFile()?.name }}</span>
+          </div>
+          <small>Upload a cover image (PNG, JPG, WEBP)</small>
         </div>
 
-        <div class="image-preview" *ngIf="formData().coverImage">
-          <img [src]="formData().coverImage" [alt]="formData().bookName" />
+        <div class="image-preview" *ngIf="previewUrl()">
+          <img [src]="previewUrl()" [alt]="formData().bookName" />
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
-          <button type="submit" class="btn btn-primary">{{ editingId() ? 'Update Book' : 'Create Book' }}</button>
+          <button type="submit" class="btn btn-primary" [disabled]="uploading()">
+            {{ uploading() ? 'Uploading...' : (editingId() ? 'Update Book' : 'Create Book') }}
+          </button>
         </div>
       </form>
     </div>

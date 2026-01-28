@@ -15,7 +15,7 @@ $header-height: 56px;
   height: $header-height;
   width: 100%;
   box-sizing: border-box;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1000;
 
@@ -94,7 +94,7 @@ $header-height: 56px;
       cursor: pointer;
       padding: 0;
       position: relative;
-      
+
       &:hover {
         opacity: 0.9;
       }
@@ -129,12 +129,162 @@ $header-height: 56px;
       font-weight: 400;
     }
   }
+
+  // Profile Container specific
+  .profile-container {
+    height: 100%;
+    justify-content: center;
+
+    .profile-icon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    &:hover .profile-dropdown {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  // Dropdown Menu
+  .profile-dropdown {
+    display: none; // Hidden by default
+    position: absolute;
+    top: 50px; // Adjust based on header height
+    right: -80px; // Align somewhat centered or to right
+    width: 280px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    cursor: default;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+
+    // Arrow pointing up
+    &::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      right: 86px; // Adjust to align with icon
+      width: 16px;
+      height: 16px;
+      background-color: white;
+      transform: rotate(45deg);
+      box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.04);
+      z-index: -1;
+    }
+
+    // To bridge the gap so hover isn't lost
+    &::after {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 0;
+      width: 100%;
+      height: 15px;
+      background: transparent;
+    }
+
+    .dropdown-content {
+      padding: 20px;
+      text-align: left;
+      color: #333;
+
+      .welcome-section {
+        margin-bottom: 12px;
+
+        .welcome-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          margin: 0 0 4px 0;
+        }
+
+        .welcome-desc {
+          font-size: 12px;
+          color: #777;
+          margin: 0 0 16px 0;
+          line-height: 1.4;
+        }
+
+        .btn-login-signup {
+          display: block;
+          width: 100%;
+          padding: 8px 0;
+          border: 1px solid $header-bg;
+          background: white;
+          color: $header-bg;
+          text-align: center;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 600;
+          border-radius: 2px;
+          transition: all 0.2s;
+          text-transform: uppercase;
+
+          &:hover {
+            background-color: $header-bg;
+            color: white;
+          }
+        }
+      }
+
+      .divider {
+        height: 1px;
+        background-color: #eee;
+        margin: 12px 0;
+      }
+
+      .menu-links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .menu-link {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+          color: #555;
+          font-size: 14px;
+          transition: color 0.2s;
+          background: none;
+          border: none;
+          width: 100%;
+          padding: 0;
+          cursor: pointer;
+
+          &:hover {
+            color: $header-bg;
+          }
+
+          .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+          }
+
+          &.logout-btn {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
 }
 
 // Responsive Design
 @media (max-width: 1024px) {
   .header {
     padding: 0 5%;
+
     &__search {
       width: 300px;
     }
@@ -147,7 +297,7 @@ $header-height: 56px;
     justify-content: space-between;
 
     &__logo-text {
-        display: none;
+      display: none;
     }
 
     &__search {
@@ -161,7 +311,19 @@ $header-height: 56px;
 
     &__nav {
       gap: 16px;
-      &-label { display: none; }
+
+      &-label {
+        display: none;
+      }
+
+      // Adjust dropdown for mobile
+      .profile-dropdown {
+        right: -10px;
+
+        &::before {
+          right: 15px;
+        }
+      }
     }
   }
 }

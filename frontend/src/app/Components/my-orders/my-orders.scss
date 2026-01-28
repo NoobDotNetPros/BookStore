@@ -111,3 +111,49 @@ $green-status: #388E3C;
         }
     }
 }
+
+// Responsive Design
+@media (max-width: 768px) {
+    .page-container {
+        padding: 16px;
+    }
+
+    .order-item {
+        flex-direction: column;
+        padding: 16px;
+
+        .item-visual {
+            width: 100%;
+            height: 150px;
+            margin-right: 0;
+            margin-bottom: 16px;
+        }
+
+        .item-details {
+            width: 100%;
+
+            .title {
+                font-size: 1rem;
+            }
+        }
+
+        .order-status {
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .breadcrumb {
+        font-size: 0.75rem;
+        margin-bottom: 16px;
+    }
+
+    .order-item {
+        .item-details .price-row {
+            flex-direction: column;
+            gap: 4px;
+        }
+    }
+}

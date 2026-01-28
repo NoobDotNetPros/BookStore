@@ -25,6 +25,17 @@ $gray-dark: #545b62; // Darker gray
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .admin-logo {
+        height: 40px;
+        width: auto;
+      }
+    }
+
     h1 {
       margin: 0;
       color: $text-color;
@@ -283,6 +294,43 @@ $gray-dark: #545b62; // Darker gray
             color: #666;
             font-size: 12px;
           }
+
+          .file-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+
+            input[type="file"] {
+              display: none;
+            }
+
+            .file-upload-btn {
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              padding: 10px 20px;
+              background: $primary-color;
+              color: white;
+              border-radius: 4px;
+              cursor: pointer;
+              font-size: 14px;
+              transition: background 0.2s;
+
+              &:hover {
+                background: $primary-color-dark;
+              }
+            }
+
+            .file-name {
+              color: $text-color;
+              font-size: 13px;
+              max-width: 200px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
         }
 
         .form-row {
@@ -341,8 +389,133 @@ $gray-dark: #545b62; // Darker gray
                 background: $gray-dark;
               }
             }
+
+            &:disabled {
+              opacity: 0.6;
+              cursor: not-allowed;
+            }
           }
         }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .admin-panel {
+    padding: 16px;
+
+    .admin-header h1 {
+      font-size: 22px;
+    }
+
+    .books-table table {
+      font-size: 13px;
+
+      thead th,
+      tbody td {
+        padding: 10px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-panel {
+    .admin-header {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+
+      .header-title {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    .stats-container {
+      grid-template-columns: 1fr;
+      gap: 12px;
+
+      .stat-card {
+        padding: 16px;
+
+        .stat-value {
+          font-size: 22px;
+        }
+      }
+    }
+
+    .books-table {
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      thead th,
+      tbody td {
+        min-width: 100px;
+      }
+
+      .btn {
+        padding: 4px 8px;
+        font-size: 11px;
+      }
+    }
+
+    .modal-overlay .modal-content {
+      width: 95%;
+      max-height: 95vh;
+
+      .modal-header {
+        padding: 16px;
+
+        h2 {
+          font-size: 18px;
+        }
+      }
+
+      .book-form {
+        padding: 16px;
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+          flex-direction: column;
+
+          .btn {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-panel {
+    padding: 12px;
+
+    .books-table {
+      .book-thumbnail {
+        width: 40px;
+        height: 60px;
+      }
+
+      td .description {
+        display: none;
       }
     }
   }
