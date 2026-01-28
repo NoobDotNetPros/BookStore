@@ -27,7 +27,12 @@ public class BookController : ControllerBase
     public async Task<IActionResult> GetAllBooks()
     {
         var books = await _mediator.Send(new GetBooksQuery());
-        return Ok(new { message = "Successfully fetched all products", data = books });
+        return Ok(new Bookstore.Models.ApiResponse<List<Bookstore.Models.DTOs.BookDto>>
+        {
+            Success = true,
+            Message = "Successfully fetched all products",
+            Data = books
+        });
     }
 
     /// <summary>

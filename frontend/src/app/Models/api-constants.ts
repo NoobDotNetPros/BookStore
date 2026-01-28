@@ -1,5 +1,5 @@
 // API Configuration Constants
-export const API_BASE_URL = 'http://localhost:4200/api';
+export const API_BASE_URL = 'http://localhost:5000/api';
 
 export const API_ENDPOINTS = {
   // Auth endpoints

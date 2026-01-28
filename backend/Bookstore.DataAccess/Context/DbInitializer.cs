@@ -158,5 +158,36 @@ public static class DbInitializer
             context.Books.AddRange(books);
             await context.SaveChangesAsync();
         }
+
+        // Seed random dummy books if we have fewer than 100 books
+        if (await context.Books.CountAsync() < 100)
+        {
+            var random = new Random();
+            var adjectives = new[] { "Advanced", "Basic", "Complete", "Dynamic", "Essential", "Fundamental", "Great", "High-Performance", "Interactive", "Modern" };
+            var nouns = new[] { "C#", "Java", "Python", "Algorithms", "Architecture", "Cloud Computing", "DevOps", "Machine Learning", "Microservices", "Web Development" };
+            var authors = new[] { "John Smith", "Jane Doe", "Bob Wilson", "Alice Cooper", "Charlie Brown", "David Miller", "Eva Green", "Frank Wright" };
+
+            var dummyBooks = new List<Book>();
+            for (int i = 0; i < 100; i++)
+            {
+                var title = $"{adjectives[random.Next(adjectives.Length)]} {nouns[random.Next(nouns.Length)]} {random.Next(100, 999)}";
+                
+                dummyBooks.Add(new Book
+                {
+                    BookName = title,
+                    Author = authors[random.Next(authors.Length)],
+                    Description = $"A comprehensive guide to {title}. Learn the best practices and advanced techniques.",
+                    ISBN = $"978-{random.Next(100, 999)}-{random.Next(100, 999)}-{random.Next(0, 9)}",
+                    Quantity = random.Next(10, 100),
+                    Price = random.Next(50, 500) * 10,
+                    DiscountPrice = random.Next(40, 450) * 10,
+                    CoverImage = $"https://picsum.photos/seed/{random.Next(10000)}/200/300",
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            context.Books.AddRange(dummyBooks);
+            await context.SaveChangesAsync();
+        }
     }
 }
