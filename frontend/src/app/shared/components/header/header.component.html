@@ -14,7 +14,25 @@
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
       <input type="text" class="header__search-input" placeholder="Search ..." [(ngModel)]="searchQuery"
-        (keyup.enter)="onSearch()" />
+        (input)="onSearchInput()" (keyup.enter)="onSearch()" (focus)="onSearchFocus()" autocomplete="off" />
+
+      <!-- Search Dropdown -->
+      <div class="search-dropdown" *ngIf="showSearchDropdown">
+        <div class="search-result" *ngFor="let book of searchResults" (click)="selectBook(book)">
+          <img [src]="book.coverImage || 'assets/images/default-book.png'" [alt]="book.bookName" class="result-image">
+          <div class="result-info">
+            <span class="result-title">{{ book.bookName }}</span>
+            <span class="result-author">by {{ book.author }}</span>
+          </div>
+          <span class="result-price">₹{{ book.discountPrice || book.price }}</span>
+        </div>
+        <div class="search-result view-all" *ngIf="searchResults.length > 0" (click)="onSearch()">
+          <span>View all results for "{{ searchQuery }}"</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </div>
     </div>
 
     <!-- Navigation Icons Section -->
