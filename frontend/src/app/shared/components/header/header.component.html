@@ -13,26 +13,13 @@
         <path d="M21 21L15.803 15.803M15.803 15.803A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      <input type="text" class="header__search-input" placeholder="Search ..." [(ngModel)]="searchQuery"
-        (input)="onSearchInput()" (keyup.enter)="onSearch()" (focus)="onSearchFocus()" autocomplete="off" />
-
-      <!-- Search Dropdown -->
-      <div class="search-dropdown" *ngIf="showSearchDropdown">
-        <div class="search-result" *ngFor="let book of searchResults" (click)="selectBook(book)">
-          <img [src]="book.coverImage || 'assets/images/default-book.png'" [alt]="book.bookName" class="result-image">
-          <div class="result-info">
-            <span class="result-title">{{ book.bookName }}</span>
-            <span class="result-author">by {{ book.author }}</span>
-          </div>
-          <span class="result-price">₹{{ book.discountPrice || book.price }}</span>
-        </div>
-        <div class="search-result view-all" *ngIf="searchResults.length > 0" (click)="onSearch()">
-          <span>View all results for "{{ searchQuery }}"</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </div>
+      <input type="text" class="header__search-input" placeholder="Search books by title, author..." [(ngModel)]="searchQuery"
+        (input)="onSearchInput()" (keyup.enter)="onSearch()" autocomplete="off" />
+      <button class="header__search-clear" *ngIf="searchQuery" (click)="clearSearch()" type="button" title="Clear search">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
 
     <!-- Navigation Icons Section -->

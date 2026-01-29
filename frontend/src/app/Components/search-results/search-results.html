@@ -2,7 +2,34 @@
   <!-- Header Section -->
   <div class="search-header">
     <h1>Search Results</h1>
-    <p class="search-query">Results for "<strong>{{ searchQuery }}</strong>"</p>
+    <p class="search-query" *ngIf="searchQuery">
+      Showing results for "<strong>{{ searchQuery }}</strong>"
+    </p>
+    <p class="search-query" *ngIf="!searchQuery && !isLoading">
+      Start typing to search for books...
+    </p>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section" *ngIf="searchQuery && searchResults.length > 0 && !isLoading">
+    <div class="filter-group">
+      <label>Sort by:</label>
+      <select [(ngModel)]="sortBy" (change)="onFilterChange()">
+        <option value="relevance">Relevance</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="name">Name (A-Z)</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Price:</label>
+      <select [(ngModel)]="priceRange" (change)="onFilterChange()">
+        <option value="all">All Prices</option>
+        <option value="under-500">Under ₹500</option>
+        <option value="500-1000">₹500 - ₹1000</option>
+        <option value="above-1000">Above ₹1000</option>
+      </select>
+    </div>
   </div>
 
   <!-- Loading State -->
@@ -11,8 +38,15 @@
     <p>Searching books...</p>
   </div>
 
+  <!-- No Search Query State -->
+  <div class="empty-search" *ngIf="!searchQuery && !isLoading">
+    <div class="empty-icon">🔍</div>
+    <h2>Search for your favorite books</h2>
+    <p>Enter a book title, author name, or keyword to find books</p>
+  </div>
+
   <!-- No Results State -->
-  <div class="no-results" *ngIf="noResults && !isLoading">
+  <div class="no-results" *ngIf="noResults && !isLoading && searchQuery">
     <div class="no-results-icon">📚</div>
     <h2>No books found</h2>
     <p>We couldn't find any books matching "<strong>{{ searchQuery }}</strong>"</p>
@@ -22,7 +56,7 @@
       <li>Book titles</li>
       <li>Author names</li>
     </ul>
-    <button class="btn-home" (click)="clearSearch()">Back to Home</button>
+    <button class="btn-home" (click)="clearSearch()">Browse All Books</button>
   </div>
 
   <!-- Results Grid -->
@@ -36,14 +70,18 @@
         <div class="book-image-wrapper">
           <img [src]="book.coverImage || 'assets/images/default-book.png'"
                [alt]="book.bookName"
-               class="book-image">
+               class="book-image"
+               loading="lazy">
           <div class="book-overlay">
             <button class="btn-view-details">View Details</button>
           </div>
+          <span class="discount-badge" *ngIf="book.discountPrice && book.price > book.discountPrice">
+            {{ ((book.price - book.discountPrice) / book.price * 100) | number:'1.0-0' }}% OFF
+          </span>
         </div>
         <div class="book-info">
-          <h3 class="book-title" [title]="book.bookName">{{ book.bookName }}</h3>
-          <p class="book-author">by {{ book.author }}</p>
+          <h3 class="book-title" [title]="book.bookName" [innerHTML]="highlightMatch(book.bookName)"></h3>
+          <p class="book-author">by <span [innerHTML]="highlightMatch(book.author)"></span></p>
           <div class="book-price">
             <span class="current-price">₹{{ book.discountPrice || book.price }}</span>
             <span class="original-price" *ngIf="book.discountPrice && book.price > book.discountPrice">

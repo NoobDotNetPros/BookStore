@@ -1,12 +1,11 @@
-import { Component, output, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, output, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { BookService } from '../../../Services/book.service';
 import { AuthService } from '../../../Services/auth.service';
 import { CartService } from '../../../Services/cart.service';
-import { BookDto } from '../../../Models/book.models';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil, filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -26,11 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userName = 'Profile';
   cartCount = 0;
 
-  // Search autocomplete
-  allBooks: BookDto[] = [];
-  searchResults: BookDto[] = [];
-  showSearchDropdown = false;
-  isSearching = false;
+  // Search
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
 
@@ -40,8 +35,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   cartClick = output<void>();
 
   ngOnInit() {
-    // Load books for search (available for all users)
-    this.loadBooks();
+    // Preload books for instant search
+    this.bookService.getAllBooks().subscribe();
 
     this.authService.currentUser$.subscribe(user => {
       this.isLoggedIn = !!user;
@@ -58,13 +53,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.cartCount = count;
     });
 
-    // Setup debounced search for dropdown preview
+    // Setup debounced search - navigate to search page while typing
     this.searchSubject.pipe(
-      debounceTime(300),
+      debounceTime(150),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
     ).subscribe(query => {
-      this.performSearch(query);
+      this.navigateToSearch(query);
+    });
+
+    // Sync search query from URL when navigating
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      const url = this.router.url;
+      if (!url.startsWith('/search')) {
+        // Clear search when leaving search page
+        this.searchQuery = '';
+      }
+    });
+
+    // Subscribe to search query changes from service
+    this.bookService.searchQuery$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(query => {
+      if (this.searchQuery !== query) {
+        this.searchQuery = query;
+      }
     });
   }
 
@@ -73,73 +89,43 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadBooks(): void {
-    this.bookService.getAllBooks().subscribe({
-      next: (response) => {
-        this.allBooks = response.data || [];
-      },
-      error: () => {
-        this.allBooks = [];
-      }
-    });
-  }
-
   onSearchInput(): void {
     this.searchSubject.next(this.searchQuery);
   }
 
-  private performSearch(query: string): void {
-    if (!query || query.trim().length < 2) {
-      this.searchResults = [];
-      this.showSearchDropdown = false;
-      return;
+  private navigateToSearch(query: string): void {
+    const trimmedQuery = query.trim();
+
+    if (trimmedQuery.length >= 1) {
+      // Navigate to search page with query
+      this.router.navigate(['/search'], {
+        queryParams: { q: trimmedQuery }
+      });
+      this.bookService.updateSearchQuery(trimmedQuery);
+    } else if (this.router.url.startsWith('/search')) {
+      // If on search page and query is empty, go back to home
+      this.router.navigate(['/home']);
     }
-
-    this.isSearching = true;
-    const searchTerm = query.toLowerCase().trim();
-
-    this.searchResults = this.allBooks.filter(book =>
-      book.bookName?.toLowerCase().includes(searchTerm) ||
-      book.author?.toLowerCase().includes(searchTerm)
-    ).slice(0, 6); // Limit to 6 results
-
-    this.showSearchDropdown = this.searchResults.length > 0;
-    this.isSearching = false;
   }
 
   onSearch(): void {
-    if (!this.searchQuery.trim()) {
+    const trimmedQuery = this.searchQuery.trim();
+    if (!trimmedQuery) {
       return;
     }
 
-    this.showSearchDropdown = false;
     // Navigate to search results page
     this.router.navigate(['/search'], {
-      queryParams: { q: this.searchQuery.trim() }
+      queryParams: { q: trimmedQuery }
     });
-    // Update service for other components
-    this.bookService.updateSearchQuery(this.searchQuery.trim());
-    this.searchSubmit.emit(this.searchQuery.trim());
+    this.bookService.updateSearchQuery(trimmedQuery);
+    this.searchSubmit.emit(trimmedQuery);
   }
 
-  selectBook(book: BookDto): void {
-    this.showSearchDropdown = false;
+  clearSearch(): void {
     this.searchQuery = '';
-    this.router.navigate(['/book', book.id]);
-  }
-
-  onSearchFocus(): void {
-    if (this.searchResults.length > 0) {
-      this.showSearchDropdown = true;
-    }
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.header__search')) {
-      this.showSearchDropdown = false;
-    }
+    this.bookService.updateSearchQuery('');
+    this.router.navigate(['/home']);
   }
 
   onProfileClick(): void {
