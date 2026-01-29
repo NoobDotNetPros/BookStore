@@ -47,7 +47,13 @@ export class Profile implements OnInit {
     successMessage = signal('');
 
     ngOnInit() {
-        this.loadUserProfile();
+        // Check if user is logged in before loading profile
+        if (this.authService.isLoggedIn()) {
+            this.loadUserProfile();
+        } else {
+            this.errorMessage.set('Please login to view your profile.');
+            this.isLoading.set(false);
+        }
     }
 
     loadUserProfile() {
