@@ -38,10 +38,10 @@ export interface ApiResponse<T> {
 })
 export class OrderService {
   private http = inject(HttpClient);
-  private apiUrl = `${API_BASE_URL}/Order`;
+  private apiUrl = `${API_BASE_URL}/orders`;
 
   getUserOrders(): Observable<ApiResponse<Order[]>> {
-    return this.http.get<ApiResponse<Order[]>>(`${this.apiUrl}/user`);
+    return this.http.get<ApiResponse<Order[]>>(this.apiUrl);
   }
 
   getOrderById(orderId: number): Observable<ApiResponse<Order>> {

@@ -67,4 +67,13 @@ public class CartRepository : ICartRepository
             _context.CartItems.Remove(cartItem);
         }
     }
+
+    public async Task ClearCartAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        var cartItems = await _context.CartItems
+            .Where(c => c.UserId == userId && !c.IsWishlist)
+            .ToListAsync(cancellationToken);
+        
+        _context.CartItems.RemoveRange(cartItems);
+    }
 }
