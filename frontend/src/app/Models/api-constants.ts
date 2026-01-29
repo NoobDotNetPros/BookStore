@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     VERIFY_OTP: `${API_BASE_URL}/auth/verify-otp`,
     RESEND_OTP: `${API_BASE_URL}/auth/resend-otp`,
     RESET_PASSWORD: `${API_BASE_URL}/auth/reset-password`,
+    VERIFY_EMAIL: (token: string) => `${API_BASE_URL}/auth/verification/${token}`,
   },
   // Books endpoints
   BOOKS: {

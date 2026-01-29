@@ -96,6 +96,10 @@ export class AuthService {
     return this.http.post<{ message: string }>(API_ENDPOINTS.AUTH.RESET_PASSWORD, request);
   }
 
+  verifyEmail(token: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(API_ENDPOINTS.AUTH.VERIFY_EMAIL(token), {});
+  }
+
   logout(): void {
     this.removeFromLocalStorage(this.tokenKey);
     this.removeFromLocalStorage('currentUser');

@@ -9,6 +9,7 @@ import { AdminPanelComponent } from './Components/admin-panel/admin-panel';
 import { Login } from './login/login';
 import { Signup } from './signup/signup';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password';
+import { VerifyEmailComponent } from './verify-email/verify-email';
 import { MyCartComponent } from './mycart/mycart';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { AdminAuthGuard } from './shared/guards/admin.guard';
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'signup', component: Signup },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'home', component: BookList, canActivate: [AuthGuard] },
   { path: 'book/:id', component: BookDetails, canActivate: [AuthGuard] },
   { path: 'wishlist', component: Wishlist, canActivate: [AuthGuard] },

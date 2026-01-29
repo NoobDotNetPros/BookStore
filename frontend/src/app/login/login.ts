@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../Services/auth.service';
@@ -10,16 +10,26 @@ import { AuthService } from '../Services/auth.service';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnInit {
   showPassword = false;
   email = '';
   password = '';
   submitted = false;
   loading = false;
   errorMessage = '';
+  successMessage = '';
 
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  ngOnInit(): void {
+    // Check if user was redirected after email verification
+    const verified = this.route.snapshot.queryParamMap.get('verified');
+    if (verified === 'true') {
+      this.successMessage = 'Email verified successfully! You can now login.';
+    }
+  }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
