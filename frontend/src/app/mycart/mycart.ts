@@ -1,7 +1,7 @@
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../Services/cart.service';
 import { UserService } from '../Services/user.service';
 import { OrderService } from '../Services/order.service';
@@ -32,7 +32,7 @@ interface Address {
 @Component({
   selector: 'app-my-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './mycart.html',
   styleUrls: ['./mycart.scss']
 })
@@ -125,6 +125,23 @@ export class MyCartComponent implements OnInit {
             state: '',
             type: 'Home'
           };
+
+          // Load saved addresses
+          if (user.addresses && Array.isArray(user.addresses)) {
+            this.savedAddresses = user.addresses.map((addr: any) => ({
+              fullName: user.fullName || '',
+              mobileNumber: user.phone || user.mobileNumber || '',
+              address: addr.fullAddress || addr.address || '',
+              city: addr.city || '',
+              state: addr.state || '',
+              type: (addr.addressType || addr.type || 'Home') as 'Home' | 'Work' | 'Other'
+            }));
+          }
+
+          // Set address data from first saved address if available
+          if (this.savedAddresses.length > 0) {
+            this.addressData = { ...this.savedAddresses[0] };
+          }
         }
       },
       error: (err) => {
@@ -220,7 +237,14 @@ export class MyCartComponent implements OnInit {
 
   // Get selected address
   selectedAddress(): Address {
-    return this.savedAddresses[this.selectedAddressIndex()];
+    if (this.savedAddresses.length > 0) {
+      return this.savedAddresses[this.selectedAddressIndex()] || this.addressData;
+    }
+    return this.addressData;
+  }
+
+  hasAddresses(): boolean {
+    return this.savedAddresses.length > 0;
   }
 
   // Format price

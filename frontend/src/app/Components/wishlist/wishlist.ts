@@ -48,18 +48,18 @@ export class Wishlist implements OnInit {
             next: (response) => {
                 if (response.success && response.data) {
                     this.wishlistItems.set(
-                        response.data.map(item => ({
+                        response.data.map((item: any) => ({
                             id: item.id,
                             bookId: item.bookId,
                             title: item.bookTitle || 'Unknown Title',
-                            author: 'Unknown Author', // Backend doesn't provide author in wishlist
+                            author: item.author || 'Unknown Author',
                             image: item.coverImage || 'https://via.placeholder.com/200',
                             price: item.price,
-                            originalPrice: item.price * 1.2
+                            originalPrice: item.originalPrice || item.price * 1.2
                         }))
                     );
                 } else {
-                    this.errorMessage.set(response.message || 'Failed to load wishlist');
+                    this.wishlistItems.set([]);
                 }
                 this.loading.set(false);
             },

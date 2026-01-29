@@ -8,8 +8,10 @@ export interface WishlistItem {
   id: number;
   bookId: number;
   bookTitle: string;
+  author?: string;
   coverImage: string;
   price: number;
+  originalPrice?: number;
 }
 
 @Injectable({

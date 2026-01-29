@@ -40,24 +40,24 @@
               <span class="original">Rs.{{ formatPrice(item.originalPrice) }}</span>
             </div>
             <div class="quantity-row">
-              <button 
-                class="circle" 
-                type="button" 
+              <button
+                class="circle"
+                type="button"
                 [disabled]="item.quantity <= 1"
                 (click)="decreaseQty(item.id)">−</button>
-              <input 
-                type="text" 
-                class="qty-input" 
-                [value]="item.quantity" 
+              <input
+                type="text"
+                class="qty-input"
+                [value]="item.quantity"
                 readonly />
-              <button 
-                class="circle" 
-                type="button" 
+              <button
+                class="circle"
+                type="button"
                 [disabled]="item.quantity >= 10"
                 (click)="increaseQty(item.id)">+</button>
-              <button 
-                class="remove" 
-                type="button" 
+              <button
+                class="remove"
+                type="button"
                 (click)="removeItem(item.id)">Remove</button>
             </div>
           </div>
@@ -76,9 +76,9 @@
   <section class="panel address-panel" [class.collapsed]="activeSection() === 'cart'">
     <div class="panel-header clickable" (click)="toggleSection('address')">
       <h3>Customer Details</h3>
-      <button 
-        class="outline" 
-        type="button" 
+      <button
+        class="outline"
+        type="button"
         *ngIf="activeSection() === 'address'"
         (click)="$event.stopPropagation()">
         Add New Address
@@ -87,7 +87,7 @@
 
     <div class="address-body" *ngIf="activeSection() === 'address' || activeSection() === 'summary'">
       <!-- Customer Info -->
-      <div class="customer-info">
+      <div class="customer-info" *ngIf="hasAddresses()">
         <div class="field">
           <label>Full Name</label>
           <input type="text" [value]="selectedAddress().fullName" readonly />
@@ -98,24 +98,30 @@
         </div>
       </div>
 
+      <!-- No Address Message -->
+      <div class="no-address-message" *ngIf="!hasAddresses()">
+        <p>No address saved yet. Please add an address from your profile to continue.</p>
+        <a routerLink="/profile" class="add-address-link">Go to Profile to Add Address</a>
+      </div>
+
       <!-- Address List -->
-      <div class="address-list">
-        <div 
-          class="address-item" 
+      <div class="address-list" *ngIf="hasAddresses()">
+        <div
+          class="address-item"
           *ngFor="let addr of savedAddresses; let i = index"
           [class.selected]="selectedAddressIndex() === i">
-          
+
           <div class="address-radio-row">
             <label class="radio-label" (click)="selectAddress(i)">
-              <input 
-                type="radio" 
-                name="address" 
+              <input
+                type="radio"
+                name="address"
                 [checked]="selectedAddressIndex() === i" />
               <span class="address-type-label">{{ i + 1 }}.{{ addr.type.toUpperCase() }}</span>
             </label>
-            <button 
-              class="edit-link" 
-              type="button" 
+            <button
+              class="edit-link"
+              type="button"
               *ngIf="selectedAddressIndex() === i">
               Edit
             </button>
@@ -147,7 +153,7 @@
         </div>
       </div>
 
-      <div class="actions" *ngIf="activeSection() === 'address'">
+      <div class="actions" *ngIf="activeSection() === 'address' && hasAddresses()">
         <button class="primary" type="button" (click)="continueToSummary()">
           CONTINUE
         </button>
