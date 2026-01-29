@@ -17,20 +17,116 @@ public class EmailService : IEmailService
 
     public async Task SendVerificationEmailAsync(string email, string token, CancellationToken cancellationToken = default)
     {
-        var verificationLink = $"http://localhost:5000/verify-email?token={token}";
+        var verificationLink = $"http://localhost:4200/verify-email?token={token}";
         
         var subject = "Verify Your Email - Bookstore App";
         var body = $@"
+            <!DOCTYPE html>
             <html>
-            <body>
-                <h2>Welcome to Bookstore App!</h2>
-                <p>Please verify your email address by clicking the link below:</p>
-                <p><a href='{verificationLink}'>Verify Email</a></p>
-                <p>Or copy and paste this link in your browser:</p>
-                <p>{verificationLink}</p>
-                <p>This link will expire in 24 hours.</p>
-                <br/>
-                <p>If you didn't create an account, please ignore this email.</p>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            </head>
+            <body style='margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f4f4f4;'>
+                <table role='presentation' style='width: 100%; border-collapse: collapse;'>
+                    <tr>
+                        <td align='center' style='padding: 40px 0;'>
+                            <table role='presentation' style='width: 600px; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'>
+                                <!-- Header -->
+                                <tr>
+                                    <td style='background: linear-gradient(135deg, #a33a3a 0%, #7a2a2a 100%); padding: 30px 40px; border-radius: 8px 8px 0 0; text-align: center;'>
+                                        <table role='presentation' style='width: 100%;'>
+                                            <tr>
+                                                <td align='center'>
+                                                    <div style='background-color: rgba(255,255,255,0.15); display: inline-block; padding: 12px 20px; border-radius: 8px;'>
+                                                        <span style='font-size: 28px; color: #ffffff; font-weight: bold; letter-spacing: 1px;'>📚 Bookstore</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Welcome Icon -->
+                                <tr>
+                                    <td align='center' style='padding: 40px 40px 20px 40px;'>
+                                        <div style='background-color: #f0f7f0; width: 80px; height: 80px; border-radius: 50%; display: inline-block; text-align: center; line-height: 80px;'>
+                                            <span style='font-size: 40px;'>✉️</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Main Content -->
+                                <tr>
+                                    <td style='padding: 0 40px 30px 40px; text-align: center;'>
+                                        <h1 style='color: #333333; font-size: 24px; margin: 0 0 10px 0; font-weight: 600;'>Welcome to Bookstore!</h1>
+                                        <p style='color: #666666; font-size: 16px; line-height: 24px; margin: 0;'>Thanks for signing up. Please verify your email address to get started.</p>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Verify Button -->
+                                <tr>
+                                    <td align='center' style='padding: 0 40px 30px 40px;'>
+                                        <a href='{verificationLink}' style='display: inline-block; background: linear-gradient(135deg, #a33a3a 0%, #c44d4d 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-size: 16px; font-weight: bold; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(163, 58, 58, 0.3);'>
+                                            ✓ Verify Email Address
+                                        </a>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Divider -->
+                                <tr>
+                                    <td style='padding: 0 40px;'>
+                                        <table role='presentation' style='width: 100%; border-collapse: collapse;'>
+                                            <tr>
+                                                <td style='border-bottom: 1px solid #eeeeee;'></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Alternative Link -->
+                                <tr>
+                                    <td style='padding: 30px 40px; text-align: center;'>
+                                        <p style='color: #888888; font-size: 14px; margin: 0 0 15px 0;'>Or copy and paste this link in your browser:</p>
+                                        <div style='background-color: #f8f9fa; padding: 15px; border-radius: 6px; border: 1px solid #e9ecef; word-break: break-all;'>
+                                            <a href='{verificationLink}' style='color: #a33a3a; font-size: 13px; text-decoration: none;'>{verificationLink}</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Expiry Notice -->
+                                <tr>
+                                    <td align='center' style='padding: 0 40px 30px 40px;'>
+                                        <div style='background-color: #fff8e6; border-left: 4px solid #ffc107; padding: 15px 20px; border-radius: 0 6px 6px 0; text-align: left;'>
+                                            <p style='color: #856404; font-size: 14px; margin: 0;'>
+                                                <strong>⏰ Note:</strong> This verification link will expire in <strong>24 hours</strong>.
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Footer -->
+                                <tr>
+                                    <td style='background-color: #f8f9fa; padding: 30px 40px; border-radius: 0 0 8px 8px; text-align: center;'>
+                                        <p style='color: #888888; font-size: 13px; margin: 0 0 10px 0;'>If you didn't create an account, you can safely ignore this email.</p>
+                                        <p style='color: #aaaaaa; font-size: 12px; margin: 0;'>© 2026 Bookstore App. All rights reserved.</p>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Additional Footer Info -->
+                            <table role='presentation' style='width: 600px; margin-top: 20px;'>
+                                <tr>
+                                    <td align='center'>
+                                        <p style='color: #999999; font-size: 11px; margin: 0;'>
+                                            This email was sent to <span style='color: #666666;'>{email}</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
             </body>
             </html>
         ";
