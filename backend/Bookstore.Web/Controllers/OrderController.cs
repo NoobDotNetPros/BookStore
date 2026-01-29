@@ -51,50 +51,97 @@ public class OrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
     {
-        var userId = GetUserId();
-
-        // Get user's address for shipping
-        var user = await _userRepository.GetByIdAsync(userId);
-        var shippingAddress = user?.Addresses?.FirstOrDefault();
-        
-        string addressString = shippingAddress != null 
-            ? $"{shippingAddress.FullAddress}, {shippingAddress.City}, {shippingAddress.State}" 
-            : "No address on file";
-
-        decimal totalAmount = request.Orders.Sum(o => o.Product_Price * o.Product_Quantity);
-
-        var order = new Order
+        if (request == null || request.Orders == null || !request.Orders.Any())
         {
-            UserId = userId,
-            Status = OrderStatus.Pending,
-            TotalAmount = totalAmount,
-            ShippingAddress = addressString,
-            OrderItems = request.Orders.Select(o => new OrderItem
-            {
-                BookId = int.Parse(o.Product_Id),
-                Quantity = o.Product_Quantity,
-                Price = o.Product_Price
-            }).ToList()
-        };
+            return BadRequest(new { success = false, message = "Invalid order request. Orders list cannot be empty." });
+        }
 
         try
         {
-            await _unitOfWork.BeginTransactionAsync();
+            var userId = GetUserId();
+
+            // Get user's address for shipping
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                Console.WriteLine($"[CreateOrder] User not found for ID: {userId}");
+                return BadRequest(new { success = false, message = "User not found" });
+            }
+
+            var shippingAddress = user.Addresses?.FirstOrDefault();
+            
+            string addressString = shippingAddress != null 
+                ? $"{shippingAddress.FullAddress}, {shippingAddress.City}, {shippingAddress.State}" 
+                : "No address on file";
+
+            var orderItems = new List<OrderItem>();
+            foreach(var o in request.Orders) 
+            {
+                 // Handle potential null Product_Id from frontend
+                 if (string.IsNullOrEmpty(o.Product_Id))
+                 {
+                     Console.WriteLine($"[CreateOrder] Missing Product_Id for item: {System.Text.Json.JsonSerializer.Serialize(o)}");
+                     continue; // Skip invalid items or return BadRequest
+                 }
+
+                 if(int.TryParse(o.Product_Id, out int bookId))
+                 {
+                    orderItems.Add(new OrderItem
+                    {
+                        BookId = bookId,
+                        Quantity = o.Product_Quantity,
+                        Price = o.Product_Price
+                    });
+                 }
+                 else
+                 {
+                     Console.WriteLine($"[CreateOrder] Invalid Book ID: {o.Product_Id}");
+                     return BadRequest(new { success = false, message = $"Invalid Book ID format: {o.Product_Id}" });
+                 }
+            }
+
+            if (!orderItems.Any())
+            {
+                 return BadRequest(new { success = false, message = "No valid items in order." });
+            }
+
+            decimal totalAmount = orderItems.Sum(o => o.Price * o.Quantity);
+
+            var order = new Order
+            {
+                UserId = userId,
+                Status = OrderStatus.Pending,
+                TotalAmount = totalAmount,
+                ShippingAddress = addressString,
+                OrderItems = orderItems
+            };
+
+            // Atomic operation: both Add Order and Remove Cart Items are committed in one SaveChangesAsync
+            // Explicit transaction is not needed and conflicts with Retry Strategy
             await _orderRepository.AddAsync(order);
             
             // Clear the cart after successful order
             await _cartRepository.ClearCartAsync(userId);
             
             await _unitOfWork.SaveChangesAsync();
-            await _unitOfWork.CommitTransactionAsync();
-        }
-        catch
-        {
-            await _unitOfWork.RollbackTransactionAsync();
-            throw;
-        }
 
-        return Ok(new { success = true, message = "Order created successfully", data = new { orderId = order.Id } });
+            return Ok(new { success = true, message = "Order created successfully", data = new { orderId = order.Id } });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($"[CreateOrder] Unauthorized: {ex.Message}");
+            return Unauthorized(new { success = false, message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[CreateOrder] Error: {ex.Message}");
+            Console.WriteLine($"[CreateOrder] StackTrace: {ex.StackTrace}");
+            
+            // No rollback needed as we didn't start an explicit transaction
+            // EF Core will just discard the changes if SaveChangesAsync fails
+            
+            return StatusCode(500, new { success = false, message = "Internal Server Error during order creation", error = ex.Message });
+        }
     }
 
     /// <summary>

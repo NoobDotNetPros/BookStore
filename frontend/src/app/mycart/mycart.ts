@@ -284,7 +284,11 @@ export class MyCartComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error creating order:', err);
+        if (err.error) {
+          console.error('Server Error Details:', JSON.stringify(err.error, null, 2));
+        }
         this.toastService.error('Failed to create order. Please try again.');
+        this.loading.set(false); // Ensure loading is reset
       }
     });
   }

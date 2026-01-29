@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isLoggedIn = false;
   userName = 'Profile';
-  cartCount = 0;
+  cartCount$ = this.cartService.cartCount$;
 
   // Search
   private searchSubject = new Subject<string>();
@@ -47,10 +47,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.cartService.getCart().subscribe();
       }
       // Cart count for guest users is already initialized in CartService
-    });
-
-    this.cartService.cartCount$.subscribe(count => {
-      this.cartCount = count;
     });
 
     // Setup debounced search - navigate to search page while typing
