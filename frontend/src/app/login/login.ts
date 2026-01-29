@@ -3,6 +3,10 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../Services/auth.service';
+import { CartService } from '../Services/cart.service';
+import { WishlistService } from '../Services/wishlist.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +24,8 @@ export class Login implements OnInit {
   successMessage = '';
 
   private authService = inject(AuthService);
+  private cartService = inject(CartService);
+  private wishlistService = inject(WishlistService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -49,21 +55,55 @@ export class Login implements OnInit {
         // Backend returns { message, data } - if data exists, login was successful
         if (response.data) {
           this.authService.setUser(response.data);
-          if (this.authService.isAdmin()) {
-            this.router.navigate(['/admin']);
-          } else {
-            this.router.navigate(['/home']);
-          }
+
+          // Sync local cart and wishlist with server
+          this.syncGuestDataAndRedirect();
         } else {
           this.errorMessage = response.message || 'Login failed';
+          this.loading = false;
         }
-        this.loading = false;
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Login failed. Please try again.';
         this.loading = false;
       }
     });
+  }
+
+  private syncGuestDataAndRedirect(): void {
+    // Sync cart and wishlist in parallel
+    forkJoin([
+      this.cartService.syncLocalCartWithServer().pipe(catchError(() => of(null))),
+      this.wishlistService.syncLocalWishlistWithServer().pipe(catchError(() => of(null)))
+    ]).subscribe({
+      next: () => {
+        this.redirectAfterLogin();
+      },
+      error: () => {
+        // Even if sync fails, redirect the user
+        this.redirectAfterLogin();
+      }
+    });
+  }
+
+  private redirectAfterLogin(): void {
+    this.loading = false;
+
+    // Check for saved redirect URL
+    let redirectUrl = '/home';
+    if (typeof localStorage !== 'undefined') {
+      const savedUrl = localStorage.getItem('redirectUrl');
+      if (savedUrl) {
+        redirectUrl = savedUrl;
+        localStorage.removeItem('redirectUrl');
+      }
+    }
+
+    if (this.authService.isAdmin()) {
+      this.router.navigate(['/admin']);
+    } else {
+      this.router.navigate([redirectUrl]);
+    }
   }
 
   get emailError() {

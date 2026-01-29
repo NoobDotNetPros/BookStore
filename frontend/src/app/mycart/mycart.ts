@@ -81,8 +81,25 @@ export class MyCartComponent implements OnInit {
       this.loadCart();
       this.loadUserProfile();
     } else {
-      this.loading.set(false);
+      this.loadLocalCart();
     }
+  }
+
+  loadLocalCart() {
+    const localCart = this.cartService.getLocalCart();
+    this.cartItems.set(
+      localCart.map((item, index) => ({
+        id: index + 1, // Use index as temporary ID for local cart
+        bookId: item.bookId,
+        title: item.bookTitle,
+        author: item.bookAuthor,
+        price: item.price,
+        originalPrice: item.price * 1.2,
+        cover: item.bookCoverImage || 'https://via.placeholder.com/200',
+        quantity: item.quantity
+      }))
+    );
+    this.loading.set(false);
   }
 
   loadCart() {
@@ -165,13 +182,21 @@ export class MyCartComponent implements OnInit {
     const index = items.findIndex(item => item.id === itemId);
     if (index !== -1 && items[index].quantity < 10) {
       const newQty = items[index].quantity + 1;
-      this.cartService.updateItem(itemId, newQty).subscribe({
-        next: () => {
-          items[index].quantity = newQty;
-          this.cartItems.set([...items]);
-        },
-        error: (err) => console.error('Error updating quantity:', err)
-      });
+
+      if (this.isLoggedIn()) {
+        this.cartService.updateItem(itemId, newQty).subscribe({
+          next: () => {
+            items[index].quantity = newQty;
+            this.cartItems.set([...items]);
+          },
+          error: (err) => console.error('Error updating quantity:', err)
+        });
+      } else {
+        // Guest user - update local cart
+        this.cartService.updateLocalCartItem(items[index].bookId, newQty);
+        items[index].quantity = newQty;
+        this.cartItems.set([...items]);
+      }
     }
   }
 
@@ -180,31 +205,63 @@ export class MyCartComponent implements OnInit {
     const index = items.findIndex(item => item.id === itemId);
     if (index !== -1 && items[index].quantity > 1) {
       const newQty = items[index].quantity - 1;
-      this.cartService.updateItem(itemId, newQty).subscribe({
-        next: () => {
-          items[index].quantity = newQty;
-          this.cartItems.set([...items]);
-        },
-        error: (err) => console.error('Error updating quantity:', err)
-      });
+
+      if (this.isLoggedIn()) {
+        this.cartService.updateItem(itemId, newQty).subscribe({
+          next: () => {
+            items[index].quantity = newQty;
+            this.cartItems.set([...items]);
+          },
+          error: (err) => console.error('Error updating quantity:', err)
+        });
+      } else {
+        // Guest user - update local cart
+        this.cartService.updateLocalCartItem(items[index].bookId, newQty);
+        items[index].quantity = newQty;
+        this.cartItems.set([...items]);
+      }
     }
   }
 
   removeItem(itemId: number): void {
-    this.cartService.removeItem(itemId).subscribe({
-      next: () => {
-        const items = this.cartItems().filter(item => item.id !== itemId);
-        this.cartItems.set(items);
-      },
-      error: (err) => console.error('Error removing item:', err)
-    });
+    const items = this.cartItems();
+    const item = items.find(i => i.id === itemId);
+
+    if (this.isLoggedIn()) {
+      this.cartService.removeItem(itemId).subscribe({
+        next: () => {
+          const updatedItems = items.filter(i => i.id !== itemId);
+          this.cartItems.set(updatedItems);
+        },
+        error: (err) => console.error('Error removing item:', err)
+      });
+    } else {
+      // Guest user - remove from local cart
+      if (item) {
+        this.cartService.removeFromLocalCart(item.bookId);
+        const updatedItems = items.filter(i => i.id !== itemId);
+        this.cartItems.set(updatedItems);
+      }
+    }
   }
 
   // Navigation
   placeOrder(): void {
-    if (this.cartItems().length > 0) {
-      this.activeSection.set('address');
+    if (this.cartItems().length === 0) {
+      return;
     }
+
+    if (!this.isLoggedIn()) {
+      // Save current URL to redirect back after login
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('redirectUrl', '/my-cart');
+      }
+      this.router.navigate(['/login']);
+      this.toastService.info('Please login to proceed with checkout');
+      return;
+    }
+
+    this.activeSection.set('address');
   }
 
   continueToSummary(): void {

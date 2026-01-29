@@ -22,12 +22,12 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'search', component: SearchResultsComponent },
-  { path: 'home', component: BookList, canActivate: [AuthGuard] },
-  { path: 'book/:id', component: BookDetails, canActivate: [AuthGuard] },
-  { path: 'wishlist', component: Wishlist, canActivate: [AuthGuard] },
+  { path: 'home', component: BookList },
+  { path: 'book/:id', component: BookDetails },
+  { path: 'wishlist', component: Wishlist },
+  { path: 'my-cart', component: MyCartComponent },
   { path: 'orders', component: MyOrders, canActivate: [AuthGuard] },
   { path: 'profile', component: Profile, canActivate: [AuthGuard] },
-  { path: 'my-cart', component: MyCartComponent, canActivate: [AuthGuard] },
   { path: 'order-success', component: OrderSuccess, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminPanelComponent, canActivate: [AdminAuthGuard] }
 ];

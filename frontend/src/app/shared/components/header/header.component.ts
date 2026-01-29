@@ -40,18 +40,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   cartClick = output<void>();
 
   ngOnInit() {
+    // Load books for search (available for all users)
+    this.loadBooks();
+
     this.authService.currentUser$.subscribe(user => {
       this.isLoggedIn = !!user;
       this.userName = user?.fullName || 'Profile';
 
       if (this.isLoggedIn) {
-        // Fetch cart to initialize count
+        // Fetch cart from server to initialize count
         this.cartService.getCart().subscribe();
-        // Load all books for search
-        this.loadBooks();
-      } else {
-        this.cartService.updateCartCount(0);
       }
+      // Cart count for guest users is already initialized in CartService
     });
 
     this.cartService.cartCount$.subscribe(count => {
@@ -155,6 +155,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/']);
+    this.cartService.updateCartCount(this.cartService.getLocalCart().length);
+    this.router.navigate(['/home']);
   }
 }

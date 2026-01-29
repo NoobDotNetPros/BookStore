@@ -133,14 +133,11 @@ export class BookDetails implements OnInit {
   private toastService = inject(ToastService);
 
   addToCart() {
-    if (!this.isLoggedIn()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     const currentBook = this.book();
-    if (currentBook) {
-      // Using CartService method - adjust based on your actual service
+    if (!currentBook) return;
+
+    if (this.isLoggedIn()) {
+      // Logged in user - use API
       this.cartService.addItem(currentBook.id, this.selectedQuantity()).subscribe({
         next: () => {
           this.toastService.success('Book added to cart successfully!');
@@ -150,17 +147,26 @@ export class BookDetails implements OnInit {
           this.toastService.error('Failed to add book to cart');
         }
       });
+    } else {
+      // Guest user - use local storage
+      this.cartService.addToLocalCart({
+        bookId: currentBook.id,
+        bookTitle: currentBook.title,
+        bookAuthor: currentBook.author,
+        bookCoverImage: currentBook.image,
+        price: currentBook.price,
+        quantity: this.selectedQuantity()
+      });
+      this.toastService.success('Book added to cart successfully!');
     }
   }
 
   addToWishlist() {
-    if (!this.isLoggedIn()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     const currentBook = this.book();
-    if (currentBook) {
+    if (!currentBook) return;
+
+    if (this.isLoggedIn()) {
+      // Logged in user - use API
       this.wishlistService.addToWishlist(currentBook.id).subscribe({
         next: () => {
           this.toastService.success('Book added to wishlist successfully!');
@@ -170,6 +176,21 @@ export class BookDetails implements OnInit {
           this.toastService.error('Failed to add book to wishlist');
         }
       });
+    } else {
+      // Guest user - use local storage
+      const added = this.wishlistService.addToLocalWishlist({
+        bookId: currentBook.id,
+        bookTitle: currentBook.title,
+        author: currentBook.author,
+        coverImage: currentBook.image,
+        price: currentBook.price,
+        originalPrice: currentBook.originalPrice
+      });
+      if (added) {
+        this.toastService.success('Book added to wishlist successfully!');
+      } else {
+        this.toastService.info('Book is already in your wishlist');
+      }
     }
   }
 
@@ -178,12 +199,30 @@ export class BookDetails implements OnInit {
   }
 
   buyNow() {
-    if (!this.isLoggedIn()) {
-      this.router.navigate(['/login']);
-      return;
-    }
+    const currentBook = this.book();
+    if (!currentBook) return;
 
-    this.addToCart();
-    this.router.navigate(['/cart']);
+    if (this.isLoggedIn()) {
+      this.cartService.addItem(currentBook.id, this.selectedQuantity()).subscribe({
+        next: () => {
+          this.router.navigate(['/my-cart']);
+        },
+        error: (err: any) => {
+          console.error('Error adding to cart:', err);
+          this.toastService.error('Failed to add book to cart');
+        }
+      });
+    } else {
+      // Guest user - add to local cart and navigate to cart
+      this.cartService.addToLocalCart({
+        bookId: currentBook.id,
+        bookTitle: currentBook.title,
+        bookAuthor: currentBook.author,
+        bookCoverImage: currentBook.image,
+        price: currentBook.price,
+        quantity: this.selectedQuantity()
+      });
+      this.router.navigate(['/my-cart']);
+    }
   }
 }
