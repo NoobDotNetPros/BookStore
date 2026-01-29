@@ -300,13 +300,4 @@ Provides utilities for mocking `DbSet<T>` with async operations:
 6. **Error Case Coverage** - Tests cover both success and failure scenarios
 7. **Authorization Testing** - All secured endpoints test unauthorized access
 
-## Maintenance
-
-- Update tests when controller logic changes
-- Add new tests for new endpoints
-- Run tests before commits to ensure no regressions
-- Keep mocks in sync with interface changes
-
-
----
 
