@@ -3,16 +3,20 @@ import { CommonModule } from '@angular/common';
 import { OrderService, Order, OrderItem } from '../../Services/order.service';
 import { AuthService } from '../../Services/auth.service';
 
+interface OrderItemDisplay {
+    bookId: number;
+    title: string;
+    image: string;
+    quantity: number;
+    price: number;
+}
+
 interface OrderDisplay {
     id: number;
-    title: string;
-    author: string;
-    price: number;
-    originalPrice: number;
-    image: string;
     orderDate: string;
     status: string;
-    items: OrderItem[];
+    totalAmount: number;
+    items: OrderItemDisplay[];
 }
 
 @Component({
@@ -40,6 +44,16 @@ export class MyOrders implements OnInit {
         }
     }
 
+    getImageUrl(imageUrl: string): string {
+        if (!imageUrl) {
+            return 'https://via.placeholder.com/200';
+        }
+        if (!imageUrl.startsWith('http')) {
+            return `http://localhost:5000${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+        }
+        return imageUrl;
+    }
+
     loadOrders() {
         this.loading.set(true);
         this.errorMessage.set('');
@@ -49,17 +63,6 @@ export class MyOrders implements OnInit {
                 if (response.success && response.data) {
                     this.orders.set(
                         response.data.map(order => {
-                            const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
-
-                            // Handle image URL - prepend base URL if it's a relative path
-                            let imageUrl = firstItem?.bookCoverImage || '';
-                            if (imageUrl && !imageUrl.startsWith('http')) {
-                                imageUrl = `http://localhost:5000${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
-                            }
-                            if (!imageUrl) {
-                                imageUrl = 'https://via.placeholder.com/200';
-                            }
-
                             // Parse date safely
                             let orderDate = 'Unknown Date';
                             if (order.createdDate) {
@@ -71,14 +74,16 @@ export class MyOrders implements OnInit {
 
                             return {
                                 id: order.id,
-                                title: firstItem?.productName || 'Unknown Product',
-                                author: 'Order #' + order.id,
-                                price: order.totalAmount,
-                                originalPrice: order.totalAmount * 1.2,
-                                image: imageUrl,
                                 orderDate: orderDate,
                                 status: order.status,
-                                items: order.items
+                                totalAmount: order.totalAmount,
+                                items: order.items.map(item => ({
+                                    bookId: item.bookId,
+                                    title: item.productName || 'Unknown Product',
+                                    image: this.getImageUrl(item.bookCoverImage),
+                                    quantity: item.quantity,
+                                    price: item.price
+                                }))
                             };
                         })
                     );

@@ -1,25 +1,38 @@
 <div class="page-container">
     <div class="breadcrumb">
-        <a href="/">Home</a> / <span>My Order</span>
+        <a href="/">Home</a> / <span>My Orders</span>
     </div>
 
     <div class="orders-container">
-        <div class="order-item" *ngFor="let item of orders()">
-            <div class="item-visual">
-                <img [src]="item.image" [alt]="item.title">
-            </div>
-
-            <div class="item-details">
-                <h3 class="title">{{ item.title }}</h3>
-                <p class="author">{{ item.author }}</p>
-                <div class="price-row">
-                    <span class="current">Rs. {{ item.price }}</span>
-                    <span class="original">Rs.{{ item.originalPrice }}</span>
+        <div class="order-card" *ngFor="let order of orders()">
+            <div class="order-header">
+                <div class="order-info">
+                    <span class="order-id">Order #{{ order.id }}</span>
+                    <span class="order-date">Placed on {{ order.orderDate }}</span>
+                </div>
+                <div class="order-status">
+                    <span class="status-dot">●</span> {{ order.status }}
                 </div>
             </div>
 
-            <div class="order-status">
-                <span class="status-dot">●</span> Order Placed on {{ item.orderDate }}
+            <div class="order-items">
+                <div class="order-item" *ngFor="let item of order.items">
+                    <div class="item-visual">
+                        <img [src]="item.image" [alt]="item.title">
+                    </div>
+                    <div class="item-details">
+                        <h3 class="title">{{ item.title }}</h3>
+                        <p class="quantity">Qty: {{ item.quantity }}</p>
+                        <div class="price-row">
+                            <span class="current">Rs. {{ item.price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-footer">
+                <span class="total-label">Total:</span>
+                <span class="total-amount">Rs. {{ order.totalAmount }}</span>
             </div>
         </div>
     </div>
