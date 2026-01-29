@@ -51,14 +51,32 @@ export class MyOrders implements OnInit {
                         response.data.map(order => {
                             const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
 
+                            // Handle image URL - prepend base URL if it's a relative path
+                            let imageUrl = firstItem?.bookCoverImage || '';
+                            if (imageUrl && !imageUrl.startsWith('http')) {
+                                imageUrl = `http://localhost:5000${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+                            }
+                            if (!imageUrl) {
+                                imageUrl = 'https://via.placeholder.com/200';
+                            }
+
+                            // Parse date safely
+                            let orderDate = 'Unknown Date';
+                            if (order.createdDate) {
+                                const date = new Date(order.createdDate);
+                                if (!isNaN(date.getTime())) {
+                                    orderDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+                                }
+                            }
+
                             return {
                                 id: order.id,
                                 title: firstItem?.productName || 'Unknown Product',
                                 author: 'Order #' + order.id,
                                 price: order.totalAmount,
                                 originalPrice: order.totalAmount * 1.2,
-                                image: firstItem?.bookCoverImage || 'https://via.placeholder.com/200',
-                                orderDate: new Date(order.createdDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
+                                image: imageUrl,
+                                orderDate: orderDate,
                                 status: order.status,
                                 items: order.items
                             };

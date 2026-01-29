@@ -7,8 +7,8 @@ export interface OrderItem {
   id: number;
   orderId: number;
   bookId: number;
-  productName: string;      // ✅ Add this
-  bookCoverImage: string;   // ✅ Add this
+  productName: string;
+  bookCoverImage: string;
   quantity: number;
   price: number;
   createdAt?: string;

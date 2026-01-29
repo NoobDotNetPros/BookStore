@@ -111,7 +111,28 @@ public class OrderController : ControllerBase
         var userId = GetUserId();
 
         var orders = await _orderRepository.GetUserOrdersAsync(userId);
-        return Ok(new { success = true, message = "Successfully fetched user orders", data = orders });
+        
+        var orderDtos = orders.Select(o => new OrderDto
+        {
+            Id = o.Id,
+            UserId = o.UserId,
+            Status = o.Status.ToString(),
+            TotalAmount = o.TotalAmount,
+            ShippingAddress = o.ShippingAddress,
+            CreatedDate = o.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ss"),
+            Items = o.OrderItems.Select(oi => new OrderItemDto
+            {
+                Id = oi.Id,
+                OrderId = oi.OrderId,
+                BookId = oi.BookId,
+                ProductName = oi.Book?.BookName ?? "Unknown Product",
+                BookCoverImage = oi.Book?.CoverImage ?? "",
+                Quantity = oi.Quantity,
+                Price = oi.Price
+            }).ToList()
+        }).ToList();
+        
+        return Ok(new { success = true, message = "Successfully fetched user orders", data = orderDtos });
     }
 
     /// <summary>
@@ -148,3 +169,25 @@ public record OrderItemRequest(
     int Product_Quantity,
     decimal Product_Price
 );
+
+public class OrderDto
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public string Status { get; set; } = string.Empty;
+    public decimal TotalAmount { get; set; }
+    public string ShippingAddress { get; set; } = string.Empty;
+    public string CreatedDate { get; set; } = string.Empty;
+    public List<OrderItemDto> Items { get; set; } = new();
+}
+
+public class OrderItemDto
+{
+    public int Id { get; set; }
+    public int OrderId { get; set; }
+    public int BookId { get; set; }
+    public string ProductName { get; set; } = string.Empty;
+    public string BookCoverImage { get; set; } = string.Empty;
+    public int Quantity { get; set; }
+    public decimal Price { get; set; }
+}
