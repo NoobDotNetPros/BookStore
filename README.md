@@ -128,11 +128,36 @@ BookStore/
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Authors
 
-**Kotipalli Srikesh**
+### **Adarsh Kumar**
+- 📧 Email: [adarshkumar102004@gmail.com](mailto:adarshkumar102004@gmail.com)
+- 🐙 GitHub: [@Adarsh-Kumar001](https://github.com/Adarsh-Kumar001)
+
+### **Gaurav Gupta**
+- 📧 Email: [gaurav.gupta26102003@gmail.com](mailto:gaurav.gupta26102003@gmail.com)
+- 🐙 GitHub: [@GGupta03](https://github.com/GGupta03)
+
+### **Kotipalli Srikesh**
 - 📧 Email: [srikesh2017@gmail.com](mailto:srikesh2017@gmail.com)
 - 🐙 GitHub: [@Srikesh-Kotipalli](https://github.com/Srikesh-Kotipalli)
+
+### **Md Dilshad Alam**
+- 📧 Email: [dilshadand@gmail.com](mailto:dilshadand@gmail.com)
+- 🐙 GitHub: [@alamdilshad87](https://github.com/alamdilshad87)
+
+### **Om Bandyopadhyay**
+- 📧 Email: [ombandyopadhyay@gmail.com](mailto:ombandyopadhyay@gmail.com)
+- 🐙 GitHub: [@ob6561](https://github.com/ob6561)
+
+### **Pranav Mahajan**
+- 📧 Email: [pranavmahajan619@gmail.com](mailto:pranavmahajan619@gmail.com)
+- 🐙 GitHub: [@parumahajan](https://github.com/parumahajan)
+
+### **V Dinessh**
+- 📧 Email: [dinessh.venkat28@gmail.com](mailto:dinessh.venkat28@gmail.com)
+- 🐙 GitHub: [@Dinessh2815](https://github.com/Dinessh2815)
+
 
 ---
 
