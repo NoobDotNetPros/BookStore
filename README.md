@@ -116,15 +116,136 @@ BookStore/
 
 ## 🔌 API Summary
 
+### 🔐 Authentication & User
+
 | Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| **POST** | `/api/UserAuth/register` | Register a new user |
-| **POST** | `/api/UserAuth/login` | Login and receive JWT |
-| **GET** | `/api/Book` | Get all books |
-| **GET** | `/api/Book/{id}` | Get book details |
-| **POST** | `/api/Cart` | Add item to cart |
-| **POST** | `/api/Order` | Place a new order |
-| **GET** | `/api/Admin/books` | Admin: List all books |
+|--------|----------|-------------|
+| POST | /api/auth/signup | Register a new user |
+| POST | /api/auth/login | User login |
+| POST | /api/auth/verification/{token} | Verify user account |
+| POST | /api/auth/forgot-password | Request password reset |
+| POST | /api/auth/verify-otp | Verify OTP |
+| POST | /api/auth/resend-otp | Resend OTP |
+| POST | /api/auth/reset-password | Reset password |
+
+---
+
+### 👤 User Profile & Addresses
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/users/profile | Get user profile |
+| PUT | /api/users/profile | Update user profile |
+| PATCH | /api/users/profile | Partially update profile |
+| POST | /api/users/addresses | Add new address |
+| PUT | /api/users/addresses/{addressId} | Update address |
+| DELETE | /api/users/addresses/{addressId} | Delete address |
+
+---
+
+### 📚 Products (Books)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/books | Get all books |
+| GET | /api/books/{id} | Get book details |
+
+---
+
+### 🛒 Cart
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/cart/items | Add item to cart |
+| PUT | /api/cart/items/{cartItem_id} | Update cart item |
+| DELETE | /api/cart/items/{cartItem_id} | Remove item from cart |
+| GET | /api/cart | Get cart details |
+
+---
+
+### ❤️ Wishlist
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/wishlist/items/{product_id} | Add item to wishlist |
+| DELETE | /api/wishlist/items/{product_id} | Remove item from wishlist |
+| GET | /api/wishlist | Get wishlist items |
+
+---
+
+### 📦 Orders
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/orders | Place a new order |
+| GET | /api/orders | Get user orders |
+| GET | /api/orders/{id} | Get order details |
+
+---
+
+### ⭐ Feedback / Reviews
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/feedback/books/{product_id} | Add feedback for a book |
+| GET | /api/feedback/books/{product_id} | Get book feedback |
+
+---
+
+### 🖼️ Image Upload
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/upload/image | Upload image |
+
+---
+
+### 🛠️ Admin Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /bookstore_user/admin/registration | Admin registration |
+| POST | /bookstore_user/admin/login | Admin login |
+
+---
+
+### 📚 Admin – Books Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/admin/books | Get all books |
+| POST | /api/admin/books | Add new book |
+| GET | /api/admin/books/{id} | Get book by ID |
+| PUT | /api/admin/books/{id} | Update book |
+| DELETE | /api/admin/books/{id} | Delete book |
+
+---
+
+### 🧾 Admin – Product Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /bookstore_user/admin/add/book | Add book (admin) |
+| PUT | /bookstore_user/admin/update/book/{product_id} | Update book |
+| DELETE | /bookstore_user/admin/delete/book/{product_id} | Delete book |
+
+---
+
+### 📦 Admin – Orders
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /bookstore_user/admin/get/order | Get all orders |
+
+---
+
+### ⚙️ System
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/health | Health check |
+
+
 
 ---
 
