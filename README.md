@@ -50,22 +50,262 @@ Welcome to **BookStore**, a comprehensive full-stack e-commerce application desi
 ## 📂 Project Structure
 
 ```text
-BookStore/
+noobdotnetpros-bookstore/
+├── README.md
 ├── backend/
-│   ├── Bookstore.Web/           # API Endpoints, Controllers, Middleware
-│   ├── Bookstore.Business/      # Business Logic, Services, Interfaces
-│   ├── Bookstore.DataAccess/    # DB Context, Repositories, Migrations
-│   └── Bookstore.Models/        # Entities, DTOs, Enums
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── Components/      # UI Components (BookList, Cart, etc.)
-│   │   │   ├── Services/        # API Integrated Services
-│   │   │   └── Models/          # Client-side Interfaces
-│   │   └── assets/              # Global Images & Styles
-│   └── angular.json             # Angular Workspace Config
-└── README.md
-```
+│   ├── Bookstore.slnx
+│   ├── Bookstore.Business/
+│   │   ├── Bookstore.Business.csproj
+│   │   ├── DependencyInjection.cs
+│   │   ├── Interfaces/
+│   │   │   ├── IBookRepository.cs
+│   │   │   ├── ICartRepository.cs
+│   │   │   ├── IEmailService.cs
+│   │   │   ├── IJwtService.cs
+│   │   │   ├── IOrderRepository.cs
+│   │   │   ├── IPasswordHasher.cs
+│   │   │   ├── IUnitOfWork.cs
+│   │   │   └── IUserRepository.cs
+│   │   ├── Models/
+│   │   │   ├── NotFoundException.cs
+│   │   │   ├── Result.cs
+│   │   │   ├── SmtpSettings.cs
+│   │   │   └── ValidationException.cs
+│   │   └── Services/
+│   │       ├── EmailService.cs
+│   │       ├── JwtService.cs
+│   │       ├── PasswordHasher.cs
+│   │       ├── ValidationBehavior.cs
+│   │       ├── Books/
+│   │       │   ├── Commands/
+│   │       │   │   ├── CreateBookCommand.cs
+│   │       │   │   ├── CreateBookCommandHandler.cs
+│   │       │   │   ├── CreateBookCommandValidator.cs
+│   │       │   │   ├── DeleteBookCommand.cs
+│   │       │   │   ├── DeleteBookCommandHandler.cs
+│   │       │   │   ├── UpdateBookCommand.cs
+│   │       │   │   └── UpdateBookCommandHandler.cs
+│   │       │   └── Queries/
+│   │       │       ├── GetBookByIdQuery.cs
+│   │       │       ├── GetBookByIdQueryHandler.cs
+│   │       │       ├── GetBooksQuery.cs
+│   │       │       └── GetBooksQueryHandler.cs
+│   │       ├── MappingProfiles/
+│   │       │   ├── BookProfile.cs
+│   │       │   └── UserProfile.cs
+│   │       └── Users/
+│   │           └── Commands/
+│   │               ├── ForgotPasswordCommand.cs
+│   │               ├── ForgotPasswordCommandHandler.cs
+│   │               ├── ForgotPasswordCommandValidator.cs
+│   │               ├── LoginCommand.cs
+│   │               ├── LoginCommandHandler.cs
+│   │               ├── RegisterUserCommand.cs
+│   │               ├── RegisterUserCommandHandler.cs
+│   │               ├── RegisterUserCommandValidator.cs
+│   │               ├── ResendOtpCommand.cs
+│   │               ├── ResendOtpCommandHandler.cs
+│   │               ├── ResendOtpCommandValidator.cs
+│   │               ├── ResetPasswordCommand.cs
+│   │               ├── ResetPasswordCommandHandler.cs
+│   │               ├── ResetPasswordCommandValidator.cs
+│   │               ├── VerifyEmailCommand.cs
+│   │               ├── VerifyEmailCommandHandler.cs
+│   │               ├── VerifyOtpCommand.cs
+│   │               ├── VerifyOtpCommandHandler.cs
+│   │               └── VerifyOtpCommandValidator.cs
+│   ├── Bookstore.DataAccess/
+│   │   ├── Bookstore.DataAccess.csproj
+│   │   ├── Context/
+│   │   │   ├── ApplicationDbContext.cs
+│   │   │   ├── DbInitializer.cs
+│   │   │   └── Configurations/
+│   │   │       ├── AddressConfiguration.cs
+│   │   │       ├── BookConfiguration.cs
+│   │   │       ├── CartItemConfiguration.cs
+│   │   │       ├── FeedbackConfiguration.cs
+│   │   │       ├── OrderConfiguration.cs
+│   │   │       ├── OrderItemConfiguration.cs
+│   │   │       └── UserConfiguration.cs
+│   │   ├── Migrations/
+│   │   │   ├── 20260125125603_InitialCreate.cs
+│   │   │   ├── 20260125125603_InitialCreate.Designer.cs
+│   │   │   ├── 20260127092406_AddBookCreatedAtDefault.cs
+│   │   │   ├── 20260127092406_AddBookCreatedAtDefault.Designer.cs
+│   │   │   ├── 20260128000000_AddCoverImageToBooksTable.cs
+│   │   │   ├── 20260128000000_AddCoverImageToBooksTable.Designer.cs
+│   │   │   ├── 20260128100000_AddPasswordResetOtpFields.cs
+│   │   │   ├── 20260128100000_AddPasswordResetOtpFields.Designer.cs
+│   │   │   ├── 20260128_AddCoverImageToBooks.cs
+│   │   │   └── ApplicationDbContextModelSnapshot.cs
+│   │   └── Repositories/
+│   │       ├── BookRepository.cs
+│   │       ├── CartRepository.cs
+│   │       ├── OrderRepository.cs
+│   │       ├── UnitOfWork.cs
+│   │       └── UserRepository.cs
+│   ├── Bookstore.Models/
+│   │   ├── ApiResponse.cs
+│   │   ├── Bookstore.Models.csproj
+│   │   ├── DTOs/
+│   │   │   ├── BookDto.cs
+│   │   │   ├── LoginResponseDto.cs
+│   │   │   └── UserDto.cs
+│   │   └── Entities/
+│   │       ├── Address.cs
+│   │       ├── BaseAuditableEntity.cs
+│   │       ├── Book.cs
+│   │       ├── CartItem.cs
+│   │       ├── DomainException.cs
+│   │       ├── Feedback.cs
+│   │       ├── Order.cs
+│   │       ├── OrderItem.cs
+│   │       ├── OrderStatus.cs
+│   │       ├── User.cs
+│   │       └── UserRole.cs
+│   └── Bookstore.Web/
+│       ├── appsettings.Development.json
+│       ├── appsettings.json
+│       ├── Bookstore.Web.csproj
+│       ├── migration.sql
+│       ├── Program.cs
+│       ├── Controllers/
+│       │   ├── AddressController.cs
+│       │   ├── AdminController.cs
+│       │   ├── BookController.cs
+│       │   ├── CartController.cs
+│       │   ├── FeedbackController.cs
+│       │   ├── HealthController.cs
+│       │   ├── ImageUploadController.cs
+│       │   ├── OrderController.cs
+│       │   ├── UserAuthController.cs
+│       │   ├── WishlistController.cs
+│       │   └── Admin/
+│       │       ├── AdminAuthController.cs
+│       │       ├── AdminBookController.cs
+│       │       └── AdminOrderController.cs
+│       ├── Middleware/
+│       │   └── GlobalExceptionMiddleware.cs
+│       └── Properties/
+│           └── launchSettings.json
+└── frontend/
+    ├── README.md
+    ├── angular.json
+    ├── build_log.txt
+    ├── nginx.conf
+    ├── package.json
+    ├── tsconfig.app.json
+    ├── tsconfig.json
+    ├── tsconfig.spec.json
+    ├── .editorconfig
+    └── src/
+        ├── index.html
+        ├── main.server.ts
+        ├── main.ts
+        ├── server.ts
+        ├── styles.scss
+        ├── app/
+        │   ├── app.config.server.ts
+        │   ├── app.config.ts
+        │   ├── app.html
+        │   ├── app.routes.server.ts
+        │   ├── app.routes.ts
+        │   ├── app.scss
+        │   ├── app.spec.ts
+        │   ├── app.ts
+        │   ├── Components/
+        │   │   ├── admin-panel/
+        │   │   │   ├── admin-panel.html
+        │   │   │   ├── admin-panel.scss
+        │   │   │   └── admin-panel.ts
+        │   │   ├── book-details/
+        │   │   │   ├── book-details.html
+        │   │   │   ├── book-details.scss
+        │   │   │   ├── book-details.spec.ts
+        │   │   │   └── book-details.ts
+        │   │   ├── book-list/
+        │   │   │   ├── book-list.html
+        │   │   │   ├── book-list.scss
+        │   │   │   └── book-list.ts
+        │   │   ├── my-orders/
+        │   │   │   ├── my-orders.html
+        │   │   │   ├── my-orders.scss
+        │   │   │   └── my-orders.ts
+        │   │   ├── order-success/
+        │   │   │   ├── order-success.html
+        │   │   │   ├── order-success.scss
+        │   │   │   └── order-success.ts
+        │   │   ├── profile/
+        │   │   │   ├── profile.html
+        │   │   │   ├── profile.scss
+        │   │   │   └── profile.ts
+        │   │   ├── search-results/
+        │   │   │   ├── search-results.html
+        │   │   │   ├── search-results.scss
+        │   │   │   └── search-results.ts
+        │   │   ├── toast/
+        │   │   │   └── toast.component.ts
+        │   │   └── wishlist/
+        │   │       ├── wishlist.html
+        │   │       ├── wishlist.scss
+        │   │       └── wishlist.ts
+        │   ├── forgot-password/
+        │   │   ├── forgot-password.css
+        │   │   ├── forgot-password.html
+        │   │   └── forgot-password.ts
+        │   ├── login/
+        │   │   ├── login.html
+        │   │   ├── login.scss
+        │   │   ├── login.spec.ts
+        │   │   └── login.ts
+        │   ├── Models/
+        │   │   ├── api-constants.ts
+        │   │   ├── auth.models.ts
+        │   │   └── book.models.ts
+        │   ├── mycart/
+        │   │   ├── mycart.html
+        │   │   ├── mycart.scss
+        │   │   └── mycart.ts
+        │   ├── Services/
+        │   │   ├── admin.service.ts
+        │   │   ├── auth.interceptor.ts
+        │   │   ├── auth.service.ts
+        │   │   ├── book.service.ts
+        │   │   ├── cart.service.ts
+        │   │   ├── feedback.service.ts
+        │   │   ├── order.service.ts
+        │   │   ├── toast.service.ts
+        │   │   ├── user.service.ts
+        │   │   └── wishlist.service.ts
+        │   ├── shared/
+        │   │   ├── index.ts
+        │   │   ├── components/
+        │   │   │   ├── footer/
+        │   │   │   │   ├── footer.component.html
+        │   │   │   │   ├── footer.component.scss
+        │   │   │   │   ├── footer.component.ts
+        │   │   │   │   └── index.ts
+        │   │   │   └── header/
+        │   │   │       ├── header.component.html
+        │   │   │       ├── header.component.scss
+        │   │   │       ├── header.component.ts
+        │   │   │       └── index.ts
+        │   │   └── guards/
+        │   │       ├── admin.guard.ts
+        │   │       └── auth.guard.ts
+        │   ├── signup/
+        │   │   ├── signup.html
+        │   │   ├── signup.scss
+        │   │   ├── signup.spec.ts
+        │   │   └── signup.ts
+        │   └── verify-email/
+        │       ├── verify-email.html
+        │       ├── verify-email.scss
+        │       └── verify-email.ts
+        └── environments/
+            ├── environment.prod.ts
+            └── environment.ts
+
 
 ---
 
