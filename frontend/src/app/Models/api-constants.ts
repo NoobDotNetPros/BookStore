@@ -21,6 +21,9 @@ export const API_ENDPOINTS = {
   USERS: {
     GET_PROFILE: `${API_BASE_URL}/users/profile`,
     UPDATE_PROFILE: `${API_BASE_URL}/users/profile`,
+    ADD_ADDRESS: `${API_BASE_URL}/users/addresses`,
+    UPDATE_ADDRESS: (id: number) => `${API_BASE_URL}/users/addresses/${id}`,
+    DELETE_ADDRESS: (id: number) => `${API_BASE_URL}/users/addresses/${id}`,
   },
   // Cart endpoints
   CART: {

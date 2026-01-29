@@ -138,10 +138,22 @@ $danger-color: #D32F2F;
     .address-header {
         display: flex;
         align-items: center;
-        gap: 16px;
+        justify-content: space-between;
         margin-bottom: 16px;
         h3 { font-size: 1rem; font-weight: 700; margin: 0; color: $text-primary; }
-        .edit-link { background: none; border: none; color: $accent-color; font-size: 0.85rem; cursor: pointer; font-weight: 600; }
+        .address-actions {
+            display: flex;
+            gap: 16px;
+        }
+        .edit-link, .delete-link {
+            background: none;
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .edit-link { color: $accent-color; }
+        .delete-link { color: $danger-color; }
     }
     .address-content {
         display: grid;
@@ -166,15 +178,145 @@ $danger-color: #D32F2F;
     }
 }
 
+// Modal Styles
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid $border-color;
+    h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $text-primary;
+    }
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: $text-secondary;
+        line-height: 1;
+        &:hover { color: $text-primary; }
+    }
+}
+
+.modal-body {
+    padding: 20px;
+    .form-group {
+        margin-bottom: 16px;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: $text-primary;
+            .required { color: $danger-color; }
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid $border-color;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            &:focus {
+                outline: none;
+                border-color: $accent-color;
+                box-shadow: 0 0 0 3px rgba($accent-color, 0.1);
+            }
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .radios {
+            display: flex;
+            gap: 24px;
+            .radio {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.9rem;
+                cursor: pointer;
+                input[type="radio"] { accent-color: $accent-color; }
+            }
+        }
+    }
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid $border-color;
+    .save-btn, .cancel-btn {
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: none;
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+    .save-btn {
+        background-color: $accent-color;
+        color: white;
+        &:hover:not(:disabled) { background-color: darken($accent-color, 10%); }
+    }
+    .cancel-btn {
+        background-color: #E0E0E0;
+        color: $text-primary;
+        &:hover:not(:disabled) { background-color: #CCCCCC; }
+    }
+}
+
 @media (max-width: 768px) {
     .page-container { padding: 16px; }
     .section .section-header { flex-direction: column; align-items: flex-start; gap: 12px; .button-group { width: 100%; } }
     .form-grid { gap: 16px; }
     .address-item .address-content { grid-template-columns: 1fr; gap: 16px; }
+    .modal-body .form-row { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
     .breadcrumb { font-size: 0.75rem; margin-bottom: 16px; }
     .section .section-header { .button-group { flex-direction: column; width: 100%; } .edit-btn, .add-btn { width: 100%; text-align: center; } }
     .address-item .address-content .type-selection .radios { flex-direction: column; gap: 12px; }
+    .modal-body .form-group .radios { flex-direction: column; gap: 12px; }
+    .modal-footer { flex-direction: column-reverse; .save-btn, .cancel-btn { width: 100%; } }
 }

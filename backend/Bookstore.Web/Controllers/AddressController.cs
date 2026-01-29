@@ -143,6 +143,124 @@ public class AddressController : ControllerBase
             }
         });
     }
+
+    /// <summary>
+    /// Add a new address for the user
+    /// </summary>
+    [HttpPost("addresses")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> AddAddress([FromBody] AddressRequest request)
+    {
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) 
+            ?? User.FindFirst("sub");
+        
+        if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            return Unauthorized(new { message = "Invalid or missing user token" });
+
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
+        var address = new Address
+        {
+            UserId = userId,
+            AddressType = request.AddressType,
+            FullAddress = request.FullAddress,
+            City = request.City,
+            State = request.State
+        };
+
+        user.Addresses.Add(address);
+        await _userRepository.UpdateAsync(user);
+        await _unitOfWork.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetUserProfile), new { 
+            message = "Address added successfully", 
+            data = new {
+                id = address.Id,
+                addressType = address.AddressType,
+                fullAddress = address.FullAddress,
+                city = address.City,
+                state = address.State
+            }
+        });
+    }
+
+    /// <summary>
+    /// Update an existing address
+    /// </summary>
+    [HttpPut("addresses/{addressId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UpdateAddress(int addressId, [FromBody] AddressRequest request)
+    {
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) 
+            ?? User.FindFirst("sub");
+        
+        if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            return Unauthorized(new { message = "Invalid or missing user token" });
+
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
+        var address = user.Addresses.FirstOrDefault(a => a.Id == addressId);
+        if (address == null)
+            return NotFound(new { message = "Address not found" });
+
+        address.AddressType = request.AddressType;
+        address.FullAddress = request.FullAddress;
+        address.City = request.City;
+        address.State = request.State;
+
+        await _userRepository.UpdateAsync(user);
+        await _unitOfWork.SaveChangesAsync();
+
+        return Ok(new { 
+            message = "Address updated successfully", 
+            data = new {
+                id = address.Id,
+                addressType = address.AddressType,
+                fullAddress = address.FullAddress,
+                city = address.City,
+                state = address.State
+            }
+        });
+    }
+
+    /// <summary>
+    /// Delete an address
+    /// </summary>
+    [HttpDelete("addresses/{addressId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> DeleteAddress(int addressId)
+    {
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) 
+            ?? User.FindFirst("sub");
+        
+        if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            return Unauthorized(new { message = "Invalid or missing user token" });
+
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
+        var address = user.Addresses.FirstOrDefault(a => a.Id == addressId);
+        if (address == null)
+            return NotFound(new { message = "Address not found" });
+
+        user.Addresses.Remove(address);
+        await _userRepository.UpdateAsync(user);
+        await _unitOfWork.SaveChangesAsync();
+
+        return Ok(new { message = "Address deleted successfully" });
+    }
 }
 
 public record AddressRequest(

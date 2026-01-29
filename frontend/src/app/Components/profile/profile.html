@@ -57,7 +57,7 @@
         <div class="section address-details">
             <div class="section-header">
                 <h2>Address Details</h2>
-                <button class="add-btn" (click)="addNewAddress()">Add New Address</button>
+                <button class="add-btn" (click)="openAddAddressForm()">Add New Address</button>
             </div>
 
             <!-- Empty State -->
@@ -68,8 +68,11 @@
             <div class="address-list" *ngIf="addresses().length > 0">
                 <div class="address-item" *ngFor="let addr of addresses(); let i = index">
                     <div class="address-header">
-                        <h3>{{ addr.type || 'Address ' + (i + 1) }}</h3>
-                        <button class="edit-link">Edit</button>
+                        <h3>{{ i + 1 }}. {{ getAddressTypeDisplay(addr.type) }}</h3>
+                        <div class="address-actions">
+                            <button class="edit-link" (click)="openEditAddressForm(addr)">Edit</button>
+                            <button class="delete-link" (click)="deleteAddress(addr.id!)">Delete</button>
+                        </div>
                     </div>
 
                     <div class="address-content">
@@ -93,18 +96,72 @@
                             <label>Type</label>
                             <div class="radios">
                                 <label class="radio">
-                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="addr.type && addr.type.toUpperCase().includes('HOME')" disabled> Home
+                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="getAddressTypeDisplay(addr.type) === 'HOME'" disabled> Home
                                 </label>
                                 <label class="radio">
-                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="addr.type && addr.type.toUpperCase().includes('WORK')" disabled> Work
+                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="getAddressTypeDisplay(addr.type) === 'WORK'" disabled> Work
                                 </label>
                                 <label class="radio">
-                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="addr.type && addr.type.toUpperCase().includes('OTHER')" disabled> Other
+                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="getAddressTypeDisplay(addr.type) === 'OTHER'" disabled> Other
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Address Form Modal -->
+    <div class="modal-overlay" *ngIf="showAddressForm()" (click)="closeAddressForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>{{ isEditingAddress() ? 'Edit Address' : 'Add New Address' }}</h3>
+                <button class="close-btn" (click)="closeAddressForm()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Address <span class="required">*</span></label>
+                    <textarea
+                        [(ngModel)]="fullAddress"
+                        placeholder="Enter your full address (e.g., House No, Street, Landmark)"
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City/Town <span class="required">*</span></label>
+                        <input type="text" [(ngModel)]="city" placeholder="Enter city">
+                    </div>
+                    <div class="form-group">
+                        <label>State <span class="required">*</span></label>
+                        <input type="text" [(ngModel)]="state" placeholder="Enter state">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Type</label>
+                    <div class="radios">
+                        <label class="radio">
+                            <input type="radio" name="addressType" value="Home" [(ngModel)]="addressType"> Home
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="addressType" value="Work" [(ngModel)]="addressType"> Work
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="addressType" value="Other" [(ngModel)]="addressType"> Other
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="cancel-btn" (click)="closeAddressForm()" [disabled]="addressFormLoading()">Cancel</button>
+                <button class="save-btn" (click)="saveAddress()" [disabled]="addressFormLoading()">
+                    {{ addressFormLoading() ? 'Saving...' : (isEditingAddress() ? 'Update' : 'Add') }}
+                </button>
             </div>
         </div>
     </div>

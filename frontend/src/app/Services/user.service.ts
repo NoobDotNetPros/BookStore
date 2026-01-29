@@ -30,6 +30,13 @@ export interface UpdateProfileRequest {
   phone: string;
 }
 
+export interface AddressRequest {
+  addressType: string;
+  fullAddress: string;
+  city: string;
+  state: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -42,5 +49,17 @@ export class UserService {
 
   updateUserProfile(user: UpdateProfileRequest | any): Observable<ApiResponse<UserProfileData>> {
     return this.http.patch<ApiResponse<UserProfileData>>(API_ENDPOINTS.USERS.UPDATE_PROFILE, user);
+  }
+
+  addAddress(address: AddressRequest): Observable<ApiResponse<AddressData>> {
+    return this.http.post<ApiResponse<AddressData>>(API_ENDPOINTS.USERS.ADD_ADDRESS, address);
+  }
+
+  updateAddress(id: number, address: AddressRequest): Observable<ApiResponse<AddressData>> {
+    return this.http.put<ApiResponse<AddressData>>(API_ENDPOINTS.USERS.UPDATE_ADDRESS(id), address);
+  }
+
+  deleteAddress(id: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(API_ENDPOINTS.USERS.DELETE_ADDRESS(id));
   }
 }

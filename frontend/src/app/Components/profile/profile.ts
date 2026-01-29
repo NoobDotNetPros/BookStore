@@ -1,7 +1,7 @@
-import { Component, signal, inject, OnInit, WritableSignal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../../Services/user.service';
+import { UserService, AddressRequest } from '../../Services/user.service';
 import { AuthService } from '../../Services/auth.service';
 
 interface UserProfile {
@@ -17,6 +17,7 @@ interface AddressInfo {
     address: string;
     city: string;
     state: string;
+    isEditing?: boolean;
 }
 
 @Component({
@@ -46,8 +47,19 @@ export class Profile implements OnInit {
     errorMessage = signal('');
     successMessage = signal('');
 
+    // Address form state
+    showAddressForm = signal(false);
+    isEditingAddress = signal(false);
+    editingAddressId = signal<number | null>(null);
+    addressFormLoading = signal(false);
+
+    // Address form fields
+    addressType = 'Home';
+    fullAddress = '';
+    city = '';
+    state = '';
+
     ngOnInit() {
-        // Check if user is logged in before loading profile
         if (this.authService.isLoggedIn()) {
             this.loadUserProfile();
         } else {
@@ -69,19 +81,18 @@ export class Profile implements OnInit {
                     this.email = userData.email || '';
                     this.phone = userData.phone || userData.mobileNumber || '';
 
-                    // Store backup
                     this.fullNameBackup = this.fullName;
                     this.emailBackup = this.email;
                     this.phoneBackup = this.phone;
 
-                    // Load addresses if available
                     if (userData.addresses && Array.isArray(userData.addresses)) {
                         const addressList = userData.addresses.map((addr: any) => ({
                             id: addr.id,
-                            type: addr.addressType || addr.type || '',
+                            type: addr.addressType || addr.type || 'Other',
                             address: addr.fullAddress || addr.address || '',
                             city: addr.city || '',
-                            state: addr.state || ''
+                            state: addr.state || '',
+                            isEditing: false
                         }));
                         this.addresses.set(addressList);
                     } else {
@@ -100,13 +111,11 @@ export class Profile implements OnInit {
 
     toggleEdit() {
         if (this.isEditing()) {
-            // Cancel editing - restore backup
             this.fullName = this.fullNameBackup;
             this.email = this.emailBackup;
             this.phone = this.phoneBackup;
             this.isEditing.set(false);
         } else {
-            // Enter edit mode - create backup
             this.fullNameBackup = this.fullName;
             this.emailBackup = this.email;
             this.phoneBackup = this.phone;
@@ -126,14 +135,11 @@ export class Profile implements OnInit {
 
         this.userService.updateUserProfile(updateData).subscribe({
             next: (response) => {
-                // Update backups on success
                 this.fullNameBackup = this.fullName;
                 this.emailBackup = this.email;
                 this.phoneBackup = this.phone;
                 this.isEditing.set(false);
                 this.successMessage.set('Profile updated successfully!');
-
-                // Clear success message after 3 seconds
                 setTimeout(() => this.successMessage.set(''), 3000);
             },
             error: (error) => {
@@ -143,8 +149,113 @@ export class Profile implements OnInit {
         });
     }
 
-    addNewAddress() {
-        console.log('Add new address clicked');
-        // TODO: Implement add address functionality
+    // Address Management Methods
+    openAddAddressForm() {
+        this.resetAddressForm();
+        this.isEditingAddress.set(false);
+        this.editingAddressId.set(null);
+        this.showAddressForm.set(true);
+    }
+
+    openEditAddressForm(address: AddressInfo) {
+        this.addressType = address.type || 'Other';
+        this.fullAddress = address.address || '';
+        this.city = address.city || '';
+        this.state = address.state || '';
+        this.isEditingAddress.set(true);
+        this.editingAddressId.set(address.id || null);
+        this.showAddressForm.set(true);
+    }
+
+    closeAddressForm() {
+        this.showAddressForm.set(false);
+        this.resetAddressForm();
+    }
+
+    resetAddressForm() {
+        this.addressType = 'Home';
+        this.fullAddress = '';
+        this.city = '';
+        this.state = '';
+        this.isEditingAddress.set(false);
+        this.editingAddressId.set(null);
+    }
+
+    saveAddress() {
+        if (!this.fullAddress.trim() || !this.city.trim() || !this.state.trim()) {
+            this.errorMessage.set('Please fill in all address fields.');
+            setTimeout(() => this.errorMessage.set(''), 3000);
+            return;
+        }
+
+        this.addressFormLoading.set(true);
+        this.errorMessage.set('');
+
+        const addressData: AddressRequest = {
+            addressType: this.addressType,
+            fullAddress: this.fullAddress.trim(),
+            city: this.city.trim(),
+            state: this.state.trim()
+        };
+
+        if (this.isEditingAddress() && this.editingAddressId()) {
+            // Update existing address
+            this.userService.updateAddress(this.editingAddressId()!, addressData).subscribe({
+                next: (response) => {
+                    this.successMessage.set('Address updated successfully!');
+                    this.closeAddressForm();
+                    this.loadUserProfile();
+                    this.addressFormLoading.set(false);
+                    setTimeout(() => this.successMessage.set(''), 3000);
+                },
+                error: (error) => {
+                    console.error('Error updating address:', error);
+                    this.errorMessage.set('Failed to update address. Please try again.');
+                    this.addressFormLoading.set(false);
+                }
+            });
+        } else {
+            // Add new address
+            this.userService.addAddress(addressData).subscribe({
+                next: (response) => {
+                    this.successMessage.set('Address added successfully!');
+                    this.closeAddressForm();
+                    this.loadUserProfile();
+                    this.addressFormLoading.set(false);
+                    setTimeout(() => this.successMessage.set(''), 3000);
+                },
+                error: (error) => {
+                    console.error('Error adding address:', error);
+                    this.errorMessage.set('Failed to add address. Please try again.');
+                    this.addressFormLoading.set(false);
+                }
+            });
+        }
+    }
+
+    deleteAddress(addressId: number) {
+        if (!confirm('Are you sure you want to delete this address?')) {
+            return;
+        }
+
+        this.userService.deleteAddress(addressId).subscribe({
+            next: () => {
+                this.successMessage.set('Address deleted successfully!');
+                this.loadUserProfile();
+                setTimeout(() => this.successMessage.set(''), 3000);
+            },
+            error: (error) => {
+                console.error('Error deleting address:', error);
+                this.errorMessage.set('Failed to delete address. Please try again.');
+            }
+        });
+    }
+
+    getAddressTypeDisplay(type: string): string {
+        if (!type) return 'Other';
+        const normalized = type.toUpperCase();
+        if (normalized.includes('HOME')) return 'HOME';
+        if (normalized.includes('WORK')) return 'WORK';
+        return 'OTHER';
     }
 }
