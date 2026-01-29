@@ -9,19 +9,19 @@ Welcome to **BookStore**, a comprehensive full-stack e-commerce application desi
 ## 🚀 Key Features
 
 ### 👤 User Features
-- **User Authentication**: Secure Signup, Login, and Forgot Password with JWT-based authentication.
-- **Browse Books**: Search and explore a wide collection of books with detailed descriptions.
-- **Shopping Cart**: Seamlessly add, remove, and manage quantities of books in your cart.
-- **Wishlist**: Save your favorite books for future purchases.
-- **Order Management**: Secure checkout process with order history and success tracking.
-- **User Profile**: Manage personal details and delivery addresses.
-- **Feedback & Reviews**: Share your thoughts on books with a built-in feedback system.
+- **User Authentication**: Secure Signup, Login, and Forgot Password with JWT-based authentication
+- **Browse Books**: Search and explore a wide collection of books with detailed descriptions
+- **Shopping Cart**: Seamlessly add, remove, and manage quantities of books in your cart
+- **Wishlist**: Save your favorite books for future purchases
+- **Order Management**: Secure checkout process with order history and success tracking
+- **User Profile**: Manage personal details and delivery addresses
+- **Feedback & Reviews**: Share your thoughts on books with a built-in feedback system
 
 ### 🛡️ Admin Features
-- **Admin Dashboard**: Overview of store performance and management.
-- **Book Management**: Full CRUD operations (Add, Update, Delete) for the book catalog.
-- **Order Monitoring**: View and manage customer orders.
-- **User Management**: Monitor registered users and their activities.
+- **Admin Dashboard**: Overview of store performance and management
+- **Book Management**: Full CRUD operations (Add, Update, Delete) for the book catalog
+- **Order Monitoring**: View and manage customer orders
+- **User Management**: Monitor registered users and their activities
 
 ---
 
@@ -305,7 +305,7 @@ noobdotnetpros-bookstore/
         └── environments/
             ├── environment.prod.ts
             └── environment.ts
-
+```
 
 ---
 
@@ -318,108 +318,157 @@ noobdotnetpros-bookstore/
 - [Angular CLI](https://angular.dev/tools/cli)
 
 ### 2️⃣ Backend Setup
-1.  Navigate to the backend directory:
-    ```bash
-    cd backend/Bookstore.Web
-    ```
-2.  Configure your database connection string in `appsettings.json`:
-    ```json
-    "ConnectionStrings": {
-      "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=BookstoreDb;Trusted_Connection=True;TrustServerCertificate=True"
-    }
-    ```
-3.  Apply Migrations and Seed Data:
-    The application is configured to automatically apply migrations and seed initial data on startup.
-4.  Run the API:
-    ```bash
-    dotnet run
-    ```
-    API will be available at: `https://localhost:7158` (or check console output)
-    Swagger UI: `https://localhost:7158/swagger`
+
+1. **Navigate to the backend directory:**
+   ```bash
+   cd backend/Bookstore.Web
+   ```
+
+2. **Configure your database connection string in `appsettings.json`:**
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=BookstoreDb;Trusted_Connection=True;TrustServerCertificate=True"
+   }
+   ```
+
+3. **Apply Migrations and Seed Data:**  
+   The application is configured to automatically apply migrations and seed initial data on startup.
+
+4. **Run the API:**
+   ```bash
+   dotnet run
+   ```
+   - API will be available at: `https://localhost:7158` (or check console output)
+   - Swagger UI: `https://localhost:7158/swagger`
 
 ### 3️⃣ Frontend Setup
-1.  Navigate to the frontend directory:
-    ```bash
-    cd frontend
-    ```
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Start the development server:
-    ```bash
-    npm start
-    ```
-    The app will be available at: `http://localhost:4200`
 
-🔌 API Summary
-🔐 Authentication & User
-Method	Endpoint	Description
-POST	/api/auth/signup	Register a new user
-POST	/api/auth/login	User login
-POST	/api/auth/verification/{token}	Verify user account
-POST	/api/auth/forgot-password	Request password reset
-POST	/api/auth/verify-otp	Verify OTP
-POST	/api/auth/resend-otp	Resend OTP
-POST	/api/auth/reset-password	Reset password
-👤 User Profile & Addresses
-Method	Endpoint	Description
-GET	/api/users/profile	Get user profile
-PUT	/api/users/profile	Update user profile
-PATCH	/api/users/profile	Partially update profile
-POST	/api/users/addresses	Add new address
-PUT	/api/users/addresses/{addressId}	Update address
-DELETE	/api/users/addresses/{addressId}	Delete address
-📚 Products (Books)
-Method	Endpoint	Description
-GET	/api/books	Get all books
-GET	/api/books/{id}	Get book details
-🛒 Cart
-Method	Endpoint	Description
-POST	/api/cart/items	Add item to cart
-PUT	/api/cart/items/{cartItem_id}	Update cart item
-DELETE	/api/cart/items/{cartItem_id}	Remove item from cart
-GET	/api/cart	Get cart details
-❤️ Wishlist
-Method	Endpoint	Description
-POST	/api/wishlist/items/{product_id}	Add item to wishlist
-DELETE	/api/wishlist/items/{product_id}	Remove item from wishlist
-GET	/api/wishlist	Get wishlist items
-📦 Orders
-Method	Endpoint	Description
-POST	/api/orders	Place a new order
-GET	/api/orders	Get user orders
-GET	/api/orders/{id}	Get order details
-⭐ Feedback / Reviews
-Method	Endpoint	Description
-POST	/api/feedback/books/{product_id}	Add feedback for a book
-GET	/api/feedback/books/{product_id}	Get book feedback
-🖼️ Image Upload
-Method	Endpoint	Description
-POST	/api/upload/image	Upload image
-🛠️ Admin Authentication
-Method	Endpoint	Description
-POST	/bookstore_user/admin/registration	Admin registration
-POST	/bookstore_user/admin/login	Admin login
-📚 Admin – Books Management
-Method	Endpoint	Description
-GET	/api/admin/books	Get all books
-POST	/api/admin/books	Add new book
-GET	/api/admin/books/{id}	Get book by ID
-PUT	/api/admin/books/{id}	Update book
-DELETE	/api/admin/books/{id}	Delete book
-🧾 Admin – Product Management
-Method	Endpoint	Description
-POST	/bookstore_user/admin/add/book	Add book (admin)
-PUT	/bookstore_user/admin/update/book/{product_id}	Update book
-DELETE	/bookstore_user/admin/delete/book/{product_id}	Delete book
-📦 Admin – Orders
-Method	Endpoint	Description
-GET	/bookstore_user/admin/get/order	Get all orders
-⚙️ System
-Method	Endpoint	Description
-GET	/api/health	Health check
+1. **Navigate to the frontend directory:**
+   ```bash
+   cd frontend
+   ```
 
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm start
+   ```
+   - The app will be available at: `http://localhost:4200`
+
+---
+
+## 🔌 API Summary
+
+### 🔐 Authentication & User
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/signup` | Register a new user |
+| POST | `/api/auth/login` | User login |
+| POST | `/api/auth/verification/{token}` | Verify user account |
+| POST | `/api/auth/forgot-password` | Request password reset |
+| POST | `/api/auth/verify-otp` | Verify OTP |
+| POST | `/api/auth/resend-otp` | Resend OTP |
+| POST | `/api/auth/reset-password` | Reset password |
+
+### 👤 User Profile & Addresses
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users/profile` | Get user profile |
+| PUT | `/api/users/profile` | Update user profile |
+| PATCH | `/api/users/profile` | Partially update profile |
+| POST | `/api/users/addresses` | Add new address |
+| PUT | `/api/users/addresses/{addressId}` | Update address |
+| DELETE | `/api/users/addresses/{addressId}` | Delete address |
+
+### 📚 Products (Books)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/books` | Get all books |
+| GET | `/api/books/{id}` | Get book details |
+
+### 🛒 Cart
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/cart/items` | Add item to cart |
+| PUT | `/api/cart/items/{cartItem_id}` | Update cart item |
+| DELETE | `/api/cart/items/{cartItem_id}` | Remove item from cart |
+| GET | `/api/cart` | Get cart details |
+
+### ❤️ Wishlist
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/wishlist/items/{product_id}` | Add item to wishlist |
+| DELETE | `/api/wishlist/items/{product_id}` | Remove item from wishlist |
+| GET | `/api/wishlist` | Get wishlist items |
+
+### 📦 Orders
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/orders` | Place a new order |
+| GET | `/api/orders` | Get user orders |
+| GET | `/api/orders/{id}` | Get order details |
+
+### ⭐ Feedback / Reviews
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/feedback/books/{product_id}` | Add feedback for a book |
+| GET | `/api/feedback/books/{product_id}` | Get book feedback |
+
+### 🖼️ Image Upload
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/upload/image` | Upload image |
+
+### 🛠️ Admin Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/bookstore_user/admin/registration` | Admin registration |
+| POST | `/bookstore_user/admin/login` | Admin login |
+
+### 📚 Admin – Books Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/admin/books` | Get all books |
+| POST | `/api/admin/books` | Add new book |
+| GET | `/api/admin/books/{id}` | Get book by ID |
+| PUT | `/api/admin/books/{id}` | Update book |
+| DELETE | `/api/admin/books/{id}` | Delete book |
+
+### 🧾 Admin – Product Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/bookstore_user/admin/add/book` | Add book (admin) |
+| PUT | `/bookstore_user/admin/update/book/{product_id}` | Update book |
+| DELETE | `/bookstore_user/admin/delete/book/{product_id}` | Delete book |
+
+### 📦 Admin – Orders
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/bookstore_user/admin/get/order` | Get all orders |
+
+### ⚙️ System
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Health check |
+
+---
 
 ## 👨‍💻 Authors
 
@@ -451,8 +500,8 @@ GET	/api/health	Health check
 - 📧 Email: [dinessh.venkat28@gmail.com](mailto:dinessh.venkat28@gmail.com)
 - 🐙 GitHub: [@Dinessh2815](https://github.com/Dinessh2815)
 
-
 ---
 
 ## 📄 License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
