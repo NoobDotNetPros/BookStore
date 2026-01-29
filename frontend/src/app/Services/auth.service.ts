@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { API_ENDPOINTS } from '../Models/api-constants';
@@ -33,9 +34,10 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<LoginResponse | null>;
   public currentUser$: Observable<LoginResponse | null>;
   private tokenKey = 'authToken';
+  private platformId = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient) {
-    const storedUser = localStorage.getItem('currentUser');
+    const storedUser = this.getFromLocalStorage('currentUser');
     this.currentUserSubject = new BehaviorSubject<LoginResponse | null>(
       storedUser ? JSON.parse(storedUser) : null
     );
@@ -47,7 +49,26 @@ export class AuthService {
   }
 
   public get authToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return this.getFromLocalStorage(this.tokenKey);
+  }
+
+  private getFromLocalStorage(key: string): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(key);
+    }
+    return null;
+  }
+
+  private setInLocalStorage(key: string, value: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(key, value);
+    }
+  }
+
+  private removeFromLocalStorage(key: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(key);
+    }
   }
 
   login(email: string, password: string): Observable<ApiResponse<LoginResponse>> {
@@ -76,14 +97,14 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem('currentUser');
+    this.removeFromLocalStorage(this.tokenKey);
+    this.removeFromLocalStorage('currentUser');
     this.currentUserSubject.next(null);
   }
 
   setUser(response: LoginResponse): void {
-    localStorage.setItem(this.tokenKey, response.token);
-    localStorage.setItem('currentUser', JSON.stringify(response));
+    this.setInLocalStorage(this.tokenKey, response.token);
+    this.setInLocalStorage('currentUser', JSON.stringify(response));
     this.currentUserSubject.next(response);
   }
 
