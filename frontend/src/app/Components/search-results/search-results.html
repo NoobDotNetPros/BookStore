@@ -1,0 +1,62 @@
+<div class="search-results-container">
+  <!-- Header Section -->
+  <div class="search-header">
+    <h1>Search Results</h1>
+    <p class="search-query">Results for "<strong>{{ searchQuery }}</strong>"</p>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Searching books...</p>
+  </div>
+
+  <!-- No Results State -->
+  <div class="no-results" *ngIf="noResults && !isLoading">
+    <div class="no-results-icon">📚</div>
+    <h2>No books found</h2>
+    <p>We couldn't find any books matching "<strong>{{ searchQuery }}</strong>"</p>
+    <p class="tips">Try searching with:</p>
+    <ul>
+      <li>Different keywords</li>
+      <li>Book titles</li>
+      <li>Author names</li>
+    </ul>
+    <button class="btn-home" (click)="clearSearch()">Back to Home</button>
+  </div>
+
+  <!-- Results Grid -->
+  <div class="results-grid" *ngIf="searchResults.length > 0 && !isLoading">
+    <div class="result-info">
+      <p>Found <strong>{{ searchResults.length }}</strong> book(s)</p>
+    </div>
+
+    <div class="books-grid">
+      <div class="book-card" *ngFor="let book of searchResults" (click)="onBookClick(book.id)">
+        <div class="book-image-wrapper">
+          <img [src]="book.coverImage || 'assets/images/default-book.png'"
+               [alt]="book.bookName"
+               class="book-image">
+          <div class="book-overlay">
+            <button class="btn-view-details">View Details</button>
+          </div>
+        </div>
+        <div class="book-info">
+          <h3 class="book-title" [title]="book.bookName">{{ book.bookName }}</h3>
+          <p class="book-author">by {{ book.author }}</p>
+          <div class="book-price">
+            <span class="current-price">₹{{ book.discountPrice || book.price }}</span>
+            <span class="original-price" *ngIf="book.discountPrice && book.price > book.discountPrice">
+              ₹{{ book.price }}
+            </span>
+          </div>
+          <div class="book-stock">
+            <span class="stock-status" [class.in-stock]="book.quantity > 0">
+              {{ book.quantity > 0 ? 'In Stock' : 'Out of Stock' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

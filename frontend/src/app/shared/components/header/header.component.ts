@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.cartCount = count;
     });
 
-    // Setup debounced search
+    // Setup debounced search for dropdown preview
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -108,8 +108,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onSearch(): void {
+    if (!this.searchQuery.trim()) {
+      return;
+    }
+
     this.showSearchDropdown = false;
-    // Always emit update, even if empty, to clear search
+    // Navigate to search results page
+    this.router.navigate(['/search'], {
+      queryParams: { q: this.searchQuery.trim() }
+    });
+    // Update service for other components
     this.bookService.updateSearchQuery(this.searchQuery.trim());
     this.searchSubmit.emit(this.searchQuery.trim());
   }
@@ -141,13 +149,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onCartClick(): void {
-    this.cartClick.emit(); // Keep emitting just in case
+    this.cartClick.emit();
     this.router.navigate(['/my-cart']);
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/']);
   }
 }
-
