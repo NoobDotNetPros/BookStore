@@ -120,9 +120,19 @@ $accent-color: #A03037;
         opacity: 0.6;
         transition: opacity 0.2s;
         padding: 4px;
+        color: #999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
             opacity: 1;
+            color: #e74c3c;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
         }
 
         img {
