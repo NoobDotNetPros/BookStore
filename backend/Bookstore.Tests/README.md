@@ -307,8 +307,6 @@ Provides utilities for mocking `DbSet<T>` with async operations:
 - Run tests before commits to ensure no regressions
 - Keep mocks in sync with interface changes
 
+
 ---
 
-*Last Updated: January 29, 2026*
-*Test Framework: NUnit 3.14.0*
-*Target Framework: .NET 8.0*
