@@ -9,7 +9,25 @@
         <a routerLink="/login">LOGIN</a>
         <a routerLink="/signup" class="active">SIGNUP</a>
       </div>
-      <form (ngSubmit)="onSubmit()">
+
+      <!-- Success Message -->
+      <div class="success-message" *ngIf="successMessage">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <div class="message-content">
+          <p>{{ successMessage }}</p>
+          <span class="redirect-text">Redirecting to login page...</span>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <form (ngSubmit)="onSubmit()" *ngIf="!successMessage">
         <div class="form-group" [class.has-error]="fullNameError">
           <label>Full Name</label>
           <input type="text" [(ngModel)]="fullName" name="fullName" [class.error-border]="fullNameError">
@@ -38,7 +56,9 @@
           <input type="tel" [(ngModel)]="mobileNumber" name="mobileNumber" [class.error-border]="mobileError">
           <span class="error-text" *ngIf="mobileError">Enter mobile number</span>
         </div>
-        <button type="submit" class="signup-btn">Signup</button>
+        <button type="submit" class="signup-btn" [disabled]="loading">
+          {{ loading ? 'Signing up...' : 'Signup' }}
+        </button>
       </form>
     </div>
   </div>

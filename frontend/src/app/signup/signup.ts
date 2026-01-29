@@ -3,6 +3,7 @@ import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../Services/auth.service';
+import { ToastService } from '../Services/toast.service';
 
 @Component({
   selector: 'app-signup',
@@ -19,9 +20,11 @@ export class Signup {
   submitted = false;
   loading = false;
   errorMessage = '';
+  successMessage = '';
 
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -30,6 +33,7 @@ export class Signup {
   onSubmit() {
     this.submitted = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
     if (!this.fullName.trim() || !this.email.trim() || !this.password.trim() || !this.mobileNumber.trim()) {
       return;
@@ -38,14 +42,18 @@ export class Signup {
     this.loading = true;
     this.authService.signup(this.fullName, this.email, this.password, this.mobileNumber).subscribe({
       next: (response: any) => {
-        // Backend returns { id, message } on success (200 OK)
-        // It does not return a token, so we cannot auto-login.
-        // Redirect to login page.
         this.loading = false;
-        this.router.navigate(['/login']);
+        this.successMessage = response.message || 'Registration successful! A verification email has been sent to your email address.';
+        this.toastService.success(this.successMessage, 5000);
+
+        // Redirect to login after 3 seconds
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 3000);
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Signup failed. Please try again.';
+        this.toastService.error(this.errorMessage);
         this.loading = false;
       }
     });
