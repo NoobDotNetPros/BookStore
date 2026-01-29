@@ -109,7 +109,8 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.authToken;
+    // Check both in-memory state and localStorage for immediate availability after login
+    return !!this.currentUserSubject.value || !!this.authToken;
   }
 
   isAdmin(): boolean {
@@ -118,7 +119,14 @@ export class AuthService {
   }
 
   getUserRole(): string | null {
-    const token = this.authToken;
+    // First try to get role directly from in-memory user (immediate availability after login)
+    const currentUser = this.currentUserSubject.value;
+    if (currentUser?.role) {
+      return currentUser.role;
+    }
+
+    // Fallback to decoding token
+    const token = currentUser?.token || this.authToken;
     if (!token) return null;
 
     const decoded = this.decodeToken(token);

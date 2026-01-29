@@ -34,7 +34,12 @@
             <a routerLink="/forgot-password" class="forgot-password">Forgot Password?</a>
           </div>
         </div>
-        <button type="submit" class="login-btn">Login</button>
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+        <button type="submit" class="login-btn" [disabled]="loading">
+          {{ loading ? 'Logging in...' : 'Login' }}
+        </button>
         <div class="divider">
           <span class="line"></span>
           <span class="or-text">OR</span>

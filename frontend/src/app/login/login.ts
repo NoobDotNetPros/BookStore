@@ -36,7 +36,8 @@ export class Login {
     this.loading = true;
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        if (response.success && response.data) {
+        // Backend returns { message, data } - if data exists, login was successful
+        if (response.data) {
           this.authService.setUser(response.data);
           if (this.authService.isAdmin()) {
             this.router.navigate(['/admin']);

@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
       this.isLoggedIn = !!user;
-      this.userName = user?.user.fullName || 'Profile';
+      this.userName = user?.fullName || 'Profile';
 
       if (this.isLoggedIn) {
         // Fetch cart to initialize count

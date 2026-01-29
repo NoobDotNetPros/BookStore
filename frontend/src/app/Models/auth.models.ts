@@ -10,9 +10,13 @@ export interface SignupRequest {
   phone: string;
 }
 
+// LoginResponse matches backend LoginResponseDto (flat structure)
 export interface LoginResponse {
   token: string;
-  user: UserDto;
+  userId: number;
+  email: string;
+  fullName: string;
+  role: string;
 }
 
 export interface UserDto {
@@ -22,8 +26,9 @@ export interface UserDto {
   mobileNumber: string;
 }
 
+// Backend returns { message, data } format (no success field)
 export interface ApiResponse<T> {
-  success: boolean;
+  success?: boolean;
   message: string;
   data?: T;
   errors?: string[];

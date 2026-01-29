@@ -188,6 +188,17 @@
     }
   }
 
+  .error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 10px;
+    text-align: center;
+    border: 1px solid #ef9a9a;
+  }
+
   .login-btn {
     width: 100%;
     padding: 14px;
@@ -203,6 +214,11 @@
 
     &:hover {
       background: #8b2323;
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
     }
   }
 
