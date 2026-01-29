@@ -40,22 +40,28 @@ export class Signup {
     }
 
     this.loading = true;
-    this.authService.signup(this.fullName, this.email, this.password, this.mobileNumber).subscribe({
-      next: (response: any) => {
-        this.loading = false;
-        this.successMessage = response.message || 'Registration successful! A verification email has been sent to your email address.';
-        this.toastService.success(this.successMessage, 5000);
+    setTimeout(() => {
+      this.authService.signup(this.fullName, this.email, this.password, this.mobileNumber).subscribe({
+        next: (response: any) => {
+          setTimeout(() => {
+            this.loading = false;
+            this.successMessage = response.message || 'Registration successful! A verification email has been sent to your email address.';
+            this.toastService.success(this.successMessage, 5000);
 
-        // Redirect to login after 3 seconds
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 3000);
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Signup failed. Please try again.';
-        this.toastService.error(this.errorMessage);
-        this.loading = false;
-      }
+            // Redirect to login after 3 seconds
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000);
+          });
+        },
+        error: (err) => {
+          setTimeout(() => {
+            this.errorMessage = err.error?.message || 'Signup failed. Please try again.';
+            this.toastService.error(this.errorMessage);
+            this.loading = false;
+          });
+        }
+      });
     });
   }
 

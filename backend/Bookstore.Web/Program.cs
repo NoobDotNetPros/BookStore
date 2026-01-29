@@ -87,7 +87,14 @@ builder.Services.Configure<SmtpSettings>(smtpConfig);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+        b => {
+            b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+            // Enable retry on failure for transient SQL Azure errors
+            b.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+        }));
 
 // Repositories
 builder.Services.AddScoped<IBookRepository, BookRepository>();
@@ -142,29 +149,10 @@ app.UseSwaggerUI(options =>
     options.EnableTryItOutByDefault();
 });
 
-// Database initialization
-using (var scope = app.Services.CreateScope())
-{
-    try
-    {
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-        logger.LogInformation("Applying pending migrations...");
-        await context.Database.MigrateAsync();
-        logger.LogInformation("Database migrations applied successfully.");
-
-        // Seed dummy data
-        logger.LogInformation("Seeding database...");
-        await DbInitializer.InitializeAsync(context);
-        logger.LogInformation("Database seeding completed.");
-    }
-    catch (Exception ex)
-    {
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
-    }
-}
+// Database initialization - Azure SQL already has schema, skip migrations
+// Connection will be established on first request
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Using Azure SQL database - connection will be established on first request.");
 
 // app.UseHttpsRedirection();
 app.UseCors("BookstorePolicy");
