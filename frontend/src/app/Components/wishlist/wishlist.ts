@@ -2,6 +2,7 @@ import { Component, signal, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WishlistService, WishlistItem } from '../../Services/wishlist.service';
 import { AuthService } from '../../Services/auth.service';
+import { ToastService } from '../../Services/toast.service';
 
 interface WishlistDisplayItem {
   id: number;
@@ -23,6 +24,7 @@ interface WishlistDisplayItem {
 export class Wishlist implements OnInit {
     private wishlistService = inject(WishlistService);
     private authService = inject(AuthService);
+    private toastService = inject(ToastService);
 
     isLoggedIn = signal<boolean>(false);
     wishlistItems = signal<WishlistDisplayItem[]>([]);
@@ -75,10 +77,11 @@ export class Wishlist implements OnInit {
         this.wishlistService.removeFromWishlist(bookId).subscribe({
             next: () => {
                 this.wishlistItems.update(items => items.filter(item => item.bookId !== bookId));
+                this.toastService.success('Item removed from wishlist');
             },
             error: (err) => {
                 console.error('Error removing from wishlist:', err);
-                alert('Failed to remove item from wishlist');
+                this.toastService.error('Failed to remove item from wishlist');
             }
         });
     }

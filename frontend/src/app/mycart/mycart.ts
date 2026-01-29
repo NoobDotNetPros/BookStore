@@ -6,6 +6,7 @@ import { CartService } from '../Services/cart.service';
 import { UserService } from '../Services/user.service';
 import { OrderService } from '../Services/order.service';
 import { AuthService } from '../Services/auth.service';
+import { ToastService } from '../Services/toast.service';
 
 type ActiveSection = 'cart' | 'address' | 'summary';
 
@@ -41,6 +42,7 @@ export class MyCartComponent implements OnInit {
   private userService = inject(UserService);
   private orderService = inject(OrderService);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
   private router = inject(Router);
 
   activeSection = signal<ActiveSection>('cart');
@@ -220,11 +222,12 @@ export class MyCartComponent implements OnInit {
 
     this.orderService.createOrder({ Orders: orderItems }).subscribe({
       next: () => {
+        this.toastService.success('Order placed successfully!');
         this.router.navigate(['/order-success']);
       },
       error: (err) => {
         console.error('Error creating order:', err);
-        alert('Failed to create order');
+        this.toastService.error('Failed to create order. Please try again.');
       }
     });
   }

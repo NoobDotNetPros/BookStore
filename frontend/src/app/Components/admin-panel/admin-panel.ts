@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, BookFormData } from '../../Services/admin.service';
 import { HttpClient } from '@angular/common/http';
+import { ToastService } from '../../Services/toast.service';
 
 @Component({
   selector: 'app-admin-panel',
@@ -14,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 export class AdminPanelComponent implements OnInit {
   private adminService = inject(AdminService);
   private http = inject(HttpClient);
+  private toastService = inject(ToastService);
 
   books = signal<BookFormData[]>([]);
   loading = signal<boolean>(true);
@@ -142,10 +144,11 @@ export class AdminPanelComponent implements OnInit {
         next: () => {
           this.loadBooks();
           this.closeForm();
-          alert('Book updated successfully');
+          this.toastService.success('Book updated successfully');
         },
         error: (err) => {
           this.errorMessage.set('Failed to update book');
+          this.toastService.error('Failed to update book');
           console.error('Error:', err);
         }
       });
@@ -154,10 +157,11 @@ export class AdminPanelComponent implements OnInit {
         next: () => {
           this.loadBooks();
           this.closeForm();
-          alert('Book created successfully');
+          this.toastService.success('Book created successfully');
         },
         error: (err) => {
           this.errorMessage.set('Failed to create book');
+          this.toastService.error('Failed to create book');
           console.error('Error:', err);
         }
       });
@@ -196,10 +200,11 @@ export class AdminPanelComponent implements OnInit {
       this.adminService.deleteBook(book.id!).subscribe({
         next: () => {
           this.loadBooks();
-          alert('Book deleted successfully');
+          this.toastService.success('Book deleted successfully');
         },
         error: (err) => {
           this.errorMessage.set('Failed to delete book');
+          this.toastService.error('Failed to delete book');
           console.error('Error:', err);
         }
       });

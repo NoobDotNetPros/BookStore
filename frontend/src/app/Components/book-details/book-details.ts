@@ -5,6 +5,7 @@ import { BookService } from '../../Services/book.service';
 import { CartService } from '../../Services/cart.service';
 import { WishlistService } from '../../Services/wishlist.service';
 import { AuthService } from '../../Services/auth.service';
+import { ToastService } from '../../Services/toast.service';
 import { BookDto } from '../../Models/book.models';
 
 interface BookDetailsView {
@@ -129,6 +130,8 @@ export class BookDetails implements OnInit {
     }
   }
 
+  private toastService = inject(ToastService);
+
   addToCart() {
     if (!this.isLoggedIn()) {
       this.router.navigate(['/login']);
@@ -140,11 +143,11 @@ export class BookDetails implements OnInit {
       // Using CartService method - adjust based on your actual service
       this.cartService.addItem(currentBook.id, this.selectedQuantity()).subscribe({
         next: () => {
-          alert('Book added to cart successfully!');
+          this.toastService.success('Book added to cart successfully!');
         },
         error: (err: any) => {
           console.error('Error adding to cart:', err);
-          alert('Failed to add book to cart');
+          this.toastService.error('Failed to add book to cart');
         }
       });
     }
@@ -160,18 +163,18 @@ export class BookDetails implements OnInit {
     if (currentBook) {
       this.wishlistService.addToWishlist(currentBook.id).subscribe({
         next: () => {
-          alert('Book added to wishlist successfully!');
+          this.toastService.success('Book added to wishlist successfully!');
         },
         error: (err: any) => {
           console.error('Error adding to wishlist:', err);
-          alert('Failed to add book to wishlist');
+          this.toastService.error('Failed to add book to wishlist');
         }
       });
     }
   }
 
   notifyMe() {
-    alert('You will be notified when this book is back in stock!');
+    this.toastService.info('You will be notified when this book is back in stock!');
   }
 
   buyNow() {
