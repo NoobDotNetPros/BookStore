@@ -115,11 +115,11 @@ export class MyCartComponent implements OnInit {
   loadUserProfile() {
     this.userService.getUserProfile().subscribe({
       next: (response) => {
-        if (response.success && response.data) {
+        if (response.data) {
           const user = response.data;
           this.addressData = {
-            fullName: user.fullName,
-            mobileNumber: user.mobileNumber,
+            fullName: user.fullName || '',
+            mobileNumber: user.phone || user.mobileNumber || '',
             address: '',
             city: '',
             state: '',

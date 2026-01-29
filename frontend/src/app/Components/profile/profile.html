@@ -1,35 +1,54 @@
-<div class="page-container">
+﻿<div class="page-container">
     <div class="breadcrumb">
         <a href="/">Home</a> / <span>Profile</span>
     </div>
 
-    <div class="profile-container">
+    <!-- Loading State -->
+    <div class="loading-message" *ngIf="isLoading()">
+        <p>Loading your profile...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage()">
+        <p>{{ errorMessage() }}</p>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" *ngIf="successMessage()">
+        <p>{{ successMessage() }}</p>
+    </div>
+
+    <div class="profile-container" *ngIf="!isLoading()">
         <!-- Personal Details -->
-        <div class="section personal-details">
+        <div class="section personal-details" [class.editing-mode]="isEditing()">
             <div class="section-header">
-                <h2>Personal Details</h2>
-                <button class="edit-btn" (click)="toggleEdit()">Edit</button>
+                <div class="header-title">
+                    <h2>Personal Details</h2>
+                    <span class="edit-mode-indicator" *ngIf="isEditing()">(Editing)</span>
+                </div>
+                <div class="button-group">
+                    <button *ngIf="!isEditing()" class="edit-btn" (click)="toggleEdit()">Edit</button>
+                    <div class="edit-action-buttons" *ngIf="isEditing()">
+                        <button class="save-btn" (click)="saveProfile()">Save</button>
+                        <button class="cancel-btn" (click)="toggleEdit()">Cancel</button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-grid">
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" [ngModel]="user().fullName" [disabled]="!isEditing()">
+                    <input type="text" [(ngModel)]="fullName" [disabled]="!isEditing()" placeholder="Enter your full name">
                 </div>
 
                 <div class="form-group">
                     <label>Email Id</label>
-                    <input type="text" [ngModel]="user().email" [disabled]="!isEditing()">
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" [ngModel]="user().password" [disabled]="!isEditing()">
+                    <input type="email" [(ngModel)]="email" [disabled]="!isEditing()" placeholder="Enter your email">
                 </div>
 
                 <div class="form-group">
                     <label>Mobile Number</label>
-                    <input type="text" [ngModel]="user().mobile" [disabled]="!isEditing()">
+                    <input type="text" [(ngModel)]="phone" [disabled]="!isEditing()" placeholder="Enter your mobile number">
                 </div>
             </div>
         </div>
@@ -41,27 +60,32 @@
                 <button class="add-btn" (click)="addNewAddress()">Add New Address</button>
             </div>
 
-            <div class="address-list">
-                <div class="address-item" *ngFor="let addr of addresses()">
+            <!-- Empty State -->
+            <div class="empty-addresses" *ngIf="addresses().length === 0">
+                <p>No addresses added yet. Click "Add New Address" to add one.</p>
+            </div>
+
+            <div class="address-list" *ngIf="addresses().length > 0">
+                <div class="address-item" *ngFor="let addr of addresses(); let i = index">
                     <div class="address-header">
-                        <h3>{{ addr.type }}</h3>
+                        <h3>{{ addr.type || 'Address ' + (i + 1) }}</h3>
                         <button class="edit-link">Edit</button>
                     </div>
 
                     <div class="address-content">
                         <div class="form-group full-width">
                             <label>Address</label>
-                            <textarea disabled>{{ addr.address }}</textarea>
+                            <textarea disabled>{{ addr.address || 'No address provided' }}</textarea>
                         </div>
 
                         <div class="row">
                             <div class="form-group">
                                 <label>City/Town</label>
-                                <input type="text" [value]="addr.city" disabled>
+                                <input type="text" [value]="addr.city || 'N/A'" disabled>
                             </div>
                             <div class="form-group">
                                 <label>State</label>
-                                <input type="text" [value]="addr.state" disabled>
+                                <input type="text" [value]="addr.state || 'N/A'" disabled>
                             </div>
                         </div>
 
@@ -69,16 +93,13 @@
                             <label>Type</label>
                             <div class="radios">
                                 <label class="radio">
-                                    <input type="radio" name="loc-{{addr.id}}" [checked]="addr.type.includes('Home')"
-                                        disabled> Home
+                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="addr.type && addr.type.toUpperCase().includes('HOME')" disabled> Home
                                 </label>
                                 <label class="radio">
-                                    <input type="radio" name="loc-{{addr.id}}" [checked]="addr.type.includes('Work')"
-                                        disabled> Work
+                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="addr.type && addr.type.toUpperCase().includes('WORK')" disabled> Work
                                 </label>
                                 <label class="radio">
-                                    <input type="radio" name="loc-{{addr.id}}" [checked]="addr.type.includes('Other')"
-                                        disabled> Other
+                                    <input type="radio" [name]="'loc-' + (addr.id || i)" [checked]="addr.type && addr.type.toUpperCase().includes('OTHER')" disabled> Other
                                 </label>
                             </div>
                         </div>
