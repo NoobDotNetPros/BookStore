@@ -1,6 +1,6 @@
 <app-toast></app-toast>
-<app-header *ngIf="showLayout"></app-header>
-<div [class.main-content]="showLayout" [class.full-page]="!showLayout">
+<app-header *ngIf="showHeader"></app-header>
+<div [class.main-content]="showFooter" [class.full-page]="!showFooter">
     <router-outlet></router-outlet>
 </div>
-<app-footer *ngIf="showLayout"></app-footer>
+<app-footer *ngIf="showFooter"></app-footer>

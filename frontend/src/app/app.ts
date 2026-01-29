@@ -15,21 +15,28 @@ import { filter } from 'rxjs/operators';
 })
 export class App {
   title = 'Bookstore';
-  showLayout = true;
+  showHeader = true;
+  showFooter = true;
 
   private router = inject(Router);
 
-  // Routes that should not show header/footer
-  private noLayoutRoutes = ['/login', '/signup', '/forgot-password', '/verify-email'];
+  // Routes that should not show footer (but header is shown)
+  private noFooterRoutes = ['/login', '/signup', '/forgot-password', '/verify-email'];
 
   constructor() {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.showLayout = !this.noLayoutRoutes.some(route => event.urlAfterRedirects.startsWith(route));
+      this.updateLayoutVisibility(event.urlAfterRedirects);
     });
 
     // Check initial route
-    this.showLayout = !this.noLayoutRoutes.some(route => this.router.url.startsWith(route));
+    this.updateLayoutVisibility(this.router.url);
+  }
+
+  private updateLayoutVisibility(url: string): void {
+    const isNoFooterRoute = this.noFooterRoutes.some(route => url.startsWith(route));
+    this.showHeader = true; // Always show header
+    this.showFooter = !isNoFooterRoute;
   }
 }
