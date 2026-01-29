@@ -113,8 +113,22 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    // Check both in-memory state and localStorage for immediate availability after login
-    return !!this.currentUserSubject.value || !!this.authToken;
+    // Only evaluate login status in the browser (localStorage + JWT validation)
+    if (!isPlatformBrowser(this.platformId)) {
+      return false;
+    }
+
+    const token = this.currentUserSubject.value?.token || this.authToken;
+    if (!token) {
+      return false;
+    }
+
+    if (!this.isTokenValid(token)) {
+      this.logout();
+      return false;
+    }
+
+    return true;
   }
 
   isAdmin(): boolean {
@@ -138,6 +152,9 @@ export class AuthService {
   }
 
   private decodeToken(token: string): any {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
     try {
       const payload = token.split('.')[1];
       if (!payload) return null;
@@ -146,5 +163,16 @@ export class AuthService {
       console.error('Error decoding token', e);
       return null;
     }
+  }
+
+  private isTokenValid(token: string): boolean {
+    const decoded = this.decodeToken(token);
+    if (!decoded) return false;
+
+    const exp = decoded.exp;
+    if (!exp || typeof exp !== 'number') return false;
+
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    return exp > nowSeconds;
   }
 }
