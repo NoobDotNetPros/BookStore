@@ -1,37 +1,42 @@
-# Stage 1: Build the Angular application
+# ============================
+# Stage 1 — Build Angular app
+# ============================
 FROM node:20 AS build
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Copy the rest of the application code
+# Copy app source
 COPY . .
 
-# Build the application
+# Build Angular for production
 RUN npm run build -- --configuration production
 
-# Stage 2: Serve the application with Nginx
+
+# ============================
+# Stage 2 — Run with Nginx
+# ============================
 FROM nginx:alpine
 
-# Remove default nginx website
+# Remove default nginx content
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy the built application from the 'browser' output directory
-# Note: Angular 17+ with application builder outputs to dist/frontend/browser
+# Copy Angular build output
+# Angular 17+ outputs to dist/frontend/browser
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 
-# If index.html doesn't exist but index.csr.html does, rename it (Angular SSR artifact)
+# Fix Angular CSR file name if needed
 RUN if [ -f /usr/share/nginx/html/index.csr.html ] && [ ! -f /usr/share/nginx/html/index.html ]; then \
         mv /usr/share/nginx/html/index.csr.html /usr/share/nginx/html/index.html; \
     fi
 
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx config template
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-# Expose port 80
+# Expose nginx
 EXPOSE 80
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Inject Railway PORT and start nginx
+CMD ["sh", "-c", "envsubst '$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
