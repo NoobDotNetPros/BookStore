@@ -12,14 +12,19 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// =====================================
+// Controllers + JSON
+// =====================================
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
-// Add Swagger/OpenAPI
+// =====================================
+// Swagger
+// =====================================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -27,7 +32,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v1",
         Title = "Bookstore API",
-        Description = "A comprehensive bookstore management API built with N-Tier Architecture",
+        Description = "Bookstore Management API",
         Contact = new OpenApiContact
         {
             Name = "Kotipalli Srikesh",
@@ -35,10 +40,8 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    // Fix duplicate schema names
     options.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
 
-    // Add JWT Authentication to Swagger
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -46,7 +49,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter 'Bearer' [space] and then your valid token"
+        Description = "Enter 'Bearer {token}'"
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -65,52 +68,73 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Add CORS
-var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
-                     ?? new[] { "http://localhost:4200" };
+// =====================================
+// CORS (Railway + Localhost)
+// =====================================
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>();
+
+if (allowedOrigins == null || allowedOrigins.Length == 0)
+{
+    allowedOrigins = new[]
+    {
+        "http://localhost:4200",
+        "https://bookstore-production-d904.up.railway.app"
+    };
+}
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("BookstorePolicy",
-        policy => policy
+    options.AddPolicy("BookstorePolicy", policy =>
+    {
+        policy
             .WithOrigins(allowedOrigins)
-            .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
-// Configuration Settings
-var smtpConfig = builder.Configuration.GetSection("SmtpSettings");
-builder.Services.Configure<SmtpSettings>(smtpConfig);
+// =====================================
+// SMTP
+// =====================================
+builder.Services.Configure<SmtpSettings>(
+    builder.Configuration.GetSection("SmtpSettings"));
 
-// DbContext
+// =====================================
+// Database
+// =====================================
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => {
+        b =>
+        {
             b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-            // Enable retry on failure for transient SQL Azure errors
-            b.EnableRetryOnFailure(
-                maxRetryCount: 3,
-                maxRetryDelay: TimeSpan.FromSeconds(30),
-                errorNumbersToAdd: null);
+            b.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null);
         }));
 
+// =====================================
 // Repositories
+// =====================================
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// =====================================
 // Services
+// =====================================
 builder.Services.AddScoped<IEmailService, EmailService>();
-
-// Add Business layer services (MediatR, AutoMapper, FluentValidation, etc.)
 builder.Services.AddBusinessServices();
 
+// =====================================
 // JWT Authentication
-var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured");
+// =====================================
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("JWT Key not configured");
+
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
 
@@ -129,9 +153,9 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtAudience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-        ClockSkew = TimeSpan.Zero,
-        NameClaimType = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtKey)),
+        ClockSkew = TimeSpan.Zero
     };
 });
 
@@ -139,25 +163,24 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// =====================================
+// Swagger
+// =====================================
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookstore API v1");
     options.RoutePrefix = "swagger";
-    options.DisplayRequestDuration();
-    options.EnableTryItOutByDefault();
 });
 
-// Database initialization - Azure SQL already has schema, skip migrations
-// Connection will be established on first request
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
-logger.LogInformation("Using Azure SQL database - connection will be established on first request.");
-
-// app.UseHttpsRedirection();
+// =====================================
+// Middleware Order (CRITICAL)
+// =====================================
 app.UseCors("BookstorePolicy");
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
