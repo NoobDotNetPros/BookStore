@@ -1,5 +1,7 @@
+import { environment } from '../../environments/environment';
+
 // API Configuration Constants
-export const API_BASE_URL = 'http://localhost:5000/api';
+export const API_BASE_URL = environment.apiBaseUrl;
 
 export const API_ENDPOINTS = {
   // Auth endpoints

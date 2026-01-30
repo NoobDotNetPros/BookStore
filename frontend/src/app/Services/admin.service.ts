@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../Models/auth.models';
+import { environment } from '../../environments/environment';
 
 export interface BookFormData {
   id?: number;
@@ -19,7 +20,7 @@ export interface BookFormData {
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl = 'http://localhost:5000/api/admin';
+  private apiUrl = `${environment.apiBaseUrl}/admin`;
 
   constructor(private http: HttpClient) { }
 

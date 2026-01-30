@@ -1,0 +1,10 @@
+.env
+.DS_Store
+.vscode/
+bin/
+obj/
+artifacts/
+*.log
+node_modules/
+dist/
+.angular/

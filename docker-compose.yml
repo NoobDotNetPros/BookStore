@@ -6,7 +6,16 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      # Secrets loaded from .env file
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+      - Jwt__Key=${Jwt__Key}
+      - SmtpSettings__UserName=${SmtpSettings__UserName}
+      - SmtpSettings__Password=${SmtpSettings__Password}
+      - SmtpSettings__FromEmail=${SmtpSettings__FromEmail}
+      - ImageKit__UrlEndpoint=${ImageKit__UrlEndpoint}
+      - ImageKit__PublicKey=${ImageKit__PublicKey}
+      - ImageKit__PrivateKey=${ImageKit__PrivateKey}
     # If your database is running on your host machine, use this extra_hosts configuration
     # so the container can access it via 'host.docker.internal'
     extra_hosts:
