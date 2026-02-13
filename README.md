@@ -4,6 +4,10 @@
 
 Welcome to **BookStore**, a comprehensive full-stack e-commerce application designed for book enthusiasts. This project features a robust **.NET 8 Web API** backend following **N-Tier Architecture** and a dynamic **Angular 19** frontend.
 
+- **Frontend:** [bookstore-production-d904.up.railway.app](https://bookstore-production-d904.up.railway.app)
+
+- **Backend (Swagger Docs):** [bookstore-production-a27c.up.railway.app/swagger](https://bookstore-production-a27c.up.railway.app/swagger)
+
 ---
 
 ## 🚀 Key Features
